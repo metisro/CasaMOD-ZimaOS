@@ -24,27 +24,21 @@ Browser
 - Avoids execution inside ZimaOS Wujie micro-apps, shadow roots, and iframes.
 - Includes adapted Weather Widget and Widget Sortable example mods.
 
-## Docker Hub Images
+## Container Images
 
 The app uses two CasaMOD-ZimaOS images:
 
 ```text
-flaviusgheorghe/casamod-zimaos-api:latest
-flaviusgheorghe/casamod-zimaos-proxy:latest
+ghcr.io/metisro/casamod-zimaos-api:latest
+ghcr.io/metisro/casamod-zimaos-proxy:latest
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
 Images are `node:22-alpine` and `nginx:alpine`.
 
 The GitHub Actions workflow at `.github/workflows/publish-docker.yml` publishes
-both images for `linux/amd64` and `linux/arm64`. Before its first run, add these
-GitHub repository Actions secrets:
-
-```text
-DOCKERHUB_TOKEN
-```
-
-The token must have Docker Hub public-repository Read & Write permission.
+both images to GitHub Container Registry for `linux/amd64` and `linux/arm64`.
+It uses the repository's built-in `GITHUB_TOKEN`; no registry secret is needed.
 
 ## Docker Compose Install
 

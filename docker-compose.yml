@@ -1,6 +1,6 @@
 services:
   casamod-zimaos-api:
-    image: flaviusgheorghe/casamod-zimaos-api:${CASAMOD_VERSION:-latest}
+    image: ghcr.io/metisro/casamod-zimaos-api:${CASAMOD_VERSION:-latest}
     container_name: casamod-zimaos-api
     network_mode: host
     restart: unless-stopped
@@ -11,7 +11,7 @@ services:
       - /DATA/AppData/casamod:/data
 
   casamod-zimaos-proxy:
-    image: flaviusgheorghe/casamod-zimaos-proxy:${CASAMOD_VERSION:-latest}
+    image: ghcr.io/metisro/casamod-zimaos-proxy:${CASAMOD_VERSION:-latest}
     container_name: casamod-zimaos-proxy
     network_mode: host
     restart: unless-stopped
