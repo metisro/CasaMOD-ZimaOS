@@ -41,9 +41,10 @@ both images for `linux/amd64` and `linux/arm64`. Before its first run, add these
 GitHub repository Actions secrets:
 
 ```text
-DOCKERHUB_USERNAME
 DOCKERHUB_TOKEN
 ```
+
+The token must have Docker Hub public-repository Read & Write permission.
 
 ## Docker Compose Install
 
