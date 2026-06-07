@@ -2,10 +2,7 @@ name: casamod-zimaos
 
 services:
   casamod-zimaos-api:
-    build:
-      context: .
-      dockerfile: api/Dockerfile
-    image: casamod-zimaos-api:local
+    image: flaviusgheorghe/casamod-zimaos-api:${CASAMOD_VERSION:-latest}
     container_name: casamod-zimaos-api
     network_mode: host
     restart: unless-stopped
@@ -16,10 +13,7 @@ services:
       - /DATA/AppData/casamod:/data
 
   casamod-zimaos-proxy:
-    build:
-      context: .
-      dockerfile: proxy/Dockerfile
-    image: casamod-zimaos-proxy:local
+    image: flaviusgheorghe/casamod-zimaos-proxy:${CASAMOD_VERSION:-latest}
     container_name: casamod-zimaos-proxy
     network_mode: host
     restart: unless-stopped

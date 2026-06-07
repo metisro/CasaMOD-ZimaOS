@@ -51,6 +51,29 @@ chmod +x verify.sh
 ./verify.sh
 ```
 
+### ZimaOS UI Registry Fallback
+
+Some ZimaOS releases rewrite GHCR pulls through forced registry mirrors. Those
+mirrors can fail even when the GHCR images are public and anonymously pullable.
+If the ZimaOS custom-app installer reports that it tried four mirror methods,
+import `docker-compose.zimaos.yml` instead. It pulls identical images from
+Docker Hub, which avoids the broken GHCR mirror path.
+
+To confirm the ZimaOS mirror issue from its terminal:
+
+```sh
+docker pull ghcr.io/metisro/casamod-zimaos-api:latest
+docker pull flaviusgheorghe/casamod-zimaos-api:latest
+```
+
+If the GHCR pull fails but the Docker Hub pull succeeds, use the ZimaOS fallback
+Compose file. Alternatively, a direct terminal deployment may bypass the UI
+pull mechanism:
+
+```sh
+docker compose -f docker-compose.yml up -d
+```
+
 If the standalone prototype from earlier compatibility testing still exists,
 remove it once before starting the Compose app:
 

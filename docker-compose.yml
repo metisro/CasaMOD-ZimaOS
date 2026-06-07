@@ -1,3 +1,5 @@
+name: casamod-zimaos
+
 services:
   casamod-zimaos-api:
     image: ghcr.io/metisro/casamod-zimaos-api:${CASAMOD_VERSION:-latest}
