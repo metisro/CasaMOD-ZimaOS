@@ -1,0 +1,35 @@
+/* CasaMOD Weather: default CasaOS-style theme. */
+#casamod-weather-icon {
+  display: none !important;
+}
+
+.casamod-weather.casamod-weather-theme-casa {
+  --casamod-weather-chart-line: rgb(73, 179, 255);
+  --casamod-weather-chart-fill: rgba(73, 179, 255, .32);
+  --casamod-weather-chart-grid: rgba(255, 255, 255, .10);
+  --casamod-weather-chart-text: rgba(255, 255, 255, .62);
+}
+
+.casamod-weather.casamod-weather-theme-casa .casamod-weather-card {
+  color: var(--text-1, #e0e4f0);
+  background: var(--background-2, rgba(30, 32, 48, .88));
+  border-color: var(--background-4, rgba(255, 255, 255, .08));
+}
+
+.casamod-weather.casamod-weather-theme-casa .casamod-weather-scene-art {
+  display: block;
+  top: 2px;
+  left: 55px;
+  width: 118px;
+  height: 118px;
+  opacity: .18;
+  filter: saturate(.85) drop-shadow(0 8px 14px rgba(0, 0, 0, .28));
+}
+
+.casamod-weather.casamod-weather-theme-casa .casamod-weather-bg-icon {
+  display: none;
+}
+
+.casamod-weather-chart-tip strong {
+  color: #fff !important;
+}

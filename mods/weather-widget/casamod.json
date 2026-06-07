@@ -1,0 +1,8 @@
+{
+  "name": "Weather Widget",
+  "enabled": true,
+  "scripts": [
+    "mod.js"
+  ],
+  "styles": []
+}

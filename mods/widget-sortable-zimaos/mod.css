@@ -1,0 +1,17 @@
+[data-casamod-sortable="true"] > [data-casamod-sortable-child] {
+  cursor: grab;
+  transition: opacity .15s ease, outline-color .15s ease;
+}
+
+[data-casamod-sortable="true"] > [data-casamod-sortable-child]:active {
+  cursor: grabbing;
+}
+
+.casamod-sortable-dragging {
+  opacity: .35;
+}
+
+.casamod-sortable-over {
+  outline: 2px solid rgba(73, 179, 255, .8);
+  outline-offset: 3px;
+}

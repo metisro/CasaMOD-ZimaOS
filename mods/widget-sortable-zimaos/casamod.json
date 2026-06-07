@@ -1,0 +1,10 @@
+{
+  "name": "Widget Sortable",
+  "enabled": true,
+  "scripts": [
+    "mod.js"
+  ],
+  "styles": [
+    "mod.css"
+  ]
+}
