@@ -17,15 +17,21 @@
   }
 
   function findAppTile() {
-    const icon = Array.from(document.querySelectorAll("img"))
+    const roots = [document];
+    for (const element of document.querySelectorAll("*")) {
+      if (element.shadowRoot) roots.push(element.shadowRoot);
+    }
+
+    const all = selector => roots.flatMap(root => Array.from(root.querySelectorAll(selector)));
+    const icon = all("img")
       .find(image => /zimamod-icon|metisro\/zimamod/i.test(image.src));
     if (icon) return tileCandidate(icon);
 
-    const labeled = Array.from(document.querySelectorAll("[title], [aria-label]"))
+    const labeled = all("[title], [aria-label]")
       .find(element => /^zimamod$/i.test(element.getAttribute("title") || element.getAttribute("aria-label") || ""));
     if (labeled) return tileCandidate(labeled);
 
-    return Array.from(document.querySelectorAll("span, div, p"))
+    return all("span, div, p")
       .filter(element => element.children.length === 0 && /^zimamod$/i.test((element.textContent || "").trim()))
       .map(tileCandidate)
       .find(Boolean) || null;
@@ -140,6 +146,9 @@
       status.textContent = error.message;
     }
   }
+
+  window.ZimaMOD.openStore = openStore;
+  window.ZimaMOD.closeStore = closeStore;
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, character => ({
