@@ -6,7 +6,7 @@
     "Cp0204"
   ],
   "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "enabled": true,
   "scripts": [
     "mod.js"

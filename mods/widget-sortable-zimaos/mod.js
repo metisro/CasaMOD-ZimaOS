@@ -24,6 +24,8 @@
   const SORTABLE_ID = "data-zimamod-sortable-id";
   let activeColumn = null;
   let dragged = null;
+  let dragColumn = null;
+  let dragOrderSaved = false;
   let orderPromise = null;
   let restoreStartedAt = 0;
   let restoreRetryTimer = null;
@@ -141,8 +143,9 @@
   }
 
   async function restoreOrder(column) {
+    if (dragged) return;
     const order = await loadOrder();
-    if (column !== activeColumn) return;
+    if (column !== activeColumn || dragged) return;
 
     const children = sortableChildren(column);
     const byId = new Map(children.map((child, index) => [childId(child, index), child]));
@@ -170,8 +173,40 @@
   function clearDragState() {
     if (dragged) dragged.classList.remove("zimamod-sortable-dragging");
     dragged = null;
+    dragColumn = null;
     document.querySelectorAll(".zimamod-sortable-over")
       .forEach(element => element.classList.remove("zimamod-sortable-over"));
+  }
+
+  function animateReorder(column, move) {
+    const previousTops = new Map(sortableChildren(column).map(child => [
+      child,
+      child.getBoundingClientRect().top
+    ]));
+    move();
+
+    for (const child of sortableChildren(column)) {
+      if (child === dragged) continue;
+      const previousTop = previousTops.get(child);
+      if (previousTop === undefined) continue;
+      const offset = previousTop - child.getBoundingClientRect().top;
+      if (!offset) continue;
+
+      child.style.transition = "none";
+      child.style.transform = `translateY(${offset}px)`;
+      requestAnimationFrame(() => {
+        child.style.transition = "";
+        child.style.transform = "";
+      });
+    }
+  }
+
+  function finishDrag(column) {
+    if (!dragOrderSaved && column) {
+      dragOrderSaved = true;
+      void saveOrder(column);
+    }
+    clearDragState();
   }
 
   function bindChild(child, index) {
@@ -183,6 +218,8 @@
 
     child.addEventListener("dragstart", event => {
       dragged = child;
+      dragColumn = child.parentElement;
+      dragOrderSaved = false;
       child.classList.add("zimamod-sortable-dragging");
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", child.getAttribute(SORTABLE_ID));
@@ -193,23 +230,30 @@
       event.preventDefault();
       child.classList.add("zimamod-sortable-over");
       const rect = child.getBoundingClientRect();
-      const after = event.clientY > rect.top + rect.height / 2;
-      child.parentElement.insertBefore(dragged, after ? child.nextSibling : child);
+      const column = child.parentElement;
+      const children = sortableChildren(column);
+      const draggedIndex = children.indexOf(dragged);
+      const targetIndex = children.indexOf(child);
+
+      if (draggedIndex < targetIndex && event.clientY > rect.top + rect.height * .65) {
+        animateReorder(column, () => column.insertBefore(dragged, child.nextSibling));
+      } else if (draggedIndex > targetIndex && event.clientY < rect.top + rect.height * .35) {
+        animateReorder(column, () => column.insertBefore(dragged, child));
+      }
     });
 
     child.addEventListener("dragleave", () => child.classList.remove("zimamod-sortable-over"));
     child.addEventListener("drop", event => {
       event.preventDefault();
-      void saveOrder(child.parentElement);
-      clearDragState();
+      finishDrag(child.parentElement);
     });
     child.addEventListener("dragend", () => {
-      void saveOrder(child.parentElement);
-      clearDragState();
+      finishDrag(dragColumn || child.parentElement);
     });
   }
 
   function initialize() {
+    if (dragged) return;
     if (location.hash.includes("login")) return;
     const column = widgetColumn();
     if (!column) return;

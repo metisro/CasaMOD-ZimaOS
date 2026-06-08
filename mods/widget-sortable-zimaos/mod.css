@@ -1,6 +1,7 @@
 [data-zimamod-sortable="true"] > [data-zimamod-sortable-child] {
   cursor: grab;
-  transition: opacity .15s ease, outline-color .15s ease;
+  transition: opacity .15s ease, outline-color .15s ease, transform .18s ease;
+  will-change: transform;
 }
 
 [data-zimamod-sortable="true"] > [data-zimamod-sortable-child]:active {

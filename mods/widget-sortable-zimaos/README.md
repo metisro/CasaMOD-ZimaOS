@@ -17,6 +17,10 @@ Native widgets use stable semantic IDs such as `clock`, `system`, `storage`,
 and `network`. Older saved IDs containing live time, resource, or network
 values are normalized and migrated automatically.
 
+During dragging, widgets move only after the pointer crosses a directional
+threshold and displaced widgets animate into place. Order restoration is
+paused until the drag finishes to prevent flickering and unwanted swaps.
+
 ## Attribution
 
 Original `widget-sortable` authors: **LANMIN-X** and **Cp0204**.
