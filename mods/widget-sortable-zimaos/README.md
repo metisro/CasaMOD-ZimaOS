@@ -1,9 +1,20 @@
 # Widget Sortable - ZimaOS
 
-ZimaOS-compatible replacement for ZimaMOD's original `widget-sortable` mod.
+Reimplementation of the original `widget-sortable` mod for ZimaMOD and ZimaOS.
 
 It discovers the ZimaOS widget column, makes its direct children draggable, and
-stores their order in browser local storage.
+stores their order through the ZimaMOD configuration API at:
 
-Remove or disable the original CasaOS `widget-sortable` folder because its
-`.ps-container` implementation is incompatible with ZimaOS.
+```text
+/DATA/AppData/zimamod/config/sortable-widgets.json
+```
+
+## Attribution
+
+Original `widget-sortable` authors: **LANMIN-X** and **Cp0204**.
+
+Original source:
+[Cp0204/CasaMOD widget-sortable](https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable)
+
+This implementation was rewritten for the ZimaMOD framework and the ZimaOS
+dashboard DOM. It does not require the original CasaMOD container or mod.

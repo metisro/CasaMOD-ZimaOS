@@ -1,5 +1,11 @@
 {
   "name": "Widget Sortable",
+  "description": "A ZimaMOD and ZimaOS reimplementation of widget-sortable by LANMIN-X and Cp0204.",
+  "authors": [
+    "LANMIN-X",
+    "Cp0204"
+  ],
+  "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable",
   "enabled": true,
   "scripts": [
     "mod.js"

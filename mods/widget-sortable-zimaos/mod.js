@@ -1,4 +1,6 @@
-// ZimaMOD Widget Sortable - ZimaOS compatibility build
+// ZimaMOD Widget Sortable - ZimaOS reimplementation
+// Original authors: LANMIN-X and Cp0204
+// Source: https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable
 
 (function ZimaMODWidgetSortableZimaOS() {
   "use strict";
@@ -17,11 +19,12 @@
   document.documentElement.dataset.zimamodWidgetSortableZimaos = "true";
 
   const MOD_ID = "zimamod-widget-sortable-zimaos";
-  const STORAGE_KEY = MOD_ID + "-order";
+  const CONFIG_ID = "sortable-widgets";
   const SORTABLE_CHILD = "data-zimamod-sortable-child";
   const SORTABLE_ID = "data-zimamod-sortable-id";
   let activeColumn = null;
   let dragged = null;
+  let orderPromise = null;
 
   function weatherWidget() {
     return document.querySelector("#zimamod-weather-widget, [widget-id='weather'].zimamod-weather");
@@ -80,18 +83,33 @@
     });
   }
 
-  function saveOrder(column) {
+  async function saveOrder(column) {
     const order = sortableChildren(column).map((child, index) => childId(child, index));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
+    orderPromise = Promise.resolve(order);
+
+    try {
+      await window.ZimaMOD.setConfig(CONFIG_ID, { order });
+    } catch (error) {
+      console.error("[ZimaMOD Widget Sortable] Failed to save widget order", error);
+    }
   }
 
-  function restoreOrder(column) {
-    let order = [];
-    try {
-      order = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch (_) {
-      return;
+  async function loadOrder() {
+    if (!orderPromise) {
+      orderPromise = window.ZimaMOD.getConfig(CONFIG_ID, { order: [] })
+        .then(config => Array.isArray(config?.order) ? config.order : [])
+        .catch(error => {
+          console.error("[ZimaMOD Widget Sortable] Failed to load widget order", error);
+          return [];
+        });
     }
+
+    return orderPromise;
+  }
+
+  async function restoreOrder(column) {
+    const order = await loadOrder();
+    if (column !== activeColumn) return;
 
     const children = sortableChildren(column);
     const byId = new Map(children.map((child, index) => [childId(child, index), child]));
@@ -138,11 +156,11 @@
     child.addEventListener("dragleave", () => child.classList.remove("zimamod-sortable-over"));
     child.addEventListener("drop", event => {
       event.preventDefault();
-      saveOrder(child.parentElement);
+      void saveOrder(child.parentElement);
       clearDragState();
     });
     child.addEventListener("dragend", () => {
-      saveOrder(child.parentElement);
+      void saveOrder(child.parentElement);
       clearDragState();
     });
   }
@@ -156,7 +174,12 @@
     column.dataset.zimamodSortable = "true";
     const children = sortableChildren(column);
     children.forEach(bindChild);
-    restoreOrder(column);
+    void restoreOrder(column);
+  }
+
+  if (!window.ZimaMOD) {
+    console.error("[ZimaMOD Widget Sortable] ZimaMOD config API is unavailable");
+    return;
   }
 
   const observer = new MutationObserver(() => {

@@ -66,6 +66,9 @@ async function waitForServer() {
     const config = await request("GET", "/config/test-mod");
     assert.deepEqual(config.body.config, { enabled: true });
 
+    assert.equal((await request("PUT", "/config/sortable-widgets", { order: ["weather"] })).status, 200);
+    assert.equal(fs.existsSync(path.join(dataDir, "config", "sortable-widgets.json")), true);
+
     assert.equal((await request("GET", "/config/../bad")).status, 404);
     console.log("ZimaMOD API integration test passed");
   } finally {
