@@ -40,6 +40,25 @@
       });
       if (!response.ok) throw new Error(`Config write failed: ${response.status}`);
       return config;
+    },
+    async listStore() {
+      const response = await fetch(`${API_BASE}/store`, { credentials: "include", cache: "no-store" });
+      if (!response.ok) throw new Error(`MOD Store failed: ${response.status}`);
+      return (await response.json()).mods || [];
+    },
+    async installMod(modId) {
+      const response = await fetch(`${API_BASE}/store/${encodeURIComponent(modId)}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error(`Mod installation failed: ${response.status}`);
+    },
+    async uninstallMod(modId) {
+      const response = await fetch(`${API_BASE}/store/${encodeURIComponent(modId)}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error(`Mod uninstall failed: ${response.status}`);
     }
   };
 
@@ -65,6 +84,9 @@
     url.searchParams.set("v", mod.version || "1");
     return url.pathname + url.search;
   }
+
+  loadStyle("/zimamod-runtime/store.css?v=1.1.3", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.3", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {

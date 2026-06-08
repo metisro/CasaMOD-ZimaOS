@@ -1,6 +1,7 @@
 {
   "name": "Weather Widget",
   "version": "1.2.0",
+  "description": "Adds current conditions, forecasts, themes, and weather controls to the ZimaOS dashboard.",
   "enabled": true,
   "scripts": [
     "mod.js"

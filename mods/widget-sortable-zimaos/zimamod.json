@@ -1,6 +1,6 @@
 {
   "name": "Widget Sortable",
-  "description": "A ZimaMOD and ZimaOS reimplementation of widget-sortable by LANMIN-X and Cp0204.",
+  "description": "Reorder ZimaOS dashboard widgets with drag and drop while preserving their positions.",
   "authors": [
     "LANMIN-X",
     "Cp0204"

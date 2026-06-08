@@ -8,10 +8,12 @@ const PORT = Number(process.env.PORT || 8090);
 const DATA_DIR = process.env.DATA_DIR || "/data";
 const MOD_DIR = path.join(DATA_DIR, "mod");
 const CONFIG_DIR = path.join(DATA_DIR, "config");
+const STORE_DIR = path.join(DATA_DIR, "store");
 const MAX_BODY_BYTES = 64 * 1024;
 const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 fs.mkdirSync(CONFIG_DIR, { recursive: true });
+fs.mkdirSync(STORE_DIR, { recursive: true });
 
 function send(response, status, body) {
   const content = JSON.stringify(body);
@@ -76,7 +78,11 @@ function writeConfig(file, config) {
 }
 
 function modManifest(modId) {
-  const directory = path.join(MOD_DIR, modId);
+  return readModManifest(MOD_DIR, modId);
+}
+
+function readModManifest(root, modId) {
+  const directory = path.join(root, modId);
   const stat = fs.statSync(directory);
   if (!stat.isDirectory()) return null;
 
@@ -93,6 +99,10 @@ function modManifest(modId) {
     name: typeof manifest.name === "string" ? manifest.name : modId,
     enabled: manifest.enabled !== false,
     version: typeof manifest.version === "string" ? manifest.version : "1",
+    description: typeof manifest.description === "string" ? manifest.description : "",
+    screenshot: typeof manifest.screenshot === "string" && !manifest.screenshot.includes("..")
+      ? manifest.screenshot
+      : "",
     scripts: scripts.filter(item => typeof item === "string" && !item.includes("..")),
     styles: styles.filter(item => typeof item === "string" && !item.includes(".."))
   };
@@ -110,6 +120,45 @@ function listMods() {
       }
     })
     .filter(mod => mod?.enabled);
+}
+
+function listStore() {
+  return fs.readdirSync(STORE_DIR)
+    .filter(validId)
+    .map(modId => {
+      try {
+        const manifest = readModManifest(STORE_DIR, modId);
+        return manifest ? {
+          ...manifest,
+          installed: fs.existsSync(path.join(MOD_DIR, modId))
+        } : null;
+      } catch (_) {
+        return null;
+      }
+    })
+    .filter(Boolean);
+}
+
+function copyDirectory(source, destination) {
+  const temporary = destination + ".tmp-" + Date.now();
+  fs.rmSync(temporary, { recursive: true, force: true });
+  fs.cpSync(source, temporary, { recursive: true });
+  fs.rmSync(destination, { recursive: true, force: true });
+  fs.renameSync(temporary, destination);
+}
+
+function installMod(modId) {
+  if (!validId(modId)) throw new Error("Invalid mod id");
+  const source = path.join(STORE_DIR, modId);
+  if (!fs.statSync(source).isDirectory()) throw new Error("Store mod not found");
+  copyDirectory(source, path.join(MOD_DIR, modId));
+}
+
+function uninstallMod(modId) {
+  if (!validId(modId)) throw new Error("Invalid mod id");
+  const source = path.join(STORE_DIR, modId);
+  if (!fs.statSync(source).isDirectory()) throw new Error("Store mod not found");
+  fs.rmSync(path.join(MOD_DIR, modId), { recursive: true, force: true });
 }
 
 function readBody(request) {
@@ -141,6 +190,24 @@ async function handle(request, response) {
 
   if (request.method === "GET" && url.pathname === "/mods") {
     send(response, 200, { mods: listMods() });
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/store") {
+    send(response, 200, { mods: listStore() });
+    return;
+  }
+
+  const storeMatch = url.pathname.match(/^\/store\/([a-z0-9][a-z0-9-]{0,63})$/);
+  if (storeMatch && request.method === "POST") {
+    installMod(storeMatch[1]);
+    send(response, 200, { ok: true, installed: true });
+    return;
+  }
+
+  if (storeMatch && request.method === "DELETE") {
+    uninstallMod(storeMatch[1]);
+    send(response, 200, { ok: true, installed: false });
     return;
   }
 

@@ -1,0 +1,160 @@
+.zimamod-store-tile {
+  position: relative !important;
+}
+
+.zimamod-store-launcher {
+  position: absolute;
+  z-index: 20;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 11px;
+  border: 1px solid rgba(112, 225, 255, .45);
+  border-radius: 999px;
+  color: #effcff;
+  background: rgba(5, 16, 40, .86);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+  font: 600 12px/1.2 system-ui, sans-serif;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .18s ease, transform .18s ease, background .18s ease;
+}
+
+.zimamod-store-tile:hover .zimamod-store-launcher,
+.zimamod-store-launcher:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.zimamod-store-launcher:hover {
+  background: rgba(16, 85, 180, .94);
+}
+
+#zimamod-store-modal {
+  position: fixed;
+  z-index: 2147483000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #f4f8ff;
+  font-family: system-ui, sans-serif;
+}
+
+.zimamod-store-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 5, 18, .72);
+  backdrop-filter: blur(14px);
+}
+
+.zimamod-store-dialog {
+  position: relative;
+  width: min(980px, 100%);
+  max-height: min(760px, calc(100vh - 48px));
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(111, 208, 255, .2);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(9, 20, 48, .98), rgba(3, 9, 25, .98));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .6);
+}
+
+.zimamod-store-dialog header,
+.zimamod-store-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.zimamod-store-dialog h2,
+.zimamod-store-card h3,
+.zimamod-store-card p {
+  margin: 0;
+}
+
+.zimamod-store-kicker,
+.zimamod-store-card-heading span,
+.zimamod-store-status {
+  color: #8fdfff;
+  font-size: 12px;
+}
+
+.zimamod-store-close {
+  border: 0;
+  color: #ddebff;
+  background: transparent;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.zimamod-store-status {
+  margin: 16px 0;
+}
+
+.zimamod-store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+
+.zimamod-store-card {
+  overflow: hidden;
+  border: 1px solid rgba(130, 210, 255, .15);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .055);
+}
+
+.zimamod-store-media {
+  height: 150px;
+  background: #07152f;
+}
+
+.zimamod-store-media img,
+.zimamod-store-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.zimamod-store-fallback {
+  display: grid;
+  place-items: center;
+  color: #c7f7ff;
+  background: radial-gradient(circle at 30% 20%, #1766d6, #07152f 70%);
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.zimamod-store-copy {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.zimamod-store-card p {
+  min-height: 42px;
+  color: #b8c6dd;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.zimamod-store-card button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  color: white;
+  background: #1677ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zimamod-store-card button.is-installed {
+  background: #b43c5b;
+}
+
+.zimamod-store-card button:disabled {
+  opacity: .55;
+  cursor: wait;
+}

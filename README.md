@@ -26,6 +26,7 @@ Browser
 - Avoids execution inside ZimaOS Wujie micro-apps, shadow roots, and iframes.
 - Includes adapted Weather Widget and Widget Sortable example mods.
 - Includes ZimaOS custom-app metadata and a dedicated ZimaMOD app icon.
+- Includes a dashboard MOD Store for installing and uninstalling catalog mods.
 
 ## Container Images
 
@@ -39,8 +40,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.2
-ghcr.io/metisro/zimamod-proxy:1.1.2
+ghcr.io/metisro/zimamod-api:1.1.3
+ghcr.io/metisro/zimamod-proxy:1.1.3
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -78,8 +79,8 @@ The project version is stored in `VERSION`, the install Compose image tags, and
 the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.2
-git push origin v1.1.2
+git tag v1.1.3
+git push origin v1.1.3
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -112,10 +113,16 @@ The standard ZimaOS dashboard remains available on port `80`.
 /DATA/AppData/zimamod/
   mod/                    bundled and user-installed mods
   config/                 persistent per-mod settings
+  store/                  mods available through the MOD Store
 ```
 
-Both directories are mounted into the containers. Rebuilding the app refreshes
+These directories are mounted into the containers. Rebuilding the app refreshes
 the bundled mods without deleting user-installed mods or persistent settings.
+
+Hover over the ZimaMOD app tile on the dashboard and select **MOD Store** to
+view the catalog. Installing copies a catalog mod from `store/<mod-id>` into
+`mod/<mod-id>`; uninstalling removes only the installed copy. Reload the
+dashboard after changing installed mods.
 
 Each enabled mod is a directory containing `zimamod.json`:
 

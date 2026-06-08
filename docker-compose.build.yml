@@ -1,5 +1,5 @@
 name: zimamod
-version: "1.1.2-local"
+version: "1.1.3-local"
 
 services:
   zimamod-api:
@@ -30,6 +30,7 @@ services:
       - zimamod-api
     volumes:
       - /DATA/AppData/zimamod/mod:/mods:ro
+      - /DATA/AppData/zimamod/store:/store:ro
 
 x-casaos:
   architectures:
@@ -50,7 +51,7 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.2-local"
+  version: "1.1.3-local"
   updateAt: "2026-06-08"
   releaseNotes:
     en_us: Local development build.
