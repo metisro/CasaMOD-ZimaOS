@@ -1,5 +1,6 @@
 {
   "name": "Weather Widget",
+  "version": "1.2.0",
   "enabled": true,
   "scripts": [
     "mod.js"

@@ -57,6 +57,7 @@ function modManifest(modId) {
     id: modId,
     name: typeof manifest.name === "string" ? manifest.name : modId,
     enabled: manifest.enabled !== false,
+    version: typeof manifest.version === "string" ? manifest.version : "1",
     scripts: scripts.filter(item => typeof item === "string" && !item.includes("..")),
     styles: styles.filter(item => typeof item === "string" && !item.includes(".."))
   };

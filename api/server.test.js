@@ -61,6 +61,7 @@ async function waitForServer() {
     const mods = await request("GET", "/mods");
     assert.equal(mods.status, 200);
     assert.equal(mods.body.mods[0].id, "test-mod");
+    assert.equal(mods.body.mods[0].version, "1");
 
     assert.equal((await request("PUT", "/config/test-mod", { enabled: true })).status, 200);
     const config = await request("GET", "/config/test-mod");

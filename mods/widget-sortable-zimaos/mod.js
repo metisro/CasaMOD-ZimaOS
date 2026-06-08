@@ -25,6 +25,8 @@
   let activeColumn = null;
   let dragged = null;
   let orderPromise = null;
+  let restoreStartedAt = 0;
+  let restoreRetryTimer = null;
 
   function weatherWidget() {
     return document.querySelector("#zimamod-weather-widget, [widget-id='weather'].zimamod-weather");
@@ -62,16 +64,36 @@
       .slice(0, 48);
   }
 
+  function stableId(value) {
+    const normalized = slug(value);
+    if (normalized.includes("weather")) return "weather";
+    if (normalized.includes("storage")) return "storage";
+    if (normalized.includes("network")) return "network";
+    if (normalized.includes("system")) return "system";
+    if (normalized.includes("widget-settings") || normalized === "settings") return "widget-settings";
+    if (
+      /(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)/.test(normalized) ||
+      /(?:january|february|march|april|may|june|july|august|september|october|november|december)/.test(normalized)
+    ) {
+      return "clock";
+    }
+    return normalized;
+  }
+
   function childId(child, index) {
     const existing = child.getAttribute(SORTABLE_ID);
-    if (existing) return existing;
+    if (existing) {
+      const normalized = stableId(existing);
+      if (normalized && normalized !== existing) child.setAttribute(SORTABLE_ID, normalized);
+      return normalized || existing;
+    }
 
     const widget = child.matches("[widget-id]") ? child : child.querySelector(":scope > [widget-id]");
     const label = widget?.getAttribute("widget-id") ||
       child.getAttribute("aria-label") ||
       child.querySelector("h1, h2, h3, h4, [class*='title' i]")?.textContent ||
       child.textContent;
-    const id = slug(label) || "widget-" + index;
+    const id = stableId(label) || "widget-" + index;
     child.setAttribute(SORTABLE_ID, id);
     return id;
   }
@@ -84,7 +106,11 @@
   }
 
   async function saveOrder(column) {
-    const order = sortableChildren(column).map((child, index) => childId(child, index));
+    const order = Array.from(new Set(
+      sortableChildren(column)
+        .map((child, index) => stableId(childId(child, index)))
+        .filter(Boolean)
+    ));
     orderPromise = Promise.resolve(order);
 
     try {
@@ -97,7 +123,14 @@
   async function loadOrder() {
     if (!orderPromise) {
       orderPromise = window.ZimaMOD.getConfig(CONFIG_ID, { order: [] })
-        .then(config => Array.isArray(config?.order) ? config.order : [])
+        .then(async config => {
+          const original = Array.isArray(config?.order) ? config.order : [];
+          const normalized = Array.from(new Set(original.map(stableId).filter(Boolean)));
+          if (JSON.stringify(original) !== JSON.stringify(normalized)) {
+            await window.ZimaMOD.setConfig(CONFIG_ID, { order: normalized });
+          }
+          return normalized;
+        })
         .catch(error => {
           console.error("[ZimaMOD Widget Sortable] Failed to load widget order", error);
           return [];
@@ -113,13 +146,24 @@
 
     const children = sortableChildren(column);
     const byId = new Map(children.map((child, index) => [childId(child, index), child]));
-    const currentOrder = children.map((child, index) => childId(child, index));
-    const desiredOrder = order.filter(id => byId.has(id));
-    if (desiredOrder.every((id, index) => currentOrder[index] === id)) return;
+    const missingIds = order.filter(id => !byId.has(id));
+    if (missingIds.length && Date.now() - restoreStartedAt < 5000) {
+      clearTimeout(restoreRetryTimer);
+      restoreRetryTimer = setTimeout(initialize, 250);
+      return;
+    }
 
-    for (const id of order) {
+    for (const [savedIndex, id] of order.entries()) {
       const child = byId.get(id);
-      if (child) column.appendChild(child);
+      if (!child) continue;
+
+      const currentChildren = sortableChildren(column);
+      const targetIndex = Math.min(savedIndex, currentChildren.length - 1);
+      const currentIndex = currentChildren.indexOf(child);
+      if (currentIndex === targetIndex) continue;
+
+      const referenceIndex = currentIndex < targetIndex ? targetIndex + 1 : targetIndex;
+      column.insertBefore(child, currentChildren[referenceIndex] || null);
     }
   }
 
@@ -170,7 +214,10 @@
     const column = widgetColumn();
     if (!column) return;
 
-    activeColumn = column;
+    if (activeColumn !== column) {
+      activeColumn = column;
+      restoreStartedAt = Date.now();
+    }
     column.dataset.zimamodSortable = "true";
     const children = sortableChildren(column);
     children.forEach(bindChild);

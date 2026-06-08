@@ -60,6 +60,12 @@
     document.body.appendChild(script);
   }
 
+  function versionedAssetUrl(mod, relativePath) {
+    const url = new URL(window.ZimaMOD.assetUrl(mod.id, relativePath), window.location.origin);
+    url.searchParams.set("v", mod.version || "1");
+    return url.pathname + url.search;
+  }
+
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {
       if (!response.ok) throw new Error(`Mod registry failed: ${response.status}`);
@@ -68,10 +74,10 @@
     .then(({ mods }) => {
       for (const mod of mods || []) {
         for (const style of mod.styles || []) {
-          loadStyle(window.ZimaMOD.assetUrl(mod.id, style), mod.id);
+          loadStyle(versionedAssetUrl(mod, style), mod.id);
         }
         for (const script of mod.scripts || []) {
-          loadScript(window.ZimaMOD.assetUrl(mod.id, script), mod.id);
+          loadScript(versionedAssetUrl(mod, script), mod.id);
         }
       }
     })

@@ -9,6 +9,14 @@ stores their order through the ZimaMOD configuration API at:
 /DATA/AppData/zimamod/config/sortable-widgets.json
 ```
 
+Saved widget positions are restored by absolute slot. This keeps custom widgets
+in their selected position even when ZimaOS recreates native widgets with
+different dynamic labels after a refresh or restart.
+
+Native widgets use stable semantic IDs such as `clock`, `system`, `storage`,
+and `network`. Older saved IDs containing live time, resource, or network
+values are normalized and migrated automatically.
+
 ## Attribution
 
 Original `widget-sortable` authors: **LANMIN-X** and **Cp0204**.
