@@ -40,6 +40,41 @@ function readJson(file, fallback) {
   }
 }
 
+function stableWidgetId(value) {
+  const normalized = String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 64);
+
+  if (normalized.includes("weather")) return "weather";
+  if (normalized.includes("storage")) return "storage";
+  if (normalized.includes("network")) return "network";
+  if (normalized.includes("system")) return "system";
+  if (normalized.includes("widget-settings") || normalized === "settings") return "widget-settings";
+  if (
+    /(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)/.test(normalized) ||
+    /(?:january|february|march|april|may|june|july|august|september|october|november|december)/.test(normalized)
+  ) {
+    return "clock";
+  }
+  return normalized;
+}
+
+function normalizeConfig(modId, config) {
+  if (modId !== "sortable-widgets" || !Array.isArray(config?.order)) return config;
+  return {
+    ...config,
+    order: Array.from(new Set(config.order.map(stableWidgetId).filter(Boolean)))
+  };
+}
+
+function writeConfig(file, config) {
+  const temporary = file + ".tmp-" + Date.now();
+  fs.writeFileSync(temporary, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
+  fs.renameSync(temporary, file);
+}
+
 function modManifest(modId) {
   const directory = path.join(MOD_DIR, modId);
   const stat = fs.statSync(directory);
@@ -112,17 +147,18 @@ async function handle(request, response) {
   const configMatch = url.pathname.match(/^\/config\/([a-z0-9][a-z0-9-]{0,63})$/);
   if (configMatch && request.method === "GET") {
     const file = configPath(configMatch[1]);
-    send(response, 200, { config: readJson(file, null) });
+    const stored = readJson(file, null);
+    const config = normalizeConfig(configMatch[1], stored);
+    if (config !== stored && JSON.stringify(config) !== JSON.stringify(stored)) writeConfig(file, config);
+    send(response, 200, { config });
     return;
   }
 
   if (configMatch && request.method === "PUT") {
     const raw = await readBody(request);
-    const config = JSON.parse(raw);
+    const config = normalizeConfig(configMatch[1], JSON.parse(raw));
     const file = configPath(configMatch[1]);
-    const temporary = file + ".tmp-" + Date.now();
-    fs.writeFileSync(temporary, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
-    fs.renameSync(temporary, file);
+    writeConfig(file, config);
     send(response, 200, { ok: true });
     return;
   }
