@@ -1,7 +1,7 @@
-// CasaMOD: Weather Widget v1.2.0-zimaos
-// Based on CasaOS-UI PR #257's Weather.vue idea, adapted as an injected CasaMOD.
+// ZimaMOD: Weather Widget v1.2.0-zimaos
+// Based on CasaOS-UI PR #257's Weather.vue idea, adapted as an injected ZimaMOD.
 
-(function CasaMODWeatherWidget() {
+(function ZimaMODWeatherWidget() {
   "use strict";
 
   const rootNode = document.currentScript?.getRootNode?.();
@@ -14,7 +14,7 @@
     return;
   }
 
-  const MOD_ID = "casamod-weather";
+  const MOD_ID = "zimamod-weather";
   const WIDGET_ID = "weather";
   const WRAPPER_ID = MOD_ID + "-widget";
   const CASAOS_ANCHOR = ".ps-container";
@@ -22,12 +22,12 @@
   const CONFIG_PATH = "/var/lib/casaos/1/weather-widget.json";
   const LOCAL_CONFIG_KEY = MOD_ID + "-config";
   const IS_ZIMAOS =
-    Boolean(window.CasaMODZimaOS) ||
-    window.__CASAMOD_PLATFORM__ === "zimaos" ||
+    Boolean(window.ZimaMOD) ||
+    window.__ZIMAMOD_PLATFORM__ === "zimaos" ||
     /^ZimaOS$/i.test(document.title) ||
     Boolean(document.querySelector('link[href*="zimaos-logo"]'));
   const SCRIPT_URL = document.currentScript?.src || "";
-  const MOD_BASE_URL = window.__CASAMOD_BASE_URL__ || SCRIPT_URL.replace(/mod\.js(?:\?.*)?$/, "");
+  const MOD_BASE_URL = window.__ZIMAMOD_BASE_URL__ || SCRIPT_URL.replace(/mod\.js(?:\?.*)?$/, "");
   const THEMES = {
     casa: {
       label: "CasaOS",
@@ -105,16 +105,16 @@
   }
 
   const existingWidget = preferredExistingWidget();
-  if (document.documentElement.dataset.casamodWeatherLoaded === "true" && existingWidget) {
+  if (document.documentElement.dataset.zimamodWeatherLoaded === "true" && existingWidget) {
     removeDuplicateWidgets(existingWidget);
     return;
   }
-  document.documentElement.dataset.casamodWeatherLoaded = "true";
-  window.__casamodWeatherLoaded = true;
+  document.documentElement.dataset.zimamodWeatherLoaded = "true";
+  window.__zimamodWeatherLoaded = true;
 
   function assetUrl(path) {
-    if (window.CasaMODZimaOS) {
-      return window.CasaMODZimaOS.assetUrl("weather-widget", path);
+    if (window.ZimaMOD) {
+      return window.ZimaMOD.assetUrl("weather-widget", path);
     }
 
     const scriptUrl = MOD_BASE_URL || SCRIPT_URL || document.currentScript?.src;
@@ -201,8 +201,8 @@
   }
 
   async function getConfig() {
-    if (window.CasaMODZimaOS) {
-      return normalizeConfig(await window.CasaMODZimaOS.getConfig("weather-widget", DEFAULT_CONFIG));
+    if (window.ZimaMOD) {
+      return normalizeConfig(await window.ZimaMOD.getConfig("weather-widget", DEFAULT_CONFIG));
     }
 
     if (IS_ZIMAOS) {
@@ -230,7 +230,7 @@
         // Ignore invalid or unavailable browser storage.
       }
 
-      console.warn("[CasaMOD Weather] Using browser-local settings:", error);
+      console.warn("[ZimaMOD Weather] Using browser-local settings:", error);
       return normalizeConfig(DEFAULT_CONFIG);
     }
   }
@@ -238,8 +238,8 @@
   async function saveConfig(config) {
     const normalized = normalizeConfig(config);
 
-    if (window.CasaMODZimaOS) {
-      await window.CasaMODZimaOS.setConfig("weather-widget", normalized);
+    if (window.ZimaMOD) {
+      await window.ZimaMOD.setConfig("weather-widget", normalized);
       return;
     }
 
@@ -252,7 +252,7 @@
       await writeConfigFile(normalized);
     } catch (error) {
       localStorage.setItem(LOCAL_CONFIG_KEY, JSON.stringify(normalized));
-      console.warn("[CasaMOD Weather] Saved settings in browser storage:", error);
+      console.warn("[ZimaMOD Weather] Saved settings in browser storage:", error);
     }
   }
 
@@ -332,7 +332,7 @@
     if (!zimaosContainer) {
       zimaosContainer = document.createElement("div");
       zimaosContainer.id = ZIMAOS_MOUNT_ID;
-      zimaosContainer.setAttribute("aria-label", "CasaMOD widgets");
+      zimaosContainer.setAttribute("aria-label", "ZimaMOD widgets");
     }
 
     if (widgetContainer && widgetContainer !== zimaosContainer.parentElement) {
@@ -931,7 +931,7 @@
     link.id = linkId;
     link.rel = "stylesheet";
     link.href = resolvedHref;
-    link.dataset.casamodWeatherCss = persistent ? "base" : "theme";
+    link.dataset.zimamodWeatherCss = persistent ? "base" : "theme";
     document.head.appendChild(link);
     return link;
   }
@@ -1301,10 +1301,10 @@
     if (!canvas || !points.length) return;
     const wrapper = document.querySelector(`[widget-id="${WIDGET_ID}"]`);
     const css = wrapper ? getComputedStyle(wrapper) : null;
-    const chartLine = css?.getPropertyValue("--casamod-weather-chart-line").trim() || "rgb(73,179,255)";
-    const chartFill = css?.getPropertyValue("--casamod-weather-chart-fill").trim() || "rgba(73,179,255,.32)";
-    const chartGrid = css?.getPropertyValue("--casamod-weather-chart-grid").trim() || "rgba(255,255,255,.10)";
-    const chartText = css?.getPropertyValue("--casamod-weather-chart-text").trim() || "rgba(255,255,255,.62)";
+    const chartLine = css?.getPropertyValue("--zimamod-weather-chart-line").trim() || "rgb(73,179,255)";
+    const chartFill = css?.getPropertyValue("--zimamod-weather-chart-fill").trim() || "rgba(73,179,255,.32)";
+    const chartGrid = css?.getPropertyValue("--zimamod-weather-chart-grid").trim() || "rgba(255,255,255,.10)";
+    const chartText = css?.getPropertyValue("--zimamod-weather-chart-text").trim() || "rgba(255,255,255,.62)";
 
     chartState.points = points;
     chartState.hitPoints = [];
@@ -1447,7 +1447,7 @@
       if (refreshTimer) clearInterval(refreshTimer);
       refreshTimer = setInterval(updateWeather, Math.max(1, Number(config.refreshInterval || 30)) * 60 * 1000);
     } catch (error) {
-      console.error("[CasaMOD Weather]", error);
+      console.error("[ZimaMOD Weather]", error);
       showError(error.message || "Weather update failed");
     }
   }
@@ -1587,7 +1587,7 @@
       .then(renderShell)
       .then(updateWeather)
       .catch(error => {
-        console.error("[CasaMOD Weather] boot failed", error);
+        console.error("[ZimaMOD Weather] boot failed", error);
         showError(error.message || "Weather widget failed to start");
       });
   }

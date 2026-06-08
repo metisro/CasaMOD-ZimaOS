@@ -45,7 +45,7 @@ function modManifest(modId) {
   const stat = fs.statSync(directory);
   if (!stat.isDirectory()) return null;
 
-  const manifest = readJson(path.join(directory, "casamod.json"), {});
+  const manifest = readJson(path.join(directory, "zimamod.json"), {});
   const scripts = Array.isArray(manifest.scripts)
     ? manifest.scripts
     : fs.existsSync(path.join(directory, "mod.js")) ? ["mod.js"] : [];
@@ -137,5 +137,5 @@ http.createServer((request, response) => {
     });
   });
 }).listen(PORT, "127.0.0.1", () => {
-  console.log(`CasaMOD-ZimaOS API listening on 127.0.0.1:${PORT}`);
+  console.log(`ZimaMOD API listening on 127.0.0.1:${PORT}`);
 });

@@ -1,6 +1,6 @@
 # Widget Sortable - ZimaOS
 
-ZimaOS-compatible replacement for CasaMOD's original `widget-sortable` mod.
+ZimaOS-compatible replacement for ZimaMOD's original `widget-sortable` mod.
 
 It discovers the ZimaOS widget column, makes its direct children draggable, and
 stores their order in browser local storage.

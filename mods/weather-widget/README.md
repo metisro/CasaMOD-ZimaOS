@@ -1,10 +1,10 @@
-# CasaMOD - Weather Widget v1.1.0
+# ZimaMOD - Weather Widget v1.1.0
 
-CasaMOD Weather Widget adds a weather card to the CasaOS dashboard.
+ZimaMOD Weather Widget adds a weather card to the CasaOS dashboard.
 
 It is based on the Weather widget idea from
 [IceWhaleTech/CasaOS-UI pull request #257](https://github.com/IceWhaleTech/CasaOS-UI/pull/257/commits),
-but adapted as a standalone CasaMOD extension instead of a compiled Vue
+but adapted as a standalone ZimaMOD extension instead of a compiled Vue
 component.
 
 ## Features
@@ -30,7 +30,7 @@ component.
 
 ## Installation
 
-1. Copy `mod.js`, `themes/`, and `icons/` into your CasaMOD extension/mod
+1. Copy `mod.js`, `themes/`, and `icons/` into your ZimaMOD extension/mod
    location.
 2. Enable or load the mod in CasaOS.
 3. Open the CasaOS dashboard.
@@ -92,14 +92,14 @@ visual details.
 3. Scope every CSS selector to the theme root class:
 
    ```css
-   .casamod-weather.casamod-weather-theme-my-theme {
-     --casamod-weather-chart-line: rgb(120, 220, 255);
-     --casamod-weather-chart-fill: rgba(120, 220, 255, .25);
-     --casamod-weather-chart-grid: rgba(255, 255, 255, .12);
-     --casamod-weather-chart-text: rgba(255, 255, 255, .75);
+   .zimamod-weather.zimamod-weather-theme-my-theme {
+     --zimamod-weather-chart-line: rgb(120, 220, 255);
+     --zimamod-weather-chart-fill: rgba(120, 220, 255, .25);
+     --zimamod-weather-chart-grid: rgba(255, 255, 255, .12);
+     --zimamod-weather-chart-text: rgba(255, 255, 255, .75);
    }
 
-   .casamod-weather.casamod-weather-theme-my-theme .casamod-weather-card {
+   .zimamod-weather.zimamod-weather-theme-my-theme .zimamod-weather-card {
      background: rgba(20, 30, 45, .8);
      border: 1px solid rgba(255, 255, 255, .2);
    }
@@ -109,7 +109,7 @@ The same theme root class is applied to the settings overlay, so modal styles
 can use selectors such as:
 
 ```css
-.casamod-weather.casamod-weather-theme-my-theme .casamod-weather-modal {
+.zimamod-weather.zimamod-weather-theme-my-theme .zimamod-weather-modal {
   /* Custom modal appearance */
 }
 ```
@@ -117,22 +117,22 @@ can use selectors such as:
 Useful scene classes are applied automatically:
 
 ```text
-casamod-weather-scene-sun
-casamod-weather-scene-moon
-casamod-weather-scene-partly-cloudy
-casamod-weather-scene-moon-cloudy
-casamod-weather-scene-cloudy
-casamod-weather-scene-fog
-casamod-weather-scene-showers
-casamod-weather-scene-rain
-casamod-weather-scene-snow
-casamod-weather-scene-hail
-casamod-weather-scene-thunderstorm
-casamod-weather-scene-wind
+zimamod-weather-scene-sun
+zimamod-weather-scene-moon
+zimamod-weather-scene-partly-cloudy
+zimamod-weather-scene-moon-cloudy
+zimamod-weather-scene-cloudy
+zimamod-weather-scene-fog
+zimamod-weather-scene-showers
+zimamod-weather-scene-rain
+zimamod-weather-scene-snow
+zimamod-weather-scene-hail
+zimamod-weather-scene-thunderstorm
+zimamod-weather-scene-wind
 ```
 
 Use these classes to change colors or artwork positioning for particular
-weather conditions. Avoid unscoped selectors such as `#casamod-weather-icon`,
+weather conditions. Avoid unscoped selectors such as `#zimamod-weather-icon`,
 because they affect every theme.
 
 ## How It Differs From CasaOS-UI PR #257
@@ -140,13 +140,13 @@ because they affect every theme.
 The original PR added a `src/widgets/Weather.vue` component and a `chart.js`
 dependency to CasaOS-UI.
 
-This CasaMOD version does not require rebuilding CasaOS-UI. It injects a widget
+This ZimaMOD version does not require rebuilding CasaOS-UI. It injects a widget
 at runtime and draws the forecast chart with the browser canvas API. It also
 uses Open-Meteo instead of the demo OpenWeatherMap API key from the PR.
 
 The PR also contains a separate Cloudflared/Syncthing block refactor. That is
 not included in this weather extension because it targets a different dashboard
-component and should be packaged as a separate CasaMOD if needed.
+component and should be packaged as a separate ZimaMOD if needed.
 
 ## Development
 
@@ -159,4 +159,4 @@ node --check mod.js
 ## Author
 
 Created by **metisro**.
-Part of CasaMOD - [https://github.com/metisro/CasaMOD](https://github.com/metisro/CasaMOD)
+Part of ZimaMOD - [https://github.com/metisro/ZimaMOD](https://github.com/metisro/ZimaMOD)

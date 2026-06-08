@@ -38,8 +38,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/metisro/casamod-zimaos-api:latest
-            ghcr.io/metisro/casamod-zimaos-api:${{ github.sha }}
+            ghcr.io/metisro/zimamod-api:latest
+            ghcr.io/metisro/zimamod-api:${{ github.sha }}
 
       - name: Build and publish proxy image
         uses: docker/build-push-action@v6
@@ -49,5 +49,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/metisro/casamod-zimaos-proxy:latest
-            ghcr.io/metisro/casamod-zimaos-proxy:${{ github.sha }}
+            ghcr.io/metisro/zimamod-proxy:latest
+            ghcr.io/metisro/zimamod-proxy:${{ github.sha }}

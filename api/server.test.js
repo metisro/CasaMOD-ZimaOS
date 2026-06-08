@@ -7,11 +7,11 @@ const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
 
-const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "casamod-zimaos-"));
+const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-"));
 const modDir = path.join(dataDir, "mod", "test-mod");
 fs.mkdirSync(modDir, { recursive: true });
 fs.writeFileSync(path.join(modDir, "mod.js"), "");
-fs.writeFileSync(path.join(modDir, "casamod.json"), JSON.stringify({
+fs.writeFileSync(path.join(modDir, "zimamod.json"), JSON.stringify({
   name: "Test Mod",
   enabled: true
 }));
@@ -67,7 +67,7 @@ async function waitForServer() {
     assert.deepEqual(config.body.config, { enabled: true });
 
     assert.equal((await request("GET", "/config/../bad")).status, 404);
-    console.log("CasaMOD-ZimaOS API integration test passed");
+    console.log("ZimaMOD API integration test passed");
   } finally {
     child.kill();
     fs.rmSync(dataDir, { recursive: true, force: true });

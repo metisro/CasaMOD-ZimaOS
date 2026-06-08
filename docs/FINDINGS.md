@@ -2,9 +2,9 @@
 
 Validated against ZimaOS v1.6.1 running inside `dockurr/zima`.
 
-## CasaMOD Failure on ZimaOS
+## Legacy Mod-System Limitations
 
-Original CasaMOD assumes:
+Traditional CasaOS host-patching mod systems assume:
 
 - `/var/lib/casaos/www/index.html`
 - a `casaos` executable
@@ -22,11 +22,11 @@ ZimaOS provides:
 
 - Reverse proxy ZimaOS gateway port `80` through port `8088`.
 - Disable upstream compression so Nginx can inject the framework loader.
-- Serve mod assets from `/DATA/AppData/casamod/mod`.
+- Serve mod assets from `/DATA/AppData/zimamod/mod`.
 - Run mod code only in the top dashboard document.
 - Store settings through a constrained local API.
 - Package the API, proxy, loader, and bundled mods as a self-contained Docker
-  Compose app; use `/DATA/AppData/casamod` only for persistent state.
+  Compose app; use `/DATA/AppData/zimamod` only for persistent state.
 
 ## Tested Mods
 

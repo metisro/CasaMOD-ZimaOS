@@ -1,23 +1,23 @@
-name: casamod-zimaos
+name: zimamod
 
 services:
-  casamod-zimaos-api:
-    image: ghcr.io/metisro/casamod-zimaos-api:latest
-    container_name: casamod-zimaos-api
+  zimamod-api:
+    image: ghcr.io/metisro/zimamod-api:latest
+    container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
     environment:
       DATA_DIR: /data
       PORT: "8090"
     volumes:
-      - /DATA/AppData/casamod:/data
+      - /DATA/AppData/zimamod:/data
 
-  casamod-zimaos-proxy:
-    image: ghcr.io/metisro/casamod-zimaos-proxy:latest
-    container_name: casamod-zimaos-proxy
+  zimamod-proxy:
+    image: ghcr.io/metisro/zimamod-proxy:latest
+    container_name: zimamod-proxy
     network_mode: host
     restart: unless-stopped
     depends_on:
-      - casamod-zimaos-api
+      - zimamod-api
     volumes:
-      - /DATA/AppData/casamod/mod:/mods:ro
+      - /DATA/AppData/zimamod/mod:/mods:ro

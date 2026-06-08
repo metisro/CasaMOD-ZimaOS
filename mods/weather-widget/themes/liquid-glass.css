@@ -1,35 +1,35 @@
-/* CasaMOD Weather: macOS-inspired Liquid Glass theme. */
+/* ZimaMOD Weather: macOS-inspired Liquid Glass theme. */
 
-.casamod-weather.casamod-weather-theme-liquid {
-  --casamod-weather-chart-line: rgb(165, 236, 255);
-  --casamod-weather-chart-fill: rgba(124, 219, 255, .28);
-  --casamod-weather-chart-grid: rgba(255, 255, 255, .14);
-  --casamod-weather-chart-text: rgba(255, 255, 255, .78);
+.zimamod-weather.zimamod-weather-theme-liquid {
+  --zimamod-weather-chart-line: rgb(165, 236, 255);
+  --zimamod-weather-chart-fill: rgba(124, 219, 255, .28);
+  --zimamod-weather-chart-grid: rgba(255, 255, 255, .14);
+  --zimamod-weather-chart-text: rgba(255, 255, 255, .78);
   --liquid-accent-a: rgba(69, 196, 255, .34);
   --liquid-accent-b: rgba(103, 113, 255, .24);
   color: rgba(255, 255, 255, .96);
 }
 
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-sun,
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-partly-cloudy {
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-sun,
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-partly-cloudy {
   --liquid-accent-a: rgba(80, 205, 255, .42);
   --liquid-accent-b: rgba(255, 207, 92, .23);
 }
 
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-rain,
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-showers,
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-thunderstorm {
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-rain,
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-showers,
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-thunderstorm {
   --liquid-accent-a: rgba(70, 155, 255, .35);
   --liquid-accent-b: rgba(102, 84, 210, .26);
 }
 
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-snow,
-.casamod-weather.casamod-weather-theme-liquid.casamod-weather-scene-fog {
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-snow,
+.zimamod-weather.zimamod-weather-theme-liquid.zimamod-weather-scene-fog {
   --liquid-accent-a: rgba(202, 241, 255, .36);
   --liquid-accent-b: rgba(125, 187, 226, .24);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-card {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-card {
   position: relative;
   border-radius: 20px;
   color: rgba(255, 255, 255, .96);
@@ -47,7 +47,7 @@
   text-shadow: 0 1px 3px rgba(0, 12, 30, .32);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-card::before {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-card::before {
   content: "";
   position: absolute;
   inset: 1px;
@@ -59,7 +59,7 @@
   pointer-events: none;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-card::after {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-card::after {
   content: "";
   position: absolute;
   width: 140px;
@@ -73,15 +73,15 @@
   pointer-events: none;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-header,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-current-view,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-forecast-view,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-error {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-header,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-current-view,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-forecast-view,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-error {
   position: relative;
   z-index: 1;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-scene-art {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-scene-art {
   display: block;
   top: -4px;
   left: 48px;
@@ -91,32 +91,32 @@
   filter: saturate(.86) drop-shadow(0 10px 20px rgba(0, 15, 40, .30));
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-bg-icon,
-.casamod-weather.casamod-weather-theme-liquid #casamod-weather-icon {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-bg-icon,
+.zimamod-weather.zimamod-weather-theme-liquid #zimamod-weather-icon {
   display: none !important;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-city,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-temp,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-unit,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-stat-value,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-day-name,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-day-temp strong {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-city,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-temp,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-unit,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-stat-value,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-day-name,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-day-temp strong {
   color: rgba(255, 255, 255, .98) !important;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-status,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-meta,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-stat-label,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-day-low {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-status,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-meta,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-stat-label,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-day-low {
   color: #07090a;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-clock,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-icon-btn,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-stat,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-day,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-back-btn {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-clock,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-icon-btn,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-stat,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-day,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-back-btn {
   color: rgba(255, 255, 255, .94);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, .07));
@@ -128,20 +128,20 @@
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-clock,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-icon-btn {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-clock,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-icon-btn {
   border-radius: 999px;
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-clock:hover,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-icon-btn:hover,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-forecast-btn:hover,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-back-btn:hover {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-clock:hover,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-icon-btn:hover,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-forecast-btn:hover,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-back-btn:hover {
   background: linear-gradient(145deg, rgba(255, 255, 255, .32), rgba(255, 255, 255, .12));
   border-color: rgba(255, 255, 255, .36);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-chart-tip {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-chart-tip {
   color: #fff;
   background: rgba(22, 38, 60, .58);
   border: 1px solid rgba(255, 255, 255, .28);
@@ -150,7 +150,7 @@
   -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-modal {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-modal {
   color: rgba(255, 255, 255, .96);
   background:
     radial-gradient(circle at 12% 0%, rgba(71, 195, 255, .28), transparent 40%),
@@ -163,29 +163,29 @@
   -webkit-backdrop-filter: blur(34px) saturate(160%);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-modal h3,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-switch-label {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-modal h3,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-switch-label {
   color: rgba(255, 255, 255, .98);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-field label {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-field label {
   color: rgba(239, 249, 255, .70);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-field input,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-unit-switch {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-field input,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-unit-switch {
   color: #fff;
   background: rgba(255, 255, 255, .09);
   border: 1px solid rgba(255, 255, 255, .22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-unit-option {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-unit-option {
   color: rgba(244, 250, 255, .72);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-unit-switch input:checked + .casamod-weather-unit-option,
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-btn-save {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-unit-switch input:checked + .zimamod-weather-unit-option,
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-btn-save {
   color: #fff;
   background: linear-gradient(145deg, rgba(86, 205, 255, .82), rgba(102, 126, 255, .72));
   box-shadow:
@@ -193,12 +193,12 @@
     0 6px 16px rgba(41, 121, 213, .24);
 }
 
-.casamod-weather.casamod-weather-theme-liquid .casamod-weather-btn-cancel {
+.zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-btn-cancel {
   color: rgba(255, 255, 255, .92);
   background: rgba(255, 255, 255, .10);
   border: 1px solid rgba(255, 255, 255, .20);
 }
 
-.casamod-weather-chart-tip strong {
+.zimamod-weather-chart-tip strong {
   color: #fff !important;
 }

@@ -1,13 +1,13 @@
-/* CasaMOD Weather shared theme hooks. */
+/* ZimaMOD Weather shared theme hooks. */
 
-.casamod-weather {
-  --casamod-weather-chart-line: rgb(73, 179, 255);
-  --casamod-weather-chart-fill: rgba(73, 179, 255, .32);
-  --casamod-weather-chart-grid: rgba(255, 255, 255, .10);
-  --casamod-weather-chart-text: rgba(255, 255, 255, .62);
+.zimamod-weather {
+  --zimamod-weather-chart-line: rgb(73, 179, 255);
+  --zimamod-weather-chart-fill: rgba(73, 179, 255, .32);
+  --zimamod-weather-chart-grid: rgba(255, 255, 255, .10);
+  --zimamod-weather-chart-text: rgba(255, 255, 255, .62);
 }
 
-.casamod-weather-card {
+.zimamod-weather-card {
   isolation: isolate;
   box-sizing: border-box;
   height: 250px;
@@ -20,7 +20,7 @@
   overflow: hidden;
 }
 
-.casamod-weather-scene-art {
+.zimamod-weather-scene-art {
   position: absolute;
   z-index: 0;
   width: 118px;
@@ -30,78 +30,78 @@
   user-select: none;
 }
 
-.casamod-weather-forecast-active .casamod-weather-scene-art,
-.casamod-weather-forecast-active .casamod-weather-bg-icon {
+.zimamod-weather-forecast-active .zimamod-weather-scene-art,
+.zimamod-weather-forecast-active .zimamod-weather-bg-icon {
   display: none !important;
 }
 
-.casamod-weather-body {
+.zimamod-weather-body {
   margin-top: 0 !important;
 }
 
-.casamod-weather-current-view {
+.zimamod-weather-current-view {
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(52px, 1fr) auto;
   gap: 5px;
 }
 
-.casamod-weather-current-view[hidden],
-.casamod-weather-forecast-view[hidden] {
+.zimamod-weather-current-view[hidden],
+.zimamod-weather-forecast-view[hidden] {
   display: none !important;
 }
 
-.casamod-weather-temp {
+.zimamod-weather-temp {
   font-size: 36px !important;
 }
 
-.casamod-weather-chart-wrap {
+.zimamod-weather-chart-wrap {
   height: auto !important;
   min-height: 52px;
   margin: 0 -4px !important;
 }
 
-.casamod-weather-chart {
+.zimamod-weather-chart {
   height: 100% !important;
 }
 
-.casamod-weather-stats {
+.zimamod-weather-stats {
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   gap: 5px !important;
 }
 
-.casamod-weather-stat {
+.zimamod-weather-stat {
   padding: 4px 6px !important;
   border-radius: 6px !important;
 }
 
-.casamod-weather-stat-label {
+.zimamod-weather-stat-label {
   font-size: 9px !important;
 }
 
-.casamod-weather-stat-value {
+.zimamod-weather-stat-value {
   margin-top: 1px !important;
   font-size: 11px !important;
 }
 
-.casamod-weather-forecast-btn,
-.casamod-weather-back-btn {
+.zimamod-weather-forecast-btn,
+.zimamod-weather-back-btn {
   border: 0;
   cursor: pointer;
   color: inherit;
   font-family: inherit;
 }
 
-.casamod-weather-forecast-btn {
+.zimamod-weather-forecast-btn {
   width: 100%;
   text-align: left;
 }
 
-.casamod-weather-forecast-btn:hover {
+.zimamod-weather-forecast-btn:hover {
   filter: brightness(1.14);
 }
 
-.casamod-weather-forecast-view {
+.zimamod-weather-forecast-view {
   position: relative;
   z-index: 1;
   min-height: 0;
@@ -110,7 +110,7 @@
   gap: 5px;
 }
 
-.casamod-weather-forecast-grid {
+.zimamod-weather-forecast-grid {
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -118,7 +118,7 @@
   gap: 4px;
 }
 
-.casamod-weather-day {
+.zimamod-weather-day {
   min-width: 0;
   display: grid;
   grid-template-columns: 32px 26px minmax(0, 1fr);
@@ -130,34 +130,34 @@
   font-size: 10px;
 }
 
-.casamod-weather-day-name {
+.zimamod-weather-day-name {
   font-weight: 700;
   font-size: 15px;
 }
 
-.casamod-weather-day-icon {
+.zimamod-weather-day-icon {
   width: 24px;
   height: 24px;
   object-fit: contain;
   margin-left: 10px;
 }
 
-.casamod-weather-day-temp {
+.zimamod-weather-day-temp {
   min-width: 0;
   text-align: right;
   white-space: nowrap;
   font-size: 16px;
 }
 
-.casamod-weather-day-temp strong{
+.zimamod-weather-day-temp strong{
  color: #fff !important;
 }
 
-.casamod-weather-day-low {
+.zimamod-weather-day-low {
   opacity: .66;
 }
 
-.casamod-weather-back-btn {
+.zimamod-weather-back-btn {
   justify-self: end;
   padding: 3px 8px;
   border-radius: 6px;

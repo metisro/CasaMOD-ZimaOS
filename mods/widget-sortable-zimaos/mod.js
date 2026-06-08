@@ -1,6 +1,6 @@
-// CasaMOD Widget Sortable - ZimaOS compatibility build
+// ZimaMOD Widget Sortable - ZimaOS compatibility build
 
-(function CasaMODWidgetSortableZimaOS() {
+(function ZimaMODWidgetSortableZimaOS() {
   "use strict";
 
   const rootNode = document.currentScript?.getRootNode?.();
@@ -13,24 +13,24 @@
     return;
   }
 
-  if (document.documentElement.dataset.casamodWidgetSortableZimaos === "true") return;
-  document.documentElement.dataset.casamodWidgetSortableZimaos = "true";
+  if (document.documentElement.dataset.zimamodWidgetSortableZimaos === "true") return;
+  document.documentElement.dataset.zimamodWidgetSortableZimaos = "true";
 
-  const MOD_ID = "casamod-widget-sortable-zimaos";
+  const MOD_ID = "zimamod-widget-sortable-zimaos";
   const STORAGE_KEY = MOD_ID + "-order";
-  const SORTABLE_CHILD = "data-casamod-sortable-child";
-  const SORTABLE_ID = "data-casamod-sortable-id";
+  const SORTABLE_CHILD = "data-zimamod-sortable-child";
+  const SORTABLE_ID = "data-zimamod-sortable-id";
   let activeColumn = null;
   let dragged = null;
 
   function weatherWidget() {
-    return document.querySelector("#casamod-weather-widget, [widget-id='weather'].casamod-weather");
+    return document.querySelector("#zimamod-weather-widget, [widget-id='weather'].zimamod-weather");
   }
 
   function widgetColumn() {
     const weather = weatherWidget();
     if (weather) {
-      const mount = weather.closest("#casamod-weather-zimaos-mount");
+      const mount = weather.closest("#zimamod-weather-zimaos-mount");
       const column = mount?.parentElement;
       if (column && column !== document.body) return column;
     }
@@ -106,10 +106,10 @@
   }
 
   function clearDragState() {
-    if (dragged) dragged.classList.remove("casamod-sortable-dragging");
+    if (dragged) dragged.classList.remove("zimamod-sortable-dragging");
     dragged = null;
-    document.querySelectorAll(".casamod-sortable-over")
-      .forEach(element => element.classList.remove("casamod-sortable-over"));
+    document.querySelectorAll(".zimamod-sortable-over")
+      .forEach(element => element.classList.remove("zimamod-sortable-over"));
   }
 
   function bindChild(child, index) {
@@ -121,7 +121,7 @@
 
     child.addEventListener("dragstart", event => {
       dragged = child;
-      child.classList.add("casamod-sortable-dragging");
+      child.classList.add("zimamod-sortable-dragging");
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", child.getAttribute(SORTABLE_ID));
     });
@@ -129,13 +129,13 @@
     child.addEventListener("dragover", event => {
       if (!dragged || dragged === child) return;
       event.preventDefault();
-      child.classList.add("casamod-sortable-over");
+      child.classList.add("zimamod-sortable-over");
       const rect = child.getBoundingClientRect();
       const after = event.clientY > rect.top + rect.height / 2;
       child.parentElement.insertBefore(dragged, after ? child.nextSibling : child);
     });
 
-    child.addEventListener("dragleave", () => child.classList.remove("casamod-sortable-over"));
+    child.addEventListener("dragleave", () => child.classList.remove("zimamod-sortable-over"));
     child.addEventListener("drop", event => {
       event.preventDefault();
       saveOrder(child.parentElement);
@@ -153,7 +153,7 @@
     if (!column) return;
 
     activeColumn = column;
-    column.dataset.casamodSortable = "true";
+    column.dataset.zimamodSortable = "true";
     const children = sortableChildren(column);
     children.forEach(bindChild);
     restoreOrder(column);

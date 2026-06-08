@@ -1,4 +1,4 @@
-(function CasaMODZimaOSLoader() {
+(function ZimaMODLoader() {
   "use strict";
 
   const rootNode = document.currentScript?.getRootNode?.();
@@ -11,13 +11,13 @@
     return;
   }
 
-  if (document.documentElement.dataset.casamodZimaosLoaded === "true") return;
-  document.documentElement.dataset.casamodZimaosLoaded = "true";
+  if (document.documentElement.dataset.zimamodLoaded === "true") return;
+  document.documentElement.dataset.zimamodLoaded = "true";
 
-  const API_BASE = "/casamod-api";
+  const API_BASE = "/zimamod-api";
   const MOD_BASE = "/mod";
 
-  window.CasaMODZimaOS = {
+  window.ZimaMOD = {
     platform: "zimaos",
     assetUrl(modId, relativePath) {
       return `${MOD_BASE}/${encodeURIComponent(modId)}/${String(relativePath).replace(/^\/+/, "")}`;
@@ -44,19 +44,19 @@
   };
 
   function loadStyle(url, modId) {
-    if (document.querySelector(`link[data-casamod-zimaos="${modId}"][href="${url}"]`)) return;
+    if (document.querySelector(`link[data-zimamod="${modId}"][href="${url}"]`)) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = url;
-    link.dataset.casamodZimaos = modId;
+    link.dataset.zimamod = modId;
     document.head.appendChild(link);
   }
 
   function loadScript(url, modId) {
-    if (document.querySelector(`script[data-casamod-zimaos="${modId}"][src="${url}"]`)) return;
+    if (document.querySelector(`script[data-zimamod="${modId}"][src="${url}"]`)) return;
     const script = document.createElement("script");
     script.src = url;
-    script.dataset.casamodZimaos = modId;
+    script.dataset.zimamod = modId;
     document.body.appendChild(script);
   }
 
@@ -68,12 +68,12 @@
     .then(({ mods }) => {
       for (const mod of mods || []) {
         for (const style of mod.styles || []) {
-          loadStyle(window.CasaMODZimaOS.assetUrl(mod.id, style), mod.id);
+          loadStyle(window.ZimaMOD.assetUrl(mod.id, style), mod.id);
         }
         for (const script of mod.scripts || []) {
-          loadScript(window.CasaMODZimaOS.assetUrl(mod.id, script), mod.id);
+          loadScript(window.ZimaMOD.assetUrl(mod.id, script), mod.id);
         }
       }
     })
-    .catch(error => console.error("[CasaMOD-ZimaOS]", error));
+    .catch(error => console.error("[ZimaMOD]", error));
 })();

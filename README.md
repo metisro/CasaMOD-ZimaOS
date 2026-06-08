@@ -1,36 +1,36 @@
-# CasaMOD-ZimaOS
+# ZimaMOD
 
-CasaMOD compatibility framework for ZimaOS.
+Independent mod framework for ZimaOS.
 
 ZimaOS uses the CasaOS design language and APIs, but its dashboard is served by
 `zimaos-gateway` from embedded assets. It does not expose the editable
-`/var/lib/casaos/www/index.html` used by CasaMOD.
+dashboard files expected by traditional host-patching mod systems.
 
-CasaMOD-ZimaOS solves this with a reverse proxy and a small compatibility API:
+ZimaMOD solves this with a reverse proxy and a small compatibility API:
 
 ```text
 Browser
-  -> CasaMOD-ZimaOS proxy :8088
+  -> ZimaMOD proxy :8088
      -> ZimaOS gateway :80
-     -> CasaMOD-ZimaOS API :8090
+     -> ZimaMOD API :8090
 ```
 
 ## Features
 
 - Injects one stable compatibility loader into the ZimaOS dashboard.
-- Discovers enabled mods dynamically from `/DATA/AppData/casamod/mod`.
+- Discovers enabled mods dynamically from `/DATA/AppData/zimamod/mod`.
 - Serves mod JavaScript, CSS, icons, and other assets with correct MIME types.
-- Stores per-mod JSON configuration under `/DATA/AppData/casamod/config`.
+- Stores per-mod JSON configuration under `/DATA/AppData/zimamod/config`.
 - Avoids execution inside ZimaOS Wujie micro-apps, shadow roots, and iframes.
 - Includes adapted Weather Widget and Widget Sortable example mods.
 
 ## Container Images
 
-The app uses two CasaMOD-ZimaOS images:
+The app uses two ZimaMOD images:
 
 ```text
-ghcr.io/metisro/casamod-zimaos-api:latest
-ghcr.io/metisro/casamod-zimaos-proxy:latest
+ghcr.io/metisro/zimamod-api:latest
+ghcr.io/metisro/zimamod-proxy:latest
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -53,16 +53,8 @@ chmod +x verify.sh
 
 The image tags are written explicitly as `:latest`. ZimaOS's custom-app
 importer does not resolve Compose default expressions such as
-`${CASAMOD_VERSION:-latest}` and may otherwise try to pull that expression as
+`${ZIMAMOD_VERSION:-latest}` and may otherwise try to pull that expression as
 the literal image tag.
-
-If the standalone prototype from earlier compatibility testing still exists,
-remove it once before starting the Compose app:
-
-```sh
-docker stop casamod-proxy
-docker rm casamod-proxy
-```
 
 No source checkout, host installation script, or manual mod copying is required
 on ZimaOS. `install.sh` remains as a convenience wrapper around
@@ -87,7 +79,7 @@ The standard ZimaOS dashboard remains available on port `80`.
 ## Directories
 
 ```text
-/DATA/AppData/casamod/
+/DATA/AppData/zimamod/
   mod/                    bundled and user-installed mods
   config/                 persistent per-mod settings
 ```
@@ -95,7 +87,7 @@ The standard ZimaOS dashboard remains available on port `80`.
 Both directories are mounted into the containers. Rebuilding the app refreshes
 the bundled mods without deleting user-installed mods or persistent settings.
 
-Each enabled mod is a directory containing `casamod.json`:
+Each enabled mod is a directory containing `zimamod.json`:
 
 ```json
 {
@@ -111,21 +103,21 @@ Each enabled mod is a directory containing `casamod.json`:
 Mods can use the browser API exposed by the loader:
 
 ```js
-const config = await window.CasaMODZimaOS.getConfig("example-mod", {
+const config = await window.ZimaMOD.getConfig("example-mod", {
   enabled: true
 });
 
-await window.CasaMODZimaOS.setConfig("example-mod", {
+await window.ZimaMOD.setConfig("example-mod", {
   enabled: false
 });
 
-const icon = window.CasaMODZimaOS.assetUrl("example-mod", "icons/icon.svg");
+const icon = window.ZimaMOD.assetUrl("example-mod", "icons/icon.svg");
 ```
 
 Configuration is written atomically to:
 
 ```text
-/DATA/AppData/casamod/config/<mod-id>.json
+/DATA/AppData/zimamod/config/<mod-id>.json
 ```
 
 ## Porting CasaOS Mods
@@ -134,9 +126,9 @@ CasaOS mods commonly require these changes:
 
 1. Replace `.ps-container` and legacy widget-class assumptions with ZimaOS DOM
    discovery.
-2. Use `window.CasaMODZimaOS.getConfig()` and `setConfig()` instead of
+2. Use `window.ZimaMOD.getConfig()` and `setConfig()` instead of
    `/v1/file`.
-3. Use `window.CasaMODZimaOS.assetUrl()` for mod assets.
+3. Use `window.ZimaMOD.assetUrl()` for mod assets.
 4. Avoid running in Wujie micro-apps, shadow roots, and iframes.
 5. Guard against repeated execution and asynchronous SPA rendering.
 
