@@ -23,6 +23,34 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Read project version
+        id: version
+        shell: bash
+        run: |
+          version=$(cat VERSION)
+          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" != "v${version}" ]]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match VERSION ${version}" >&2
+            exit 1
+          fi
+
+          {
+            echo "value=${version}"
+            echo "api_tags<<EOF"
+            echo "ghcr.io/metisro/zimamod-api:latest"
+            echo "ghcr.io/metisro/zimamod-api:${GITHUB_SHA}"
+            if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+              echo "ghcr.io/metisro/zimamod-api:${version}"
+            fi
+            echo "EOF"
+            echo "proxy_tags<<EOF"
+            echo "ghcr.io/metisro/zimamod-proxy:latest"
+            echo "ghcr.io/metisro/zimamod-proxy:${GITHUB_SHA}"
+            if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+              echo "ghcr.io/metisro/zimamod-proxy:${version}"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -37,9 +65,9 @@ jobs:
           file: api/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: |
-            ghcr.io/metisro/zimamod-api:latest
-            ghcr.io/metisro/zimamod-api:${{ github.sha }}
+          build-args: |
+            VERSION=${{ steps.version.outputs.value }}
+          tags: ${{ steps.version.outputs.api_tags }}
 
       - name: Build and publish proxy image
         uses: docker/build-push-action@v6
@@ -48,6 +76,19 @@ jobs:
           file: proxy/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: |
-            ghcr.io/metisro/zimamod-proxy:latest
-            ghcr.io/metisro/zimamod-proxy:${{ github.sha }}
+          build-args: |
+            VERSION=${{ steps.version.outputs.value }}
+          tags: ${{ steps.version.outputs.proxy_tags }}
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

@@ -36,6 +36,13 @@ ghcr.io/metisro/zimamod-api:latest
 ghcr.io/metisro/zimamod-proxy:latest
 ```
 
+Releases also publish immutable semantic-version tags, such as:
+
+```text
+ghcr.io/metisro/zimamod-api:1.1.0
+ghcr.io/metisro/zimamod-proxy:1.1.0
+```
+
 They are built from this GitHub repository. Their upstream Docker Official
 Images are `node:22-alpine` and `nginx:alpine`.
 
@@ -54,10 +61,30 @@ chmod +x verify.sh
 ./verify.sh
 ```
 
-The image tags are written explicitly as `:latest`. ZimaOS's custom-app
-importer does not resolve Compose default expressions such as
-`${ZIMAMOD_VERSION:-latest}` and may otherwise try to pull that expression as
-the literal image tag.
+The install Compose file pins both images and `x-casaos.version` to the current
+semantic release. This lets ZimaOS display the installed version and provides
+reliable app-store update comparisons. The publishing workflow also updates
+`:latest` for users who prefer manually tracking the newest build.
+
+ZimaOS can automatically offer future versions only when ZimaMOD is installed
+from an app-store source that tracks this manifest. A one-time custom Compose
+import displays the version but must be re-imported or rebuilt manually when a
+new manifest is released.
+
+### Creating A Release
+
+The project version is stored in `VERSION`, the install Compose image tags, and
+`x-casaos.version`. To publish a release, update those values together, commit
+the change, then create and push a matching `v<version>` Git tag:
+
+```sh
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+The tag publishes immutable `:<version>` API and proxy images and creates a
+GitHub Release. Normal pushes to `main` update only `:latest` and commit-SHA
+image tags.
 
 No source checkout, host installation script, or manual mod copying is required
 on ZimaOS. `install.sh` remains as a convenience wrapper around
