@@ -1,5 +1,7 @@
 # ZimaMOD
 
+<img src="assets/zimamod-icon.png" alt="ZimaMOD icon" width="180">
+
 Independent mod framework for ZimaOS.
 
 ZimaOS uses the CasaOS design language and APIs, but its dashboard is served by
@@ -23,6 +25,7 @@ Browser
 - Stores per-mod JSON configuration under `/DATA/AppData/zimamod/config`.
 - Avoids execution inside ZimaOS Wujie micro-apps, shadow roots, and iframes.
 - Includes adapted Weather Widget and Widget Sortable example mods.
+- Includes ZimaOS custom-app metadata and a dedicated ZimaMOD app icon.
 
 ## Container Images
 

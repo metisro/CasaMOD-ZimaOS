@@ -29,6 +29,7 @@ echo "PASS: ZimaMOD containers are running"
 check_status "$base_url/zimamod-api/health" 200
 check_status "$base_url/zimamod-api/mods" 200
 check_status "$base_url/zimamod-runtime/loader.js" 200
+check_status "$base_url/zimamod-runtime/zimamod-icon.png" 200
 check_status "$base_url/mod/weather-widget/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
