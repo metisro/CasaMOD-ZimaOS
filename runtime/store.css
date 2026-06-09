@@ -1,31 +1,3 @@
-.zimamod-store-tile {
-  position: relative !important;
-}
-
-.zimamod-store-launcher {
-  position: absolute;
-  z-index: 20;
-  right: 10px;
-  bottom: 10px;
-  padding: 6px 11px;
-  border: 1px solid rgba(112, 225, 255, .45);
-  border-radius: 999px;
-  color: #effcff;
-  background: rgba(5, 16, 40, .86);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
-  font: 600 12px/1.2 system-ui, sans-serif;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(5px);
-  transition: opacity .18s ease, transform .18s ease, background .18s ease;
-}
-
-.zimamod-store-tile:hover .zimamod-store-launcher,
-.zimamod-store-launcher:focus-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .zimamod-store-launcher:hover {
   background: rgba(16, 85, 180, .94);
 }

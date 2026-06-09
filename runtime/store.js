@@ -7,52 +7,117 @@
   const BUTTON_CLASS = "zimamod-store-launcher";
   const MODAL_ID = "zimamod-store-modal";
 
-  function tileCandidate(element) {
-    let candidate = element.parentElement;
-    for (let depth = 0; candidate && depth < 6; depth++, candidate = candidate.parentElement) {
-      const rect = candidate.getBoundingClientRect();
-      if (rect.width >= 70 && rect.width <= 420 && rect.height >= 70 && rect.height <= 360) return candidate;
-    }
-    return null;
-  }
-
-  function findAppTile() {
+  function allRoots() {
     const roots = [document];
     for (const element of document.querySelectorAll("*")) {
       if (element.shadowRoot) roots.push(element.shadowRoot);
     }
+    return roots;
+  }
 
-    const all = selector => roots.flatMap(root => Array.from(root.querySelectorAll(selector)));
-    const icon = all("img")
+  function allElements(selector) {
+    return allRoots().flatMap(root => Array.from(root.querySelectorAll(selector)));
+  }
+
+  function tileCandidate(element) {
+    let candidate = element.parentElement;
+    const candidates = [];
+    for (let depth = 0; candidate && depth < 6; depth++, candidate = candidate.parentElement) {
+      const rect = candidate.getBoundingClientRect();
+      if (
+        rect.width >= 130 &&
+        rect.width <= 420 &&
+        rect.height >= 130 &&
+        rect.height <= 360 &&
+        Math.abs(rect.width - rect.height) <= Math.max(rect.width, rect.height) * .45
+      ) {
+        candidates.push(candidate);
+      }
+    }
+    return candidates[0] || null;
+  }
+
+  function titleElement() {
+    return allElements("a.block.one-line.max-w-36")
+      .find(element => /^zimamod$/i.test((element.textContent || "").trim())) || null;
+  }
+
+  function findAppTile() {
+    const title = titleElement();
+    if (title) return tileCandidate(title);
+
+    const icon = allElements("img")
       .find(image => /zimamod-icon|metisro\/zimamod/i.test(image.src));
     if (icon) return tileCandidate(icon);
 
-    const labeled = all("[title], [aria-label]")
+    const labeled = allElements("[title], [aria-label]")
       .find(element => /^zimamod$/i.test(element.getAttribute("title") || element.getAttribute("aria-label") || ""));
     if (labeled) return tileCandidate(labeled);
 
-    return all("span, div, p")
+    return allElements("span, div, p")
       .filter(element => element.children.length === 0 && /^zimamod$/i.test((element.textContent || "").trim()))
       .map(tileCandidate)
       .find(Boolean) || null;
   }
 
+  function showLauncher(button) {
+    button.style.opacity = "1";
+    button.style.pointerEvents = "auto";
+    button.style.transform = "translate(-50%, 0)";
+  }
+
+  function hideLauncher(button) {
+    if (document.activeElement === button) return;
+    button.style.opacity = "0";
+    button.style.pointerEvents = "none";
+    button.style.transform = "translate(-50%, 5px)";
+  }
+
   function mountLauncher() {
-    if (document.querySelector("." + BUTTON_CLASS)) return;
+    const launchers = allElements("." + BUTTON_CLASS);
+    if (launchers.length) {
+      launchers.slice(1).forEach(element => element.remove());
+      return;
+    }
     const tile = findAppTile();
     if (!tile) return;
+    const title = titleElement();
 
-    tile.classList.add("zimamod-store-tile");
+    tile.style.position = "relative";
     const button = document.createElement("button");
     button.className = BUTTON_CLASS;
     button.type = "button";
     button.textContent = "MOD Store";
+    button.style.cssText = [
+      "position:absolute",
+      "z-index:20",
+      "left:50%",
+      "bottom:25px",
+      "padding:6px 13px",
+      "border:1px solid rgba(112,225,255,.55)",
+      "border-radius:999px",
+      "color:#effcff",
+      "background:rgba(5,16,40,.9)",
+      "box-shadow:0 5px 20px rgba(0,0,0,.35)",
+      "font:600 12px/1.2 system-ui,sans-serif",
+      "white-space:nowrap",
+      "cursor:pointer",
+      "opacity:0",
+      "pointer-events:none",
+      "transform:translate(-50%,5px)",
+      "transition:opacity .18s ease,transform .18s ease,background .18s ease"
+    ].join(";");
     button.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
       void openStore();
     });
-    tile.appendChild(button);
+    button.addEventListener("focus", () => showLauncher(button));
+    button.addEventListener("blur", () => hideLauncher(button));
+    tile.addEventListener("mouseenter", () => showLauncher(button));
+    tile.addEventListener("mouseleave", () => hideLauncher(button));
+    if (title && title.parentElement === tile) tile.insertBefore(button, title);
+    else tile.appendChild(button);
   }
 
   function storeAsset(mod, relativePath) {

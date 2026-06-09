@@ -88,6 +88,14 @@
   function preferredExistingWidget() {
     const widgets = existingWidgets();
     return widgets.sort((left, right) => {
+      const leftConnected = left.isConnected ? 0 : 1;
+      const rightConnected = right.isConnected ? 0 : 1;
+      if (leftConnected !== rightConnected) return leftConnected - rightConnected;
+
+      const leftOverlay = isOverlayContainer(left) ? 1 : 0;
+      const rightOverlay = isOverlayContainer(right) ? 1 : 0;
+      if (leftOverlay !== rightOverlay) return leftOverlay - rightOverlay;
+
       const leftFixed = left.closest("#" + ZIMAOS_MOUNT_ID)?.classList.contains(MOD_ID + "-zimaos-embedded")
         ? 0
         : getComputedStyle(left.closest("#" + ZIMAOS_MOUNT_ID) || left).position === "fixed" ? 1 : 0;
@@ -257,62 +265,44 @@
   }
 
   function findZimaosWidgetContainer() {
-    const directSelectors = [
-      '[class*="widget-list" i]',
-      '[class*="widgets" i]',
-      '[class*="widget-container" i]',
-      '[class*="dashboard-grid" i]',
-      '[class*="home-grid" i]',
-      '[class*="widget-wrapper" i]',
-      '[class*="widget-column" i]',
-      '[class*="widget-panel" i]',
-      '[class*="sidebar-widget" i]',
-      ".grid-stack"
-    ];
+    return Array.from(document.querySelectorAll("div, aside, section"))
+      .map(element => ({ element, rect: element.getBoundingClientRect() }))
+      .filter(({ element, rect }) => {
+        return (
+          rect.width >= 260 &&
+          rect.width <= 520 &&
+          rect.height >= 450 &&
+          rect.left < window.innerWidth * .35 &&
+          hasDashboardWidgets(element)
+        );
+      })
+      .sort((left, right) => left.rect.width - right.rect.width)[0]?.element || null;
+  }
 
-    for (const selector of directSelectors) {
-      const match = Array.from(document.querySelectorAll(selector)).find(element => {
-        const rect = element.getBoundingClientRect();
-        return rect.width >= 240 && rect.height >= 150;
-      });
-      if (match) return match;
-    }
+  function hasWidgetTitle(element, title) {
+    return Array.from(element?.querySelectorAll?.("*") || []).some(child => (
+      child.children.length === 0 &&
+      (child.textContent || "").trim().toLowerCase() === title &&
+      child.getBoundingClientRect().width > 0 &&
+      child.getBoundingClientRect().height > 0 &&
+      getComputedStyle(child).visibility !== "hidden" &&
+      getComputedStyle(child).display !== "none"
+    ));
+  }
 
-    const widgetElements = Array.from(document.querySelectorAll('[class*="widget" i]'))
-      .filter(element => !element.closest("#" + ZIMAOS_MOUNT_ID));
-    const widgetParents = new Map();
-    for (const widget of widgetElements) {
-      let candidate = widget.parentElement;
-      for (let depth = 0; candidate && depth < 4; depth++, candidate = candidate.parentElement) {
-        if (candidate === document.body || candidate.id === "app") continue;
-        const rect = candidate.getBoundingClientRect();
-        if (rect.width < 240 || rect.width > 720 || rect.height < 150) continue;
-        widgetParents.set(candidate, (widgetParents.get(candidate) || 0) + 1);
-      }
-    }
-    const widgetParent = Array.from(widgetParents.entries())
-      .sort((left, right) => right[1] - left[1])
-      .map(([element]) => element)[0];
-    if (widgetParent) return widgetParent;
+  function hasDashboardWidgets(element) {
+    return ["system", "storage", "network"].every(title => hasWidgetTitle(element, title));
+  }
 
-    const keywords = ["cpu", "memory", "storage", "network", "system"];
-    const scores = new Map();
-    for (const element of document.querySelectorAll("div, section, aside")) {
-      const text = (element.textContent || "").trim().toLowerCase();
-      if (!text || text.length > 120 || !keywords.some(keyword => text.includes(keyword))) continue;
+  function closestOverlay(element) {
+    return element?.closest?.(
+      '[role="dialog"], [aria-modal="true"], [class*="modal" i], [class*="drawer" i], [class*="dialog" i], [class*="sheet" i], [class*="overlay" i]'
+    ) || null;
+  }
 
-      let candidate = element.parentElement;
-      for (let depth = 0; candidate && depth < 4; depth++, candidate = candidate.parentElement) {
-        if (candidate === document.body || candidate.id === "app") continue;
-        const rect = candidate.getBoundingClientRect();
-        if (rect.width < 240 || rect.width > 720 || rect.height < 150) continue;
-        scores.set(candidate, (scores.get(candidate) || 0) + 1);
-      }
-    }
-
-    return Array.from(scores.entries())
-      .sort((left, right) => right[1] - left[1])
-      .map(([element]) => element)[0] || null;
+  function isOverlayContainer(element) {
+    const overlay = closestOverlay(element);
+    return Boolean(overlay && !hasDashboardWidgets(overlay));
   }
 
   function mountContainer() {
@@ -325,10 +315,14 @@
       return null;
     }
 
+    const existingMount = document.getElementById(ZIMAOS_MOUNT_ID);
     const widgetContainer = findZimaosWidgetContainer();
-    if (IS_ZIMAOS && !widgetContainer) return null;
+    if (IS_ZIMAOS && !widgetContainer) {
+      if (existingMount) existingMount.hidden = true;
+      return null;
+    }
 
-    let zimaosContainer = document.getElementById(ZIMAOS_MOUNT_ID);
+    let zimaosContainer = existingMount;
     if (!zimaosContainer) {
       zimaosContainer = document.createElement("div");
       zimaosContainer.id = ZIMAOS_MOUNT_ID;
@@ -342,6 +336,7 @@
       document.body.appendChild(zimaosContainer);
     }
 
+    zimaosContainer.hidden = false;
     return zimaosContainer;
   }
 
@@ -1600,28 +1595,23 @@
     };
   }
 
-  const debouncedBoot = debounce(moduleFunction, 80);
-  const debouncedRelocate = debounce(() => {
-    if (document.querySelector(`[widget-id="${WIDGET_ID}"]`)) mountContainer();
+  const debouncedViewSync = debounce(() => {
+    if (document.querySelector(`[widget-id="${WIDGET_ID}"]`)) {
+      mountContainer();
+    } else {
+      moduleFunction();
+    }
   }, 120);
   const debouncedDedupe = debounce(enforceSingleWidget, 40);
 
-  const observer = new MutationObserver(mutations => {
+  const observer = new MutationObserver(() => {
     debouncedDedupe();
-
-    for (const mutation of mutations) {
-      if (mutation.target.querySelector?.(CASAOS_ANCHOR) || mutation.target.querySelector?.("#app")) {
-        if (document.querySelector(`[widget-id="${WIDGET_ID}"]`)) {
-          debouncedRelocate();
-        } else {
-          debouncedBoot();
-        }
-        break;
-      }
-    }
+    debouncedViewSync();
   });
 
   window.addEventListener("resize", debounce(() => drawChart(lastForecast), 120));
+  window.addEventListener("hashchange", debouncedViewSync);
+  window.addEventListener("popstate", debouncedViewSync);
   setInterval(enforceSingleWidget, 1000);
 
   if (document.querySelector(CASAOS_ANCHOR) || document.querySelector("#app")) {
