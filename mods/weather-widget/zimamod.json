@@ -2,6 +2,12 @@
   "name": "Weather Widget",
   "version": "1.2.0",
   "description": "Adds current conditions, forecasts, themes, and weather controls to the ZimaOS dashboard.",
+  "authors": [
+    {
+      "name": "ZimaMOD",
+      "url": "https://github.com/metisro/ZimaMOD"
+    }
+  ],
   "enabled": true,
   "scripts": [
     "mod.js"

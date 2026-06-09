@@ -21,6 +21,7 @@ fs.writeFileSync(path.join(storeDir, "mod.js"), "store");
 fs.writeFileSync(path.join(storeDir, "zimamod.json"), JSON.stringify({
   name: "Store Mod",
   description: "Test store mod",
+  authors: [{ name: "Test Author", url: "https://example.com/author" }],
   screenshot: "screenshot.png",
   enabled: true
 }));
@@ -76,6 +77,7 @@ async function waitForServer() {
     assert.equal(store.status, 200);
     assert.equal(store.body.mods[0].id, "store-mod");
     assert.equal(store.body.mods[0].installed, false);
+    assert.deepEqual(store.body.mods[0].authors, [{ name: "Test Author", url: "https://example.com/author" }]);
     assert.equal((await request("POST", "/store/store-mod")).status, 200);
     assert.equal(fs.readFileSync(path.join(dataDir, "mod", "store-mod", "mod.js"), "utf8"), "store");
     assert.equal((await request("DELETE", "/store/store-mod")).status, 200);

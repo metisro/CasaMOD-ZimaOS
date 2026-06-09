@@ -93,6 +93,15 @@ function readModManifest(root, modId) {
   const styles = Array.isArray(manifest.styles)
     ? manifest.styles
     : fs.existsSync(path.join(directory, "mod.css")) ? ["mod.css"] : [];
+  const authors = Array.isArray(manifest.authors)
+    ? manifest.authors.map(author => {
+      if (typeof author === "string") return { name: author, url: "" };
+      return {
+        name: typeof author?.name === "string" ? author.name : "",
+        url: typeof author?.url === "string" && /^https?:\/\//.test(author.url) ? author.url : ""
+      };
+    }).filter(author => author.name)
+    : [];
 
   return {
     id: modId,
@@ -100,6 +109,10 @@ function readModManifest(root, modId) {
     enabled: manifest.enabled !== false,
     version: typeof manifest.version === "string" ? manifest.version : "1",
     description: typeof manifest.description === "string" ? manifest.description : "",
+    authors,
+    authorUrl: typeof manifest.authorUrl === "string" && /^https?:\/\//.test(manifest.authorUrl)
+      ? manifest.authorUrl
+      : "",
     screenshot: typeof manifest.screenshot === "string" && !manifest.screenshot.includes("..")
       ? manifest.screenshot
       : "",

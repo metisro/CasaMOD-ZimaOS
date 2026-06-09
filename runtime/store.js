@@ -39,25 +39,12 @@
 
   function titleElement() {
     return allElements("a.block.one-line.max-w-36")
-      .find(element => /^zimamod$/i.test((element.textContent || "").trim())) || null;
+      .find(element => (element.textContent || "").trim() === "ZimaMOD") || null;
   }
 
   function findAppTile() {
     const title = titleElement();
-    if (title) return tileCandidate(title);
-
-    const icon = allElements("img")
-      .find(image => /zimamod-icon|metisro\/zimamod/i.test(image.src));
-    if (icon) return tileCandidate(icon);
-
-    const labeled = allElements("[title], [aria-label]")
-      .find(element => /^zimamod$/i.test(element.getAttribute("title") || element.getAttribute("aria-label") || ""));
-    if (labeled) return tileCandidate(labeled);
-
-    return allElements("span, div, p")
-      .filter(element => element.children.length === 0 && /^zimamod$/i.test((element.textContent || "").trim()))
-      .map(tileCandidate)
-      .find(Boolean) || null;
+    return title ? tileCandidate(title) : null;
   }
 
   function showLauncher(button) {
@@ -75,12 +62,11 @@
 
   function mountLauncher() {
     const launchers = allElements("." + BUTTON_CLASS);
-    if (launchers.length) {
-      launchers.slice(1).forEach(element => element.remove());
-      return;
-    }
     const tile = findAppTile();
-    if (!tile) return;
+    launchers.forEach(element => {
+      if (!tile || element.parentElement !== tile) element.remove();
+    });
+    if (!tile || tile.querySelector("." + BUTTON_CLASS)) return;
     const title = titleElement();
 
     tile.style.position = "relative";
@@ -133,19 +119,59 @@
     modal.innerHTML = `
       <div class="zimamod-store-backdrop"></div>
       <section class="zimamod-store-dialog" role="dialog" aria-modal="true" aria-labelledby="zimamod-store-title">
-        <header>
-          <div>
-            <span class="zimamod-store-kicker">ZimaMOD</span>
-            <h2 id="zimamod-store-title">MOD Store</h2>
+        <aside class="zimamod-store-sidebar">
+          <div class="zimamod-store-brand">
+            <img class="zimamod-store-brand-mark" src="/zimamod-runtime/zimamod-icon.png" alt="">
+            <span>
+              <strong>ZimaMOD</strong>
+              <small>MOD Store</small>
+            </span>
           </div>
-          <button class="zimamod-store-close" type="button" aria-label="Close MOD Store">&times;</button>
-        </header>
-        <div class="zimamod-store-status">Loading available mods...</div>
-        <div class="zimamod-store-grid"></div>
+          <nav aria-label="MOD Store sections">
+            <button type="button" class="is-active" data-filter="all">
+              <span class="zimamod-store-nav-icon">⌂</span>Discover
+            </button>
+            <button type="button" data-filter="installed">
+              <span class="zimamod-store-nav-icon">✓</span>Installed
+            </button>
+          </nav>
+          <p class="zimamod-store-sidebar-note">Extend your ZimaOS dashboard with community MODs.</p>
+        </aside>
+        <main class="zimamod-store-main">
+          <header>
+            <div>
+              <span class="zimamod-store-kicker">ZimaOS extensions</span>
+              <h2 id="zimamod-store-title">Discover MODs</h2>
+            </div>
+            <div class="zimamod-store-header-actions">
+              <label class="zimamod-store-search">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" placeholder="Search MODs" aria-label="Search MODs">
+              </label>
+              <button class="zimamod-store-close" type="button" aria-label="Close MOD Store">&times;</button>
+            </div>
+          </header>
+          <div class="zimamod-store-toolbar">
+            <div>
+              <h3>MODs for your ZimaOS</h3>
+              <p>Install, explore, and manage dashboard extensions.</p>
+            </div>
+            <div class="zimamod-store-status">Loading available mods...</div>
+          </div>
+          <div class="zimamod-store-grid"></div>
+          <div class="zimamod-store-empty" hidden>No MODs match this view.</div>
+        </main>
       </section>
     `;
     modal.querySelector(".zimamod-store-backdrop").addEventListener("click", closeStore);
     modal.querySelector(".zimamod-store-close").addEventListener("click", closeStore);
+    modal.querySelector(".zimamod-store-search input").addEventListener("input", () => filterCards(modal));
+    modal.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        modal.querySelectorAll("[data-filter]").forEach(item => item.classList.toggle("is-active", item === button));
+        filterCards(modal);
+      });
+    });
     document.body.appendChild(modal);
     return modal;
   }
@@ -157,20 +183,37 @@
   function modCard(mod) {
     const card = document.createElement("article");
     card.className = "zimamod-store-card";
+    card.dataset.installed = String(mod.installed);
+    card.dataset.search = `${mod.name} ${mod.description || ""} ${
+      (mod.authors || []).map(author => author.name).join(" ")
+    }`.toLowerCase();
     const media = mod.screenshot
       ? `<img src="${storeAsset(mod, mod.screenshot)}" alt="${escapeHtml(mod.name)} screenshot">`
       : `<div class="zimamod-store-fallback">${escapeHtml(mod.name.slice(0, 1).toUpperCase())}</div>`;
+    const authors = Array.isArray(mod.authors) && mod.authors.length
+      ? mod.authors.map(author => author.url
+        ? `<a href="${escapeHtml(author.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(author.name)}</a>`
+        : `<span>${escapeHtml(author.name)}</span>`
+      ).join('<span class="zimamod-store-author-separator">, </span>')
+      : `<span>ZimaMOD contributor</span>`;
     card.innerHTML = `
       <div class="zimamod-store-media">${media}</div>
       <div class="zimamod-store-copy">
         <div class="zimamod-store-card-heading">
-          <h3>${escapeHtml(mod.name)}</h3>
-          <span>v${escapeHtml(mod.version)}</span>
+          <div>
+            <span class="zimamod-store-card-type">ZimaMOD</span>
+            <h3>${escapeHtml(mod.name)}</h3>
+            <div class="zimamod-store-authors">by ${authors}</div>
+          </div>
+          <span class="zimamod-store-version">v${escapeHtml(mod.version)}</span>
         </div>
         <p>${escapeHtml(mod.description || "A ZimaMOD dashboard extension.")}</p>
-        <button type="button" class="${mod.installed ? "is-installed" : ""}">
-          ${mod.installed ? "Uninstall" : "Install"}
-        </button>
+        <div class="zimamod-store-card-footer">
+          <span class="zimamod-store-compatibility">For ZimaOS</span>
+          <button type="button" class="${mod.installed ? "is-installed" : ""}">
+            ${mod.installed ? "Uninstall" : "Install"}
+          </button>
+        </div>
       </div>
     `;
     card.querySelector("button").addEventListener("click", () => void changeInstallation(mod, card));
@@ -185,10 +228,12 @@
       if (mod.installed) await window.ZimaMOD.uninstallMod(mod.id);
       else await window.ZimaMOD.installMod(mod.id);
       mod.installed = !mod.installed;
+      card.dataset.installed = String(mod.installed);
       button.classList.toggle("is-installed", mod.installed);
       button.textContent = mod.installed ? "Uninstall" : "Install";
       modalShell().querySelector(".zimamod-store-status").textContent =
         "Reload the dashboard to apply the MOD Store change.";
+      filterCards(modalShell());
     } catch (error) {
       button.textContent = mod.installed ? "Uninstall" : "Install";
       modalShell().querySelector(".zimamod-store-status").textContent = error.message;
@@ -210,6 +255,21 @@
     } catch (error) {
       status.textContent = error.message;
     }
+  }
+
+  function filterCards(modal) {
+    const query = modal.querySelector(".zimamod-store-search input").value.trim().toLowerCase();
+    const filter = modal.querySelector("[data-filter].is-active")?.dataset.filter || "all";
+    let visible = 0;
+
+    modal.querySelectorAll(".zimamod-store-card").forEach(card => {
+      const matchesSearch = !query || card.dataset.search.includes(query);
+      const matchesFilter = filter !== "installed" || card.dataset.installed === "true";
+      card.hidden = !(matchesSearch && matchesFilter);
+      if (!card.hidden) visible++;
+    });
+
+    modal.querySelector(".zimamod-store-empty").hidden = visible !== 0;
   }
 
   window.ZimaMOD.openStore = openStore;

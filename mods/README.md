@@ -27,6 +27,12 @@ Add `description` and an optional relative `screenshot` path for the store card:
   "name": "Example Mod",
   "version": "1.0.0",
   "description": "A short explanation shown in the MOD Store.",
+  "authors": [
+    {
+      "name": "Author name",
+      "url": "https://github.com/author"
+    }
+  ],
   "screenshot": "screenshot.png",
   "enabled": true,
   "scripts": ["mod.js"],

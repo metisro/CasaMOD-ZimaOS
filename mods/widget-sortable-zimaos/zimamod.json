@@ -2,8 +2,13 @@
   "name": "Widget Sortable",
   "description": "Reorder ZimaOS dashboard widgets with drag and drop while preserving their positions.",
   "authors": [
-    "LANMIN-X",
-    "Cp0204"
+    {
+      "name": "LANMIN-X"
+    },
+    {
+      "name": "Cp0204",
+      "url": "https://github.com/Cp0204"
+    }
   ],
   "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable",
   "version": "1.2.0",
