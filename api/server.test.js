@@ -18,6 +18,7 @@ fs.writeFileSync(path.join(modDir, "zimamod.json"), JSON.stringify({
   enabled: true
 }));
 fs.writeFileSync(path.join(storeDir, "mod.js"), "store");
+fs.writeFileSync(path.join(storeDir, "screenshot.jpg"), "jpeg-data");
 fs.writeFileSync(path.join(storeDir, "zimamod.json"), JSON.stringify({
   name: "Store Mod",
   description: "Test store mod",
@@ -64,10 +65,20 @@ function request(method, pathname, body) {
     }, response => {
       const chunks = [];
       response.on("data", chunk => chunks.push(chunk));
-      response.on("end", () => resolve({
-        status: response.statusCode,
-        body: JSON.parse(Buffer.concat(chunks).toString("utf8"))
-      }));
+      response.on("end", () => {
+        const raw = Buffer.concat(chunks).toString("utf8");
+        let parsed = raw;
+        try {
+          parsed = JSON.parse(raw);
+        } catch (_) {
+          // Binary/static asset response.
+        }
+        resolve({
+          status: response.statusCode,
+          headers: response.headers,
+          body: parsed
+        });
+      });
     });
     request.on("error", reject);
     if (body) request.write(JSON.stringify(body));
@@ -105,6 +116,11 @@ async function waitForServer() {
       adapter: "Test Adapter",
       source: "https://example.com/original"
     });
+    const storeAsset = await request("GET", "/store-assets/store-mod/screenshot.jpg");
+    assert.equal(storeAsset.status, 200);
+    assert.equal(storeAsset.headers["content-type"], "image/jpeg");
+    assert.equal(storeAsset.body, "jpeg-data");
+    assert.equal((await request("GET", "/store-assets/store-mod/%2e%2e/server.js")).status, 404);
 
     const update = await request("GET", "/update");
     assert.equal(update.status, 200);

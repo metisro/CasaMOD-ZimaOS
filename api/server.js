@@ -11,6 +11,7 @@ const CONFIG_DIR = path.join(DATA_DIR, "config");
 const STORE_DIR = path.join(DATA_DIR, "store");
 const MAX_BODY_BYTES = 64 * 1024;
 const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const ASSET_PATH_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/;
 const VERSION = process.env.VERSION || "dev";
 const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metisro/ZimaMOD/releases/latest";
 const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
@@ -32,6 +33,41 @@ function send(response, status, body) {
 
 function validId(value) {
   return typeof value === "string" && ID_PATTERN.test(value);
+}
+
+function contentType(file) {
+  return ({
+    ".css": "text/css; charset=utf-8",
+    ".gif": "image/gif",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
+    ".js": "text/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp"
+  })[path.extname(file).toLowerCase()] || "application/octet-stream";
+}
+
+function sendFile(response, file) {
+  const stat = fs.statSync(file);
+  if (!stat.isFile()) throw new Error("Store asset not found");
+  response.writeHead(200, {
+    "Content-Type": contentType(file),
+    "Content-Length": stat.size,
+    "Cache-Control": "no-store"
+  });
+  fs.createReadStream(file).pipe(response);
+}
+
+function storeAssetPath(modId, relativePath) {
+  if (!validId(modId) || !ASSET_PATH_PATTERN.test(relativePath) || relativePath.includes("..")) {
+    throw new Error("Invalid store asset path");
+  }
+  const root = path.resolve(STORE_DIR, modId);
+  const file = path.resolve(root, relativePath);
+  if (!file.startsWith(root + path.sep)) throw new Error("Invalid store asset path");
+  return file;
 }
 
 function versionParts(value) {
@@ -312,6 +348,12 @@ async function handle(request, response) {
 
   if (request.method === "GET" && url.pathname === "/store") {
     send(response, 200, { mods: listStore() });
+    return;
+  }
+
+  const storeAssetMatch = url.pathname.match(/^\/store-assets\/([a-z0-9][a-z0-9-]{0,63})\/(.+)$/);
+  if (storeAssetMatch && request.method === "GET") {
+    sendFile(response, storeAssetPath(storeAssetMatch[1], decodeURIComponent(storeAssetMatch[2])));
     return;
   }
 

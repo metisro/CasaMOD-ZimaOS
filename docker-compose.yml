@@ -1,9 +1,9 @@
 name: zimamod
-version: "1.1.14"
+version: "1.1.15"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.14
+    image: ghcr.io/metisro/zimamod-api:1.1.15
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - /DATA/AppData/zimamod:/data
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.14
+    image: ghcr.io/metisro/zimamod-proxy:1.1.15
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -24,7 +24,6 @@ services:
       - zimamod-api
     volumes:
       - /DATA/AppData/zimamod/mod:/mods:ro
-      - /DATA/AppData/zimamod/store:/store:ro
 
 x-casaos:
   architectures:
@@ -45,9 +44,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.14"
+  version: "1.1.15"
   updateAt: "2026-06-10"
   releaseNotes:
-    en_us: Adds Weather Widget artwork to the MOD Store card.
+    en_us: Serves MOD Store images reliably through the persistent API store.
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues
