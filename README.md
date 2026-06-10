@@ -126,17 +126,61 @@ When using Docker Compose, place those values in a `.env` file beside
 docker compose up -d --force-recreate
 ```
 
-When editing the app through ZimaOS Settings, add the same environment
-variables to the appropriate services:
+When editing the app through ZimaOS Settings, configure each service tab
+separately. For example, to use dashboard port `8199` and API port `8191`:
 
-- Add `ZIMAMOD_API_PORT` to both `zimamod-api` and `zimamod-proxy`.
-- Add `ZIMAMOD_DASHBOARD_PORT` to `zimamod-proxy`.
-- Update the ZimaMOD app's displayed/open port to match
-  `ZIMAMOD_DASHBOARD_PORT`.
+1. Open the **zimamod-api** tab and add:
+
+   ```text
+   ZIMAMOD_API_PORT=8191
+   ```
+
+2. Open the **zimamod-proxy** tab and add:
+
+   ```text
+   ZIMAMOD_DASHBOARD_PORT=8199
+   ZIMAMOD_API_PORT=8191
+   ```
+
+3. Change the app's **Web UI** port to `8199`, then save the app.
+
+Environment-variable keys are whitespace-sensitive. Enter the keys exactly as
+shown, without leading or trailing spaces. In particular,
+` ZIMAMOD_API_PORT` is not the same variable as `ZIMAMOD_API_PORT`.
+
+The API port must be identical on both service tabs. The dashboard port is only
+required on `zimamod-proxy`. Existing installations may also show the legacy
+`PORT=8090` variable on `zimamod-api`; it can be removed after
+`ZIMAMOD_API_PORT` is configured.
 
 Valid port values are integers from `1` through `65535`. The default values
 remain suitable for most installations. The dashboard and API ports must be
 different.
+
+After saving, verify the running configuration from the ZimaOS terminal:
+
+```sh
+docker inspect zimamod-api --format '{{json .Config.Env}}'
+docker inspect zimamod-proxy --format '{{json .Config.Env}}'
+docker exec zimamod-proxy grep -E 'listen|proxy_pass' /etc/nginx/nginx.conf
+curl -i http://127.0.0.1:8191/mods
+curl -i http://127.0.0.1:8199/zimamod-api/mods
+```
+
+For the example above, Nginx must listen on `8199` and its `/zimamod-api/`
+upstream must use `127.0.0.1:8191`. Both curl requests should return
+`HTTP/1.1 200 OK`.
+
+If the API repeatedly restarts with `EADDRINUSE`, check for another container
+or process already using the selected port:
+
+```sh
+ss -ltnp | grep -E ':8191|:8199'
+docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+```
+
+Remove only a confirmed stale duplicate ZimaMOD container, or choose an unused
+port and apply it consistently to both service tabs.
 
 ## Update Notifications
 
