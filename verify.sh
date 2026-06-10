@@ -6,6 +6,7 @@ base_url=${ZIMAMOD_URL:-http://127.0.0.1:$dashboard_port}
 config_id=zimamod-deployment-check
 config_url="$base_url/zimamod-api/config/$config_id"
 expected='{"deployment":"ok"}'
+api_token=${ZIMAMOD_API_TOKEN:-$(docker exec zimamod-api cat /data/api-token 2>/dev/null || true)}
 
 fail() {
   echo "FAIL: $*" >&2
@@ -41,12 +42,22 @@ check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
 check_status "$base_url/v2/settings/fe.custom" 200
 
+[ "${#api_token}" -ge 32 ] ||
+  fail "API token could not be read; set ZIMAMOD_API_TOKEN or check /data/api-token"
+
+unauthorized_status=$(curl -sS -o /dev/null -w '%{http_code}' \
+  -X PUT -H 'Content-Type: application/json' --data "$expected" "$config_url")
+[ "$unauthorized_status" = "401" ] ||
+  fail "unauthenticated config write returned HTTP $unauthorized_status, expected 401"
+echo "PASS: unauthenticated writes are rejected"
+
 curl -fsS "$base_url/" | grep -Eq '/zimamod-runtime/loader\.js\?v=[^"]+' ||
   fail "dashboard HTML does not contain the ZimaMOD loader"
 echo "PASS: dashboard HTML contains the ZimaMOD loader"
 
 curl -fsS \
   -X PUT \
+  -H "Authorization: Bearer $api_token" \
   -H 'Content-Type: application/json' \
   --data "$expected" \
   "$config_url" >/dev/null

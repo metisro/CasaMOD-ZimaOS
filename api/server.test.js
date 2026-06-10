@@ -6,6 +6,7 @@ const http = require("node:http");
 const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const apiToken = "test-token-that-is-at-least-32-characters";
 
 const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-"));
 const modDir = path.join(dataDir, "mod", "test-mod");
@@ -49,19 +50,23 @@ const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
     DATA_DIR: dataDir,
     ZIMAMOD_API_PORT: "18090",
     VERSION: "1.1.8",
+    ZIMAMOD_API_TOKEN: apiToken,
     UPDATE_URL: "http://127.0.0.1:18091/latest"
   },
   stdio: "ignore"
 });
 
-function request(method, pathname, body) {
+function request(method, pathname, body, token = "", port = 18090) {
   return new Promise((resolve, reject) => {
     const request = http.request({
       host: "127.0.0.1",
-      port: 18090,
+      port,
       method,
       path: pathname,
-      headers: body ? { "Content-Type": "application/json" } : {}
+      headers: {
+        ...(body ? { "Content-Type": "application/json" } : {}),
+        ...(token ? { Authorization: `Bearer ${token === true ? apiToken : token}` } : {})
+      }
     }, response => {
       const chunks = [];
       response.on("data", chunk => chunks.push(chunk));
@@ -95,6 +100,34 @@ async function waitForServer() {
     }
   }
   throw new Error("API did not start");
+}
+
+async function verifyGeneratedToken() {
+  const generatedDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-generated-token-"));
+  const generatedChild = spawn(process.execPath, [path.join(__dirname, "server.js")], {
+    env: {
+      ...process.env,
+      DATA_DIR: generatedDataDir,
+      ZIMAMOD_API_PORT: "18092",
+      ZIMAMOD_API_TOKEN: ""
+    },
+    stdio: "ignore"
+  });
+  try {
+    for (let attempt = 0; attempt < 30; attempt++) {
+      try {
+        if ((await request("GET", "/health", null, "", 18092)).status === 200) break;
+      } catch (_) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
+    const generatedToken = fs.readFileSync(path.join(generatedDataDir, "api-token"), "utf8").trim();
+    assert.ok(generatedToken.length >= 32);
+    assert.equal((await request("PUT", "/config/test-mod", { generated: true }, generatedToken, 18092)).status, 200);
+  } finally {
+    generatedChild.kill();
+    fs.rmSync(generatedDataDir, { recursive: true, force: true });
+  }
 }
 
 (async () => {
@@ -138,14 +171,28 @@ async function waitForServer() {
     assert.equal(refreshedUpdate.body.updateAvailable, false);
     assert.equal(updateRequestCount, 2);
 
-    assert.equal((await request("POST", "/store/store-mod")).status, 200);
+    assert.equal((await request("POST", "/store/store-mod")).status, 401);
+    assert.equal((await request("POST", "/store/store-mod", null, "wrong-token")).status, 401);
+    assert.equal((await request("PATCH", "/future-write-route")).status, 401);
+    assert.equal((await request("PATCH", "/future-write-route", null, true)).status, 404);
+    assert.equal((await request("POST", "/store/store-mod", null, true)).status, 200);
     assert.equal(fs.readFileSync(path.join(dataDir, "mod", "store-mod", "mod.js"), "utf8"), "store");
-    assert.equal((await request("DELETE", "/store/store-mod")).status, 200);
+    assert.equal((await request("DELETE", "/store/store-mod")).status, 401);
+    assert.equal((await request("DELETE", "/store/store-mod", null, true)).status, 200);
     assert.equal(fs.existsSync(path.join(dataDir, "mod", "store-mod")), false);
 
-    assert.equal((await request("PUT", "/config/test-mod", { enabled: true })).status, 200);
+    assert.equal((await request("PUT", "/config/test-mod", { enabled: true })).status, 401);
+    assert.equal((await request("PUT", "/config/test-mod", { enabled: true }, true)).status, 200);
     const config = await request("GET", "/config/test-mod");
     assert.deepEqual(config.body.config, { enabled: true });
+
+    const legacySortable = {
+      order: ["system-58cpu0-00-c34ram2-79-gbcpuram"]
+    };
+    const sortableFile = path.join(dataDir, "config", "sortable-widgets.json");
+    fs.writeFileSync(sortableFile, JSON.stringify(legacySortable));
+    assert.deepEqual((await request("GET", "/config/sortable-widgets")).body.config.order, ["system"]);
+    assert.deepEqual(JSON.parse(fs.readFileSync(sortableFile, "utf8")), legacySortable);
 
     assert.equal((await request("PUT", "/config/sortable-widgets", {
       order: [
@@ -155,8 +202,8 @@ async function waitForServer() {
         "networketh0kb0-b0-b",
         "widget-settings"
       ]
-    })).status, 200);
-    assert.equal(fs.existsSync(path.join(dataDir, "config", "sortable-widgets.json")), true);
+    }, true)).status, 200);
+    assert.equal(fs.existsSync(sortableFile), true);
     const sortable = await request("GET", "/config/sortable-widgets");
     assert.deepEqual(sortable.body.config.order, [
       "weather",
@@ -166,11 +213,12 @@ async function waitForServer() {
       "widget-settings"
     ]);
     assert.deepEqual(
-      JSON.parse(fs.readFileSync(path.join(dataDir, "config", "sortable-widgets.json"), "utf8")).order,
+      JSON.parse(fs.readFileSync(sortableFile, "utf8")).order,
       sortable.body.config.order
     );
 
     assert.equal((await request("GET", "/config/../bad")).status, 404);
+    await verifyGeneratedToken();
     console.log("ZimaMOD API integration test passed");
   } finally {
     child.kill();

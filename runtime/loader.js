@@ -16,9 +16,41 @@
 
   const API_BASE = "/zimamod-api";
   const MOD_BASE = "/mod";
+  const TOKEN_KEY = "zimamod-api-token";
+
+  function writeToken() {
+    return sessionStorage.getItem(TOKEN_KEY) || "";
+  }
+
+  function requestWriteToken() {
+    const token = window.prompt("Enter the ZimaMOD API token to authorize this change:");
+    if (!token) throw new Error("ZimaMOD write authorization cancelled");
+    sessionStorage.setItem(TOKEN_KEY, token);
+    return token;
+  }
+
+  async function writeRequest(url, options) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const token = writeToken() || requestWriteToken();
+      const response = await fetch(url, {
+        ...options,
+        credentials: "include",
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.status !== 401) return response;
+      sessionStorage.removeItem(TOKEN_KEY);
+    }
+    throw new Error("Invalid ZimaMOD API token");
+  }
 
   window.ZimaMOD = {
     platform: "zimaos",
+    clearWriteToken() {
+      sessionStorage.removeItem(TOKEN_KEY);
+    },
     assetUrl(modId, relativePath) {
       return `${MOD_BASE}/${encodeURIComponent(modId)}/${String(relativePath).replace(/^\/+/, "")}`;
     },
@@ -32,9 +64,8 @@
       return body.config ?? fallback;
     },
     async setConfig(modId, config) {
-      const response = await fetch(`${API_BASE}/config/${encodeURIComponent(modId)}`, {
+      const response = await writeRequest(`${API_BASE}/config/${encodeURIComponent(modId)}`, {
         method: "PUT",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(config)
       });
@@ -53,17 +84,11 @@
       return response.json();
     },
     async installMod(modId) {
-      const response = await fetch(`${API_BASE}/store/${encodeURIComponent(modId)}`, {
-        method: "POST",
-        credentials: "include"
-      });
+      const response = await writeRequest(`${API_BASE}/store/${encodeURIComponent(modId)}`, { method: "POST" });
       if (!response.ok) throw new Error(`Mod installation failed: ${response.status}`);
     },
     async uninstallMod(modId) {
-      const response = await fetch(`${API_BASE}/store/${encodeURIComponent(modId)}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const response = await writeRequest(`${API_BASE}/store/${encodeURIComponent(modId)}`, { method: "DELETE" });
       if (!response.ok) throw new Error(`Mod uninstall failed: ${response.status}`);
     }
   };
@@ -91,8 +116,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.17", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.17", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.18", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.18", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {

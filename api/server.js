@@ -1,6 +1,7 @@
 "use strict";
 
 const http = require("node:http");
+const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -13,7 +14,9 @@ const STORE_DIR = path.join(DATA_DIR, "store");
 const MAX_BODY_BYTES = 64 * 1024;
 const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const ASSET_PATH_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/;
+const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const VERSION = process.env.VERSION || "dev";
+const TOKEN_FILE = path.join(DATA_DIR, "api-token");
 const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metisro/ZimaMOD/releases/latest";
 const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
 let updateCache = null;
@@ -23,8 +26,28 @@ if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
   throw new Error(`Invalid API port: ${PORT_VALUE}`);
 }
 
+fs.mkdirSync(DATA_DIR, { recursive: true });
 fs.mkdirSync(CONFIG_DIR, { recursive: true });
 fs.mkdirSync(STORE_DIR, { recursive: true });
+
+function apiToken() {
+  const configured = process.env.ZIMAMOD_API_TOKEN || "";
+  if (configured) {
+    if (configured.length < 32) throw new Error("ZIMAMOD_API_TOKEN must contain at least 32 characters");
+    return configured;
+  }
+  const stored = readText(TOKEN_FILE);
+  if (stored.length >= 32) {
+    fs.chmodSync(TOKEN_FILE, 0o600);
+    return stored;
+  }
+  const generated = crypto.randomBytes(32).toString("hex");
+  fs.writeFileSync(TOKEN_FILE, generated + "\n", { mode: 0o600 });
+  console.log("Generated ZimaMOD API token. Retrieve it with: docker exec zimamod-api cat /data/api-token");
+  return generated;
+}
+
+const API_TOKEN = apiToken();
 
 function send(response, status, body) {
   const content = JSON.stringify(body);
@@ -38,6 +61,30 @@ function send(response, status, body) {
 
 function validId(value) {
   return typeof value === "string" && ID_PATTERN.test(value);
+}
+
+function readText(file) {
+  try {
+    return fs.readFileSync(file, "utf8").trim();
+  } catch (_) {
+    return "";
+  }
+}
+
+function authorized(request) {
+  const prefix = "Bearer ";
+  const authorization = request.headers.authorization || "";
+  if (!authorization.startsWith(prefix)) return false;
+  const supplied = Buffer.from(authorization.slice(prefix.length), "utf8");
+  const expected = Buffer.from(API_TOKEN, "utf8");
+  return supplied.length === expected.length && crypto.timingSafeEqual(supplied, expected);
+}
+
+function requireAuthorization(request, response) {
+  if (authorized(request)) return true;
+  response.setHeader("WWW-Authenticate", 'Bearer realm="ZimaMOD write API"');
+  send(response, 401, { error: "Authentication required" });
+  return false;
 }
 
 function contentType(file) {
@@ -340,6 +387,7 @@ function readBody(request) {
 
 async function handle(request, response) {
   const url = new URL(request.url, "http://localhost");
+  if (WRITE_METHODS.has(request.method) && !requireAuthorization(request, response)) return;
 
   if (request.method === "GET" && url.pathname === "/health") {
     send(response, 200, { ok: true });
@@ -385,7 +433,6 @@ async function handle(request, response) {
     const file = configPath(configMatch[1]);
     const stored = readJson(file, null);
     const config = normalizeConfig(configMatch[1], stored);
-    if (config !== stored && JSON.stringify(config) !== JSON.stringify(stored)) writeConfig(file, config);
     send(response, 200, { config });
     return;
   }
