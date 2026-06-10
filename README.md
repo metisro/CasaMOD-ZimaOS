@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.16
-ghcr.io/metisro/zimamod-proxy:1.1.16
+ghcr.io/metisro/zimamod-api:1.1.17
+ghcr.io/metisro/zimamod-proxy:1.1.17
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
