@@ -46,6 +46,12 @@
       if (!response.ok) throw new Error(`MOD Store failed: ${response.status}`);
       return (await response.json()).mods || [];
     },
+    async getUpdateStatus(force = false) {
+      const suffix = force ? "?refresh=1" : "";
+      const response = await fetch(`${API_BASE}/update${suffix}`, { credentials: "include", cache: "no-store" });
+      if (!response.ok) throw new Error(`Update check failed: ${response.status}`);
+      return response.json();
+    },
     async installMod(modId) {
       const response = await fetch(`${API_BASE}/store/${encodeURIComponent(modId)}`, {
         method: "POST",
@@ -85,8 +91,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.8", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.8", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.9", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.9", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {

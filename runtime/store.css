@@ -2,6 +2,53 @@
   background: rgba(16, 85, 180, .94);
 }
 
+.zimamod-update-dot {
+  position: absolute;
+  z-index: 30;
+  top: 9px;
+  right: 9px;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, .92);
+  border-radius: 50%;
+  background: #2878ff;
+  box-shadow: 0 0 0 4px rgba(40, 120, 255, .2), 0 3px 10px rgba(0, 45, 140, .35);
+  cursor: pointer;
+}
+
+.zimamod-update-tooltip {
+  position: absolute;
+  top: 19px;
+  right: -5px;
+  width: 260px;
+  padding: 9px 11px;
+  border: 1px solid rgba(120, 160, 255, .35);
+  border-radius: 10px;
+  color: #eaf2ff;
+  background: rgba(8, 22, 50, .96);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  font: 500 11px/1.45 system-ui, sans-serif;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-3px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.zimamod-update-tooltip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.zimamod-update-dot:hover .zimamod-update-tooltip,
+.zimamod-update-dot:focus-visible .zimamod-update-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #zimamod-store-modal {
   position: fixed;
   z-index: 2147483000;
@@ -120,6 +167,61 @@
   color: #a0a5ae;
   font-size: 11px;
   line-height: 1.55;
+}
+
+.zimamod-store-update {
+  display: grid;
+  gap: 7px;
+  margin: auto 4px 0;
+  padding: 11px;
+  border: 1px solid #e5e8ee;
+  border-radius: 12px;
+  color: #858c98;
+  background: #f8f9fb;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.zimamod-store-update.has-update {
+  border-color: #c9dcff;
+  background: #edf4ff;
+}
+
+.zimamod-store-update-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.zimamod-store-update strong {
+  color: #3b414c;
+}
+
+.zimamod-store-update p {
+  margin: 0;
+}
+
+.zimamod-store-update code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  color: #225fc9;
+  background: #dce9ff;
+  font-size: 9px;
+}
+
+.zimamod-store-update-badge {
+  color: #2567dc;
+  font-weight: 700;
+}
+
+.zimamod-store-update-refresh {
+  border: 0;
+  padding: 0;
+  color: #3673d8;
+  background: transparent;
+  font: 650 9px system-ui, sans-serif;
+  cursor: pointer;
 }
 
 .zimamod-store-main {

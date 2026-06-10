@@ -11,6 +11,11 @@ const CONFIG_DIR = path.join(DATA_DIR, "config");
 const STORE_DIR = path.join(DATA_DIR, "store");
 const MAX_BODY_BYTES = 64 * 1024;
 const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const VERSION = process.env.VERSION || "dev";
+const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metisro/ZimaMOD/releases/latest";
+const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
+let updateCache = null;
+let updateRequest = null;
 
 fs.mkdirSync(CONFIG_DIR, { recursive: true });
 fs.mkdirSync(STORE_DIR, { recursive: true });
@@ -27,6 +32,93 @@ function send(response, status, body) {
 
 function validId(value) {
   return typeof value === "string" && ID_PATTERN.test(value);
+}
+
+function versionParts(value) {
+  const match = String(value || "").trim().match(/^v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
+  return match ? match.slice(1).map(Number) : null;
+}
+
+function versionIsNewer(candidate, current) {
+  const candidateParts = versionParts(candidate);
+  const currentParts = versionParts(current);
+  if (!candidateParts || !currentParts) return false;
+  for (let index = 0; index < candidateParts.length; index++) {
+    if (candidateParts[index] !== currentParts[index]) return candidateParts[index] > currentParts[index];
+  }
+  return false;
+}
+
+function requestJson(url, redirects = 0) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith("https:") ? require("node:https") : http;
+    const request = client.get(url, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        "User-Agent": `ZimaMOD/${VERSION}`
+      }
+    }, response => {
+      if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location && redirects < 3) {
+        response.resume();
+        resolve(requestJson(new URL(response.headers.location, url).toString(), redirects + 1));
+        return;
+      }
+      const chunks = [];
+      response.on("data", chunk => chunks.push(chunk));
+      response.on("end", () => {
+        if (response.statusCode < 200 || response.statusCode >= 300) {
+          reject(new Error(`Update check failed: HTTP ${response.statusCode}`));
+          return;
+        }
+        try {
+          resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+        } catch (_) {
+          reject(new Error("Update check returned invalid JSON"));
+        }
+      });
+    });
+    request.setTimeout(10000, () => request.destroy(new Error("Update check timed out")));
+    request.on("error", reject);
+  });
+}
+
+async function updateStatus(force = false) {
+  if (!force && updateCache && Date.now() - updateCache.cachedAt < UPDATE_CACHE_MS) return updateCache.body;
+  if (updateRequest) return updateRequest;
+
+  updateRequest = requestJson(UPDATE_URL)
+    .then(release => {
+      const latestVersion = String(release.tag_name || "").replace(/^v/, "");
+      if (!versionParts(latestVersion)) throw new Error("Latest release has an invalid version");
+      const body = {
+        currentVersion: VERSION,
+        latestVersion,
+        updateAvailable: versionIsNewer(latestVersion, VERSION),
+        checkAvailable: true,
+        releaseUrl: typeof release.html_url === "string" ? release.html_url : "",
+        checkedAt: new Date().toISOString()
+      };
+      updateCache = { cachedAt: Date.now(), body };
+      return body;
+    })
+    .catch(error => {
+      const body = {
+        currentVersion: VERSION,
+        latestVersion: "",
+        updateAvailable: false,
+        checkAvailable: false,
+        error: error.message || "Update check unavailable",
+        releaseUrl: "",
+        checkedAt: new Date().toISOString()
+      };
+      updateCache = { cachedAt: Date.now(), body };
+      return body;
+    })
+    .finally(() => {
+      updateRequest = null;
+    });
+
+  return updateRequest;
 }
 
 function configPath(modId) {
@@ -208,6 +300,11 @@ async function handle(request, response) {
 
   if (request.method === "GET" && url.pathname === "/store") {
     send(response, 200, { mods: listStore() });
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/update") {
+    send(response, 200, await updateStatus(url.searchParams.get("refresh") === "1"));
     return;
   }
 

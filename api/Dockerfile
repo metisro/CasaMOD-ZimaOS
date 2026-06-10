@@ -1,6 +1,7 @@
 FROM node:22-alpine
 
 ARG VERSION=dev
+ENV VERSION=$VERSION
 LABEL org.opencontainers.image.title="ZimaMOD API" \
       org.opencontainers.image.version="$VERSION" \
       org.opencontainers.image.source="https://github.com/metisro/ZimaMOD"

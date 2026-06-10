@@ -5,7 +5,10 @@
   document.documentElement.dataset.zimamodStoreLoaded = "true";
 
   const BUTTON_CLASS = "zimamod-store-launcher";
+  const UPDATE_DOT_CLASS = "zimamod-update-dot";
   const MODAL_ID = "zimamod-store-modal";
+  const UPDATE_CHECK_MS = 8 * 60 * 60 * 1000;
+  let updateStatus = null;
 
   function allRoots() {
     const roots = [document];
@@ -43,6 +46,8 @@
   }
 
   function findAppTile() {
+    const app = allElements("#app-zimamod").find(element => element.classList.contains("handle"));
+    if (app) return app;
     const title = titleElement();
     return title ? tileCandidate(title) : null;
   }
@@ -106,6 +111,86 @@
     else tile.appendChild(button);
   }
 
+  function mountUpdateDot() {
+    const dots = allElements("." + UPDATE_DOT_CLASS);
+    const tile = findAppTile();
+    const showUpdate = Boolean(tile && updateStatus?.checkAvailable && updateStatus.updateAvailable);
+    dots.forEach(element => {
+      if (!showUpdate || element.parentElement !== tile) element.remove();
+    });
+    if (!showUpdate) return;
+
+    tile.style.position = "relative";
+    let dot = tile.querySelector("." + UPDATE_DOT_CLASS);
+    if (!dot) {
+      dot = document.createElement("button");
+      dot.className = UPDATE_DOT_CLASS;
+      dot.type = "button";
+      dot.setAttribute("aria-label", `ZimaMOD ${updateStatus.latestVersion} is available`);
+      dot.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void openStore();
+      });
+      tile.appendChild(dot);
+    }
+    dot.innerHTML = `<span class="zimamod-update-tooltip">
+      <strong>ZimaMOD ${escapeHtml(updateStatus.latestVersion)} is available</strong>
+      In ZimaOS Settings, edit ZimaMOD, change both API and proxy image tags to
+      ${escapeHtml(updateStatus.latestVersion)}, then click Install.
+    </span>`;
+  }
+
+  function renderUpdatePanel(modal) {
+    const panel = modal?.querySelector(".zimamod-store-update");
+    if (!panel) return;
+
+    if (!updateStatus) {
+      panel.innerHTML = `<strong>ZimaMOD version</strong><span>Checking for updates...</span>`;
+      panel.classList.remove("has-update");
+      return;
+    }
+
+    if (!updateStatus.checkAvailable) {
+      panel.innerHTML = `
+        <div class="zimamod-store-update-heading">
+          <strong>ZimaMOD ${escapeHtml(updateStatus.currentVersion)}</strong>
+          <button type="button" class="zimamod-store-update-refresh">Check again</button>
+        </div>
+        <p>Update check unavailable. Your installed version is shown above.</p>
+      `;
+      panel.classList.remove("has-update");
+      panel.querySelector(".zimamod-store-update-refresh").addEventListener("click", () => void checkUpdates(true));
+      return;
+    }
+
+    panel.classList.toggle("has-update", updateStatus.updateAvailable);
+    panel.innerHTML = `
+      <div class="zimamod-store-update-heading">
+        <strong>ZimaMOD ${escapeHtml(updateStatus.currentVersion)}</strong>
+        <button type="button" class="zimamod-store-update-refresh">Check again</button>
+      </div>
+      ${updateStatus.updateAvailable ? `
+        <span class="zimamod-store-update-badge">Version ${escapeHtml(updateStatus.latestVersion)} available</span>
+        <p>In ZimaOS Settings, edit ZimaMOD and change both API and proxy image tags to
+          <code>${escapeHtml(updateStatus.latestVersion)}</code>, then click <strong>Install</strong>.</p>
+      ` : `<p>You are using the latest available version.</p>`}
+    `;
+    panel.querySelector(".zimamod-store-update-refresh").addEventListener("click", () => void checkUpdates(true));
+  }
+
+  async function checkUpdates(force = false) {
+    try {
+      updateStatus = await window.ZimaMOD.getUpdateStatus(force);
+      mountUpdateDot();
+      renderUpdatePanel(document.getElementById(MODAL_ID));
+    } catch (error) {
+      console.warn("[ZimaMOD] Update check unavailable:", error);
+      const panel = document.getElementById(MODAL_ID)?.querySelector(".zimamod-store-update");
+      if (panel) panel.innerHTML = `<strong>ZimaMOD version</strong><span>Update check unavailable.</span>`;
+    }
+  }
+
   function storeAsset(mod, relativePath) {
     return `/store/${encodeURIComponent(mod.id)}/${String(relativePath).replace(/^\/+/, "")}`;
   }
@@ -135,6 +220,10 @@
               <span class="zimamod-store-nav-icon">✓</span>Installed
             </button>
           </nav>
+          <section class="zimamod-store-update" aria-live="polite">
+            <strong>ZimaMOD version</strong>
+            <span>Checking for updates...</span>
+          </section>
           <p class="zimamod-store-sidebar-note">Extend your ZimaOS dashboard with community MODs.</p>
         </aside>
         <main class="zimamod-store-main">
@@ -173,6 +262,7 @@
       });
     });
     document.body.appendChild(modal);
+    renderUpdatePanel(modal);
     return modal;
   }
 
@@ -247,6 +337,7 @@
     const status = modal.querySelector(".zimamod-store-status");
     const grid = modal.querySelector(".zimamod-store-grid");
     try {
+      if (!updateStatus) void checkUpdates();
       const mods = await window.ZimaMOD.listStore();
       grid.replaceChildren(...mods.map(modCard));
       status.textContent = mods.length
@@ -287,8 +378,13 @@
 
   const observer = new MutationObserver(() => {
     clearTimeout(observer.timer);
-    observer.timer = setTimeout(mountLauncher, 200);
+    observer.timer = setTimeout(() => {
+      mountLauncher();
+      mountUpdateDot();
+    }, 200);
   });
   observer.observe(document.body, { childList: true, subtree: true });
   mountLauncher();
+  setTimeout(() => void checkUpdates(), 2000);
+  setInterval(() => void checkUpdates(), UPDATE_CHECK_MS);
 })();

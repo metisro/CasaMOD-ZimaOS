@@ -26,8 +26,25 @@ fs.writeFileSync(path.join(storeDir, "zimamod.json"), JSON.stringify({
   enabled: true
 }));
 
+let updateRequestCount = 0;
+const updateServer = http.createServer((request, response) => {
+  updateRequestCount++;
+  const version = updateRequestCount === 1 ? "1.1.9" : "1.1.7";
+  response.writeHead(200, { "Content-Type": "application/json" });
+  response.end(JSON.stringify({
+    tag_name: `v${version}`,
+    html_url: `https://github.com/metisro/ZimaMOD/releases/tag/v${version}`
+  }));
+}).listen(18091, "127.0.0.1");
+
 const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
-  env: { ...process.env, DATA_DIR: dataDir, PORT: "18090" },
+  env: {
+    ...process.env,
+    DATA_DIR: dataDir,
+    PORT: "18090",
+    VERSION: "1.1.8",
+    UPDATE_URL: "http://127.0.0.1:18091/latest"
+  },
   stdio: "ignore"
 });
 
@@ -78,6 +95,23 @@ async function waitForServer() {
     assert.equal(store.body.mods[0].id, "store-mod");
     assert.equal(store.body.mods[0].installed, false);
     assert.deepEqual(store.body.mods[0].authors, [{ name: "Test Author", url: "https://example.com/author" }]);
+
+    const update = await request("GET", "/update");
+    assert.equal(update.status, 200);
+    assert.equal(update.body.currentVersion, "1.1.8");
+    assert.equal(update.body.latestVersion, "1.1.9");
+    assert.equal(update.body.updateAvailable, true);
+    assert.equal(update.body.checkAvailable, true);
+    assert.equal(update.body.releaseUrl, "https://github.com/metisro/ZimaMOD/releases/tag/v1.1.9");
+    assert.equal(updateRequestCount, 1);
+    assert.equal((await request("GET", "/update")).status, 200);
+    assert.equal(updateRequestCount, 1);
+    const refreshedUpdate = await request("GET", "/update?refresh=1");
+    assert.equal(refreshedUpdate.status, 200);
+    assert.equal(refreshedUpdate.body.latestVersion, "1.1.7");
+    assert.equal(refreshedUpdate.body.updateAvailable, false);
+    assert.equal(updateRequestCount, 2);
+
     assert.equal((await request("POST", "/store/store-mod")).status, 200);
     assert.equal(fs.readFileSync(path.join(dataDir, "mod", "store-mod", "mod.js"), "utf8"), "store");
     assert.equal((await request("DELETE", "/store/store-mod")).status, 200);
@@ -114,6 +148,7 @@ async function waitForServer() {
     console.log("ZimaMOD API integration test passed");
   } finally {
     child.kill();
+    updateServer.close();
     fs.rmSync(dataDir, { recursive: true, force: true });
   }
 })().catch(error => {

@@ -29,6 +29,7 @@ echo "PASS: ZimaMOD containers are running"
 check_status "$base_url/zimamod-api/health" 200
 check_status "$base_url/zimamod-api/mods" 200
 check_status "$base_url/zimamod-api/store" 200
+check_status "$base_url/zimamod-api/update" 200
 check_status "$base_url/zimamod-runtime/loader.js" 200
 check_status "$base_url/zimamod-runtime/store.js" 200
 check_status "$base_url/zimamod-runtime/store.css" 200
@@ -38,7 +39,7 @@ check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
 check_status "$base_url/v2/settings/fe.custom" 200
 
-curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.8' ||
+curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.9' ||
   fail "dashboard HTML does not contain the ZimaMOD loader"
 echo "PASS: dashboard HTML contains the ZimaMOD loader"
 

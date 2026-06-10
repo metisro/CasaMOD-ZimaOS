@@ -27,6 +27,8 @@ Browser
 - Includes adapted Weather Widget and Widget Sortable example mods.
 - Includes ZimaOS custom-app metadata and a dedicated ZimaMOD app icon.
 - Includes a dashboard MOD Store for installing and uninstalling catalog mods.
+- Shows an update indicator and installation guidance when a newer ZimaMOD
+  release is available.
 
 ## Container Images
 
@@ -40,8 +42,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.8
-ghcr.io/metisro/zimamod-proxy:1.1.8
+ghcr.io/metisro/zimamod-api:1.1.9
+ghcr.io/metisro/zimamod-proxy:1.1.9
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -79,8 +81,8 @@ The project version is stored in `VERSION`, the install Compose image tags, and
 the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.8
-git push origin v1.1.8
+git tag v1.1.9
+git push origin v1.1.9
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -106,6 +108,18 @@ http://ZIMAOS-IP:8088
 ```
 
 The standard ZimaOS dashboard remains available on port `80`.
+
+## Update Notifications
+
+ZimaMOD checks the latest GitHub Release through its local API after dashboard
+load and every eight hours. The API caches both successful and unavailable
+checks, limiting automatic GitHub requests to approximately three per day per
+installation. The MOD Store includes a manual **Check again** action.
+
+When an update is available, a blue dot appears on the ZimaMOD dashboard tile
+and the MOD Store displays the installed and latest versions with instructions
+for updating both container image tags in ZimaOS Settings. ZimaMOD never
+installs framework updates automatically.
 
 ## Directories
 
