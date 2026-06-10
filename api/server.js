@@ -194,6 +194,17 @@ function readModManifest(root, modId) {
       };
     }).filter(author => author.name)
     : [];
+  const origin = manifest.origin && typeof manifest.origin === "object" ? {
+    type: manifest.origin.type === "adapted" ? "adapted" : "native",
+    adapter: typeof manifest.origin.adapter === "string" ? manifest.origin.adapter : "",
+    source: typeof manifest.origin.source === "string" && /^https?:\/\//.test(manifest.origin.source)
+      ? manifest.origin.source
+      : ""
+  } : {
+    type: typeof manifest.source === "string" && /^https?:\/\//.test(manifest.source) ? "adapted" : "native",
+    adapter: "",
+    source: typeof manifest.source === "string" && /^https?:\/\//.test(manifest.source) ? manifest.source : ""
+  };
 
   return {
     id: modId,
@@ -202,6 +213,7 @@ function readModManifest(root, modId) {
     version: typeof manifest.version === "string" ? manifest.version : "1",
     description: typeof manifest.description === "string" ? manifest.description : "",
     authors,
+    origin,
     authorUrl: typeof manifest.authorUrl === "string" && /^https?:\/\//.test(manifest.authorUrl)
       ? manifest.authorUrl
       : "",

@@ -382,6 +382,20 @@
   font-size: 10px;
 }
 
+.zimamod-store-compatibility a {
+  color: #4f78c8;
+  text-decoration: none;
+}
+
+.zimamod-store-compatibility a:hover {
+  text-decoration: underline;
+}
+
+.zimamod-store-compatibility {
+  flex: 1;
+  line-height: 1.35;
+}
+
 .zimamod-store-card h3 {
   margin-top: 2px;
   font-size: 13px;

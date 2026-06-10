@@ -33,10 +33,26 @@ Add `description` and an optional relative `screenshot` path for the store card:
       "url": "https://github.com/author"
     }
   ],
+  "origin": {
+    "type": "native"
+  },
   "screenshot": "screenshot.png",
   "enabled": true,
   "scripts": ["mod.js"],
   "styles": ["mod.css"]
+}
+```
+
+Use `"type": "native"` for mods made for ZimaMOD. For mods adapted from an
+existing project, include adaptation credit and the original source:
+
+```json
+{
+  "origin": {
+    "type": "adapted",
+    "adapter": "ZimaMOD",
+    "source": "https://github.com/original/project"
+  }
 }
 ```
 

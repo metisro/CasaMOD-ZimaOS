@@ -22,6 +22,11 @@ fs.writeFileSync(path.join(storeDir, "zimamod.json"), JSON.stringify({
   name: "Store Mod",
   description: "Test store mod",
   authors: [{ name: "Test Author", url: "https://example.com/author" }],
+  origin: {
+    type: "adapted",
+    adapter: "Test Adapter",
+    source: "https://example.com/original"
+  },
   screenshot: "screenshot.png",
   enabled: true
 }));
@@ -95,6 +100,11 @@ async function waitForServer() {
     assert.equal(store.body.mods[0].id, "store-mod");
     assert.equal(store.body.mods[0].installed, false);
     assert.deepEqual(store.body.mods[0].authors, [{ name: "Test Author", url: "https://example.com/author" }]);
+    assert.deepEqual(store.body.mods[0].origin, {
+      type: "adapted",
+      adapter: "Test Adapter",
+      source: "https://example.com/original"
+    });
 
     const update = await request("GET", "/update");
     assert.equal(update.status, 200);

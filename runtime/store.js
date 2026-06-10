@@ -180,7 +180,7 @@
     }
     tooltip.innerHTML = `
       <strong>ZimaMOD ${escapeHtml(updateStatus.latestVersion)} is available</strong>
-      In ZimaOS Settings, edit ZimaMOD, change both API and proxy image tags to
+      In ZimaMOD Settings, edit both zimamod-api and zimamod-proxy image tags to
       ${escapeHtml(updateStatus.latestVersion)}, then click Install.
     `;
     return tooltip;
@@ -225,7 +225,7 @@
       panel.innerHTML = `
         <div class="zimamod-store-update-heading">
           <strong>ZimaMOD ${escapeHtml(updateStatus.currentVersion)}</strong>
-          <button type="button" class="zimamod-store-update-refresh">Check again</button>
+          <button type="button" class="zimamod-store-update-refresh">Update check</button>
         </div>
         <p>Update check unavailable. Your installed version is shown above.</p>
       `;
@@ -238,11 +238,11 @@
     panel.innerHTML = `
       <div class="zimamod-store-update-heading">
         <strong>ZimaMOD ${escapeHtml(updateStatus.currentVersion)}</strong>
-        <button type="button" class="zimamod-store-update-refresh">Check again</button>
+        <button type="button" class="zimamod-store-update-refresh">Update check</button>
       </div>
       ${updateStatus.updateAvailable ? `
         <span class="zimamod-store-update-badge">Version ${escapeHtml(updateStatus.latestVersion)} available</span>
-        <p>In ZimaOS Settings, edit ZimaMOD and change both API and proxy image tags to
+        <p>In ZimaMOD Settings, edit both zimamod-api and zimamod-proxy image tags to
           <code>${escapeHtml(updateStatus.latestVersion)}</code>, then click <strong>Install</strong>.</p>
       ` : `<p>You are using the latest available version.</p>`}
     `;
@@ -356,6 +356,13 @@
         : `<span>${escapeHtml(author.name)}</span>`
       ).join('<span class="zimamod-store-author-separator">, </span>')
       : `<span>ZimaMOD contributor</span>`;
+    const origin = mod.origin?.type === "adapted"
+      ? `Adapted for ZimaMOD by ${escapeHtml(mod.origin.adapter || "ZimaMOD")}${
+        mod.origin.source
+          ? ` <span aria-hidden="true">&middot;</span> <a href="${escapeHtml(mod.origin.source)}" target="_blank" rel="noopener noreferrer">View original</a>`
+          : ""
+      }`
+      : "Made for ZimaMOD";
     card.innerHTML = `
       <div class="zimamod-store-media">${media}</div>
       <div class="zimamod-store-copy">
@@ -369,7 +376,7 @@
         </div>
         <p>${escapeHtml(mod.description || "A ZimaMOD dashboard extension.")}</p>
         <div class="zimamod-store-card-footer">
-          <span class="zimamod-store-compatibility">For ZimaOS</span>
+          <span class="zimamod-store-compatibility">${origin}</span>
           <button type="button" class="${mod.installed ? "is-installed" : ""}">
             ${mod.installed ? "Uninstall" : "Install"}
           </button>

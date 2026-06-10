@@ -42,8 +42,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.11
-ghcr.io/metisro/zimamod-proxy:1.1.11
+ghcr.io/metisro/zimamod-api:1.1.12
+ghcr.io/metisro/zimamod-proxy:1.1.12
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -81,8 +81,8 @@ The project version is stored in `VERSION`, the install Compose image tags, and
 the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.11
-git push origin v1.1.11
+git tag v1.1.12
+git push origin v1.1.12
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -114,7 +114,7 @@ The standard ZimaOS dashboard remains available on port `80`.
 ZimaMOD checks the latest GitHub Release through its local API after dashboard
 load and every eight hours. The API caches both successful and unavailable
 checks, limiting automatic GitHub requests to approximately three per day per
-installation. The MOD Store includes a manual **Check again** action.
+installation. The MOD Store includes a manual **Update check** action.
 
 When an update is available, a blue dot appears on the ZimaMOD dashboard tile
 and the MOD Store displays the installed and latest versions with instructions
