@@ -8,6 +8,14 @@ Independent, community-developed mod framework for ZimaOS.
 > by, maintained by, or supported by the ZimaOS, CasaOS, or CasaMOD projects or
 > their respective teams.
 
+> **Warning:** Mods, including mods available through the MOD Store, must not be
+> assumed to be verified, audited, safe, or compatible with your system. Review
+> and trust a mod's source code before installing it. ZimaMOD and its mods are
+> provided **as is**, without warranty. You use them entirely at your own risk,
+> and the project maintainers and contributors accept no responsibility or
+> liability for data loss, security incidents, service disruption, system
+> damage, or any other consequences resulting from their use.
+
 ZimaOS uses the CasaOS design language and APIs, but its dashboard is served by
 `zimaos-gateway` from embedded assets. It does not expose the editable
 dashboard files expected by traditional host-patching mod systems.
@@ -46,8 +54,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.16
-ghcr.io/metisro/zimamod-proxy:1.1.16
+ghcr.io/metisro/zimamod-api:1.1.17
+ghcr.io/metisro/zimamod-proxy:1.1.17
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -85,8 +93,8 @@ The project version is stored in `VERSION`, the install Compose image tags, and
 the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.16
-git push origin v1.1.16
+git tag v1.1.17
+git push origin v1.1.17
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -271,8 +279,15 @@ The bundled mods demonstrate these patterns.
 - The API listens only on `127.0.0.1`; it is exposed through the dashboard
   proxy on the same origin.
 
-Do not install mods whose source code you do not trust. Dashboard mods execute
-with access to the authenticated ZimaOS browser session.
+Dashboard mods execute with access to the authenticated ZimaOS browser session
+and may read or modify information available to that session. Mods, including
+MOD Store entries, are not guaranteed to have been independently verified,
+audited, or tested for every system and ZimaOS version.
+
+Do not install a mod unless you have reviewed and trust its source code. Back up
+important data before using ZimaMOD or installing mods. ZimaMOD and its mods are
+provided as is and used entirely at your own risk, subject to the warranty and
+liability limitations in the [Apache License 2.0](LICENSE).
 
 ## ZimaOS Compatibility
 
@@ -290,4 +305,5 @@ separately identified third-party components. See
 terms.
 
 Contributions are accepted under the terms described in
-[CONTRIBUTING.md](CONTRIBUTING.md).
+[CONTRIBUTING.md](CONTRIBUTING.md). Developers contributing mods should also
+follow the [mod development and contribution guide](mods/README.md).

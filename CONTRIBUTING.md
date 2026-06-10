@@ -1,6 +1,22 @@
 # Contributing To ZimaMOD
 
-Contributions are welcome through issues and pull requests.
+Contributions are welcome through issues and pull requests. All pull requests
+are reviewed by the ZimaMOD maintainer before merge. Submission does not
+guarantee inclusion, and the maintainer makes the final merge and release
+decision.
+
+## Pull Request Workflow
+
+1. Fork [metisro/ZimaMOD](https://github.com/metisro/ZimaMOD).
+2. Create a focused branch from the latest `main`.
+3. Make and test one cohesive change.
+4. Open a pull request against `metisro/ZimaMOD:main`.
+5. Address maintainer review feedback on the same pull-request branch.
+
+Explain the problem, the proposed behavior, the implementation, and the checks
+you ran. Include screenshots for visible changes and identify anything you
+could not test. Open a GitHub issue first for substantial changes so their
+scope and fit can be discussed before implementation.
 
 ## Contribution License
 
@@ -20,6 +36,10 @@ New or adapted mods must identify their authors and origin in `zimamod.json`.
 Adapted mods must link to their original source and comply with the original
 license. Include any required third-party license text and attribution inside
 the mod directory.
+
+See the [mod development and contribution guide](mods/README.md) for the
+manifest format, runtime requirements, testing workflow, and mod review
+expectations.
 
 ## Validation
 
