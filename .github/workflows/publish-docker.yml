@@ -101,7 +101,7 @@ jobs:
           tags: ${{ steps.version.outputs.proxy_tags }}
 
   release:
-    if: github.ref_type == 'tag'
+    if: always() && github.ref_type == 'tag' && needs.publish.result == 'success'
     needs: publish
     runs-on: ubuntu-latest
     permissions:
