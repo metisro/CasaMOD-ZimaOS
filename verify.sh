@@ -38,7 +38,7 @@ check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
 check_status "$base_url/v2/settings/fe.custom" 200
 
-curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.7' ||
+curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.8' ||
   fail "dashboard HTML does not contain the ZimaMOD loader"
 echo "PASS: dashboard HTML contains the ZimaMOD loader"
 

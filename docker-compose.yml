@@ -1,9 +1,9 @@
 name: zimamod
-version: "1.1.7"
+version: "1.1.8"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.7
+    image: ghcr.io/metisro/zimamod-api:1.1.8
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - /DATA/AppData/zimamod:/data
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.7
+    image: ghcr.io/metisro/zimamod-proxy:1.1.8
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -45,9 +45,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.7"
-  updateAt: "2026-06-08"
+  version: "1.1.8"
+  updateAt: "2026-06-10"
   releaseNotes:
-    en_us: Exposes the MOD Store from the console and improves ZimaOS tile detection.
+    en_us: Prevents the optional frontend custom-settings request from logging an unhandled error.
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues
