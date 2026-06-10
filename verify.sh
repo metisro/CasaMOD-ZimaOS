@@ -36,6 +36,7 @@ check_status "$base_url/zimamod-runtime/zimamod-icon.png" 200
 check_status "$base_url/mod/weather-widget/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
+check_status "$base_url/v2/settings/fe.custom" 200
 
 curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.7' ||
   fail "dashboard HTML does not contain the ZimaMOD loader"

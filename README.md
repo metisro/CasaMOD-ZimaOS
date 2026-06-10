@@ -183,8 +183,8 @@ The bundled mods demonstrate these patterns.
 Do not install mods whose source code you do not trust. Dashboard mods execute
 with access to the authenticated ZimaOS browser session.
 
-## Known ZimaOS Behavior
+## ZimaOS Compatibility
 
-When accessed through port `8088`, ZimaOS v1.6.1 may log a
-`/v2/settings/fe.custom` `400 Bad Request`. It does not prevent the tested mods
-from working.
+When ZimaOS returns `400 Bad Request` for the optional
+`/v2/settings/fe.custom` request, the proxy supplies an empty custom-settings
+response so the dashboard can continue without logging an unhandled error.
