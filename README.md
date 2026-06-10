@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.18
-ghcr.io/metisro/zimamod-proxy:1.1.18
+ghcr.io/metisro/zimamod-api:1.1.19
+ghcr.io/metisro/zimamod-proxy:1.1.19
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -82,7 +82,7 @@ On first start, the API generates a random write token in the persistent data
 directory. Retrieve it when the browser asks for authorization:
 
 ```sh
-docker exec zimamod-api cat /data/api-token
+docker exec zimamod-api cat /data/api-token.txt
 ```
 
 Keep the token private. ZimaMOD asks for it before configuration changes or MOD
@@ -121,8 +121,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.18
-git push origin v1.1.18
+git tag v1.1.19
+git push origin v1.1.19
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -156,7 +156,7 @@ When importing through ZimaOS, the API automatically generates its write token.
 Retrieve it from the ZimaOS terminal when prompted in the browser:
 
 ```sh
-docker exec zimamod-api cat /data/api-token
+docker exec zimamod-api cat /data/api-token.txt
 ```
 
 To set your own token instead, add `ZIMAMOD_API_TOKEN=<random-token>` of at

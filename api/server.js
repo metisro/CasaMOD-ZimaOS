@@ -16,7 +16,8 @@ const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const ASSET_PATH_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/;
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const VERSION = process.env.VERSION || "dev";
-const TOKEN_FILE = path.join(DATA_DIR, "api-token");
+const TOKEN_FILE = path.join(DATA_DIR, "api-token.txt");
+const LEGACY_TOKEN_FILE = path.join(DATA_DIR, "api-token");
 const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metisro/ZimaMOD/releases/latest";
 const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
 let updateCache = null;
@@ -36,14 +37,21 @@ function apiToken() {
     if (configured.length < 32) throw new Error("ZIMAMOD_API_TOKEN must contain at least 32 characters");
     return configured;
   }
-  const stored = readText(TOKEN_FILE);
+  let stored = readText(TOKEN_FILE);
+  if (stored.length < 32) {
+    stored = readText(LEGACY_TOKEN_FILE);
+    if (stored.length >= 32) {
+      fs.writeFileSync(TOKEN_FILE, stored + "\n", { mode: 0o600 });
+      fs.rmSync(LEGACY_TOKEN_FILE, { force: true });
+    }
+  }
   if (stored.length >= 32) {
     fs.chmodSync(TOKEN_FILE, 0o600);
     return stored;
   }
   const generated = crypto.randomBytes(32).toString("hex");
   fs.writeFileSync(TOKEN_FILE, generated + "\n", { mode: 0o600 });
-  console.log("Generated ZimaMOD API token. Retrieve it with: docker exec zimamod-api cat /data/api-token");
+  console.log("Generated ZimaMOD API token. Retrieve it with: docker exec zimamod-api cat /data/api-token.txt");
   return generated;
 }
 
