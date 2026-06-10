@@ -10,7 +10,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  validate-install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate published install images
+        shell: bash
+        run: |
+          while read -r image; do
+            docker buildx imagetools inspect "$image"
+          done < <(docker compose -f docker-compose.yml config --images)
+
   publish:
+    needs: validate-install
     runs-on: ubuntu-latest
     permissions:
       contents: read
