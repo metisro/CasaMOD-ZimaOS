@@ -58,3 +58,24 @@ existing project, include adaptation credit and the original source:
 
 Installing copies the catalog directory into `mod/<mod-id>`. Uninstalling
 removes only the installed copy and leaves the store catalog entry intact.
+
+### Store Card Image
+
+Place a PNG, JPEG, WebP, or SVG image inside the MOD directory and reference
+its relative path using `screenshot`:
+
+```text
+mods/example-mod/
+  zimamod.json
+  screenshot.webp
+```
+
+```json
+{
+  "screenshot": "screenshot.webp"
+}
+```
+
+The MOD Store displays the image with `object-fit: cover` in a wide card media
+area. A landscape image around `800x450` pixels is recommended. Keep important
+content away from the edges because the image may be cropped.

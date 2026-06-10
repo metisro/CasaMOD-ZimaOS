@@ -136,7 +136,7 @@
       dot.tabIndex = 0;
       dot.style.cssText = [
         "position:absolute",
-        "z-index:2147482000",
+        "z-index:40",
         "top:10px",
         "left:10px",
         "display:block",
