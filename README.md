@@ -1,6 +1,8 @@
 # ZimaMOD
 
-<img src="assets/zimamod-icon.png" alt="ZimaMOD icon" width="180">
+<p align="center">
+  <img src="assets/zimamod-icon.png" alt="ZimaMOD icon" width="180">
+</p>
 
 Independent, community-developed mod framework for ZimaOS.
 
@@ -262,9 +264,9 @@ Configuration is written atomically to:
 /DATA/AppData/zimamod/config/<mod-id>.json
 ```
 
-## Porting CasaOS Mods
+## Porting CasaMOD Mods for CasaOS
 
-CasaOS mods commonly require these changes:
+CasaMOD mods for CasaOS commonly require these changes:
 
 1. Replace `.ps-container` and legacy widget-class assumptions with ZimaOS DOM
    discovery.
@@ -303,7 +305,7 @@ response so the dashboard can continue without logging an unhandled error.
 
 ## License
 
-Copyright 2026 Flavius Gheorghe.
+Copyright 2026 metisro.
 
 ZimaMOD is licensed under the [Apache License 2.0](LICENSE), except for
 separately identified third-party components. See
