@@ -18,14 +18,15 @@
 }
 
 .zimamod-update-tooltip {
-  position: absolute;
-  top: 19px;
-  right: -5px;
+  position: fixed;
+  z-index: 2147483646;
+  display: none;
   width: 260px;
+  box-sizing: border-box;
   padding: 9px 11px;
   border: 1px solid rgba(120, 160, 255, .35);
   border-radius: 10px;
-  color: #eaf2ff;
+  color: #eaf2ff !important;
   background: rgba(8, 22, 50, .96);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
   font: 500 11px/1.45 system-ui, sans-serif;
@@ -39,14 +40,8 @@
 .zimamod-update-tooltip strong {
   display: block;
   margin-bottom: 2px;
-  color: #fff;
+  color: #fff !important;
   font-size: 12px;
-}
-
-.zimamod-update-dot:hover .zimamod-update-tooltip,
-.zimamod-update-dot:focus-visible .zimamod-update-tooltip {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 #zimamod-store-modal {

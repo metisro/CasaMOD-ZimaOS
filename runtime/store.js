@@ -6,6 +6,7 @@
 
   const BUTTON_CLASS = "zimamod-store-launcher";
   const UPDATE_DOT_CLASS = "zimamod-update-dot";
+  const UPDATE_TOOLTIP_CLASS = "zimamod-update-tooltip";
   const MODAL_ID = "zimamod-store-modal";
   const UPDATE_CHECK_MS = 8 * 60 * 60 * 1000;
   let updateStatus = null;
@@ -23,6 +24,7 @@
   }
 
   function tileCandidate(element) {
+    if (!element) return null;
     let candidate = element.parentElement;
     const candidates = [];
     for (let depth = 0; candidate && depth < 6; depth++, candidate = candidate.parentElement) {
@@ -45,11 +47,13 @@
       .find(element => (element.textContent || "").trim() === "ZimaMOD") || null;
   }
 
+  function findAppHandle() {
+    return allElements("#app-zimamod").find(element => element.classList.contains("handle")) || null;
+  }
+
   function findAppTile() {
-    const app = allElements("#app-zimamod").find(element => element.classList.contains("handle"));
-    if (app) return app;
     const title = titleElement();
-    return title ? tileCandidate(title) : null;
+    return title ? tileCandidate(title) : tileCandidate(findAppHandle());
   }
 
   function showLauncher(button) {
@@ -113,32 +117,98 @@
 
   function mountUpdateDot() {
     const dots = allElements("." + UPDATE_DOT_CLASS);
-    const tile = findAppTile();
-    const showUpdate = Boolean(tile && updateStatus?.checkAvailable && updateStatus.updateAvailable);
+    const handle = findAppHandle();
+    const showUpdate = Boolean(handle && updateStatus?.checkAvailable && updateStatus.updateAvailable);
     dots.forEach(element => {
-      if (!showUpdate || element.parentElement !== tile) element.remove();
+      if (!showUpdate || element.parentElement !== handle) element.remove();
     });
-    if (!showUpdate) return;
+    if (!showUpdate) {
+      hideUpdateTooltip();
+      return;
+    }
 
-    tile.style.position = "relative";
-    let dot = tile.querySelector("." + UPDATE_DOT_CLASS);
+    handle.style.position = "relative";
+    let dot = handle.querySelector("." + UPDATE_DOT_CLASS);
     if (!dot) {
-      dot = document.createElement("button");
+      dot = document.createElement("span");
       dot.className = UPDATE_DOT_CLASS;
-      dot.type = "button";
-      dot.setAttribute("aria-label", `ZimaMOD ${updateStatus.latestVersion} is available`);
+      dot.setAttribute("role", "button");
+      dot.tabIndex = 0;
+      dot.style.cssText = [
+        "position:absolute",
+        "z-index:2147482000",
+        "top:1px",
+        "right:1px",
+        "display:block",
+        "width:14px",
+        "height:14px",
+        "margin:0",
+        "padding:0",
+        "border:2px solid rgba(255,255,255,.96)",
+        "border-radius:50%",
+        "background:#2878ff",
+        "box-shadow:0 0 0 4px rgba(40,120,255,.22),0 3px 10px rgba(0,45,140,.4)",
+        "cursor:pointer"
+      ].join(";");
       dot.addEventListener("click", event => {
         event.preventDefault();
         event.stopPropagation();
         void openStore();
       });
-      tile.appendChild(dot);
+      dot.addEventListener("keydown", event => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        void openStore();
+      });
+      dot.addEventListener("mouseenter", showUpdateTooltip);
+      dot.addEventListener("mouseleave", hideUpdateTooltip);
+      dot.addEventListener("focus", showUpdateTooltip);
+      dot.addEventListener("blur", hideUpdateTooltip);
+      handle.appendChild(dot);
     }
-    dot.innerHTML = `<span class="zimamod-update-tooltip">
+    dot.setAttribute("aria-label", `ZimaMOD ${updateStatus.latestVersion} is available`);
+  }
+
+  function updateTooltip() {
+    let tooltip = document.querySelector("." + UPDATE_TOOLTIP_CLASS);
+    if (!tooltip) {
+      tooltip = document.createElement("div");
+      tooltip.className = UPDATE_TOOLTIP_CLASS;
+      tooltip.setAttribute("role", "tooltip");
+      document.body.appendChild(tooltip);
+    }
+    tooltip.innerHTML = `
       <strong>ZimaMOD ${escapeHtml(updateStatus.latestVersion)} is available</strong>
       In ZimaOS Settings, edit ZimaMOD, change both API and proxy image tags to
       ${escapeHtml(updateStatus.latestVersion)}, then click Install.
-    </span>`;
+    `;
+    return tooltip;
+  }
+
+  function showUpdateTooltip(event) {
+    if (!updateStatus?.updateAvailable) return;
+    const dot = event.currentTarget;
+    const rect = dot.getBoundingClientRect();
+    const tooltip = updateTooltip();
+    tooltip.style.display = "block";
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const left = Math.max(12, Math.min(window.innerWidth - tooltipRect.width - 12, rect.right - tooltipRect.width));
+    const top = Math.min(window.innerHeight - tooltipRect.height - 12, rect.bottom + 10);
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${Math.max(12, top)}px`;
+    tooltip.style.opacity = "1";
+    tooltip.style.transform = "translateY(0)";
+  }
+
+  function hideUpdateTooltip() {
+    const tooltip = document.querySelector("." + UPDATE_TOOLTIP_CLASS);
+    if (!tooltip) return;
+    tooltip.style.opacity = "0";
+    tooltip.style.transform = "translateY(-3px)";
+    setTimeout(() => {
+      if (tooltip.style.opacity === "0") tooltip.style.display = "none";
+    }, 170);
   }
 
   function renderUpdatePanel(modal) {
