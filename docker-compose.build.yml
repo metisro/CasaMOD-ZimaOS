@@ -1,5 +1,5 @@
 name: zimamod
-version: "1.1.10-local"
+version: "1.1.11-local"
 
 services:
   zimamod-api:
@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: api/Dockerfile
       args:
-        VERSION: "1.1.10-local"
+        VERSION: "1.1.11-local"
     image: zimamod-api:local
     container_name: zimamod-api
     network_mode: host
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: proxy/Dockerfile
       args:
-        VERSION: "1.1.10-local"
+        VERSION: "1.1.11-local"
     image: zimamod-proxy:local
     container_name: zimamod-proxy
     labels:
@@ -55,7 +55,7 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.10-local"
+  version: "1.1.11-local"
   updateAt: "2026-06-10"
   releaseNotes:
     en_us: Local development build.

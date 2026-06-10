@@ -137,8 +137,8 @@
       dot.style.cssText = [
         "position:absolute",
         "z-index:2147482000",
-        "top:1px",
-        "right:1px",
+        "top:10px",
+        "left:10px",
         "display:block",
         "width:14px",
         "height:14px",
@@ -435,6 +435,7 @@
 
   window.ZimaMOD.openStore = openStore;
   window.ZimaMOD.closeStore = closeStore;
+  window.ZimaMOD.checkForUpdates = checkUpdates;
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, character => ({
@@ -455,6 +456,6 @@
   });
   observer.observe(document.body, { childList: true, subtree: true });
   mountLauncher();
-  setTimeout(() => void checkUpdates(), 2000);
+  void checkUpdates();
   setInterval(() => void checkUpdates(), UPDATE_CHECK_MS);
 })();
