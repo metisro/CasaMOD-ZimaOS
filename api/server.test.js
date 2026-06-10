@@ -47,7 +47,7 @@ const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
   env: {
     ...process.env,
     DATA_DIR: dataDir,
-    PORT: "18090",
+    ZIMAMOD_API_PORT: "18090",
     VERSION: "1.1.8",
     UPDATE_URL: "http://127.0.0.1:18091/latest"
   },

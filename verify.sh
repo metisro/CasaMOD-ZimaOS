@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-base_url=${ZIMAMOD_URL:-http://127.0.0.1:8088}
+dashboard_port=${ZIMAMOD_DASHBOARD_PORT:-8088}
+base_url=${ZIMAMOD_URL:-http://127.0.0.1:$dashboard_port}
 config_id=zimamod-deployment-check
 config_url="$base_url/zimamod-api/config/$config_id"
 expected='{"deployment":"ok"}'
@@ -40,7 +41,7 @@ check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
 check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
 check_status "$base_url/v2/settings/fe.custom" 200
 
-curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.15' ||
+curl -fsS "$base_url/" | grep -q '/zimamod-runtime/loader.js?v=1.1.16' ||
   fail "dashboard HTML does not contain the ZimaMOD loader"
 echo "PASS: dashboard HTML contains the ZimaMOD loader"
 

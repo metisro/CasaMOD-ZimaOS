@@ -4,7 +4,8 @@ const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
 
-const PORT = Number(process.env.PORT || 8090);
+const PORT_VALUE = process.env.ZIMAMOD_API_PORT || process.env.PORT || "8090";
+const PORT = Number(PORT_VALUE);
 const DATA_DIR = process.env.DATA_DIR || "/data";
 const MOD_DIR = path.join(DATA_DIR, "mod");
 const CONFIG_DIR = path.join(DATA_DIR, "config");
@@ -17,6 +18,10 @@ const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metis
 const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
 let updateCache = null;
 let updateRequest = null;
+
+if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
+  throw new Error(`Invalid API port: ${PORT_VALUE}`);
+}
 
 fs.mkdirSync(CONFIG_DIR, { recursive: true });
 fs.mkdirSync(STORE_DIR, { recursive: true });

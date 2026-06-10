@@ -20,7 +20,8 @@ ZimaOS provides:
 
 ## Proven Compatibility Approach
 
-- Reverse proxy ZimaOS gateway port `80` through port `8088`.
+- Reverse proxy ZimaOS gateway port `80` through dashboard port `8088` by
+  default, with runtime-configurable dashboard and API ports.
 - Disable upstream compression so Nginx can inject the framework loader.
 - Serve mod assets from `/DATA/AppData/zimamod/mod`.
 - Run mod code only in the top dashboard document.

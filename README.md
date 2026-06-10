@@ -12,9 +12,9 @@ ZimaMOD solves this with a reverse proxy and a small compatibility API:
 
 ```text
 Browser
-  -> ZimaMOD proxy :8088
+  -> ZimaMOD proxy :8088 (configurable)
      -> ZimaOS gateway :80
-     -> ZimaMOD API :8090
+     -> ZimaMOD API :8090 (configurable)
 ```
 
 ## Features
@@ -42,8 +42,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.15
-ghcr.io/metisro/zimamod-proxy:1.1.15
+ghcr.io/metisro/zimamod-api:1.1.16
+ghcr.io/metisro/zimamod-proxy:1.1.16
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -81,8 +81,8 @@ The project version is stored in `VERSION`, the install Compose image tags, and
 the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.15
-git push origin v1.1.15
+git tag v1.1.16
+git push origin v1.1.16
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -108,6 +108,35 @@ http://ZIMAOS-IP:8088
 ```
 
 The standard ZimaOS dashboard remains available on port `80`.
+
+### Custom Ports
+
+ZimaMOD defaults to dashboard port `8088` and private API port `8090`. Both can
+be changed at runtime without rebuilding either image:
+
+```env
+ZIMAMOD_DASHBOARD_PORT=8188
+ZIMAMOD_API_PORT=8190
+```
+
+When using Docker Compose, place those values in a `.env` file beside
+`docker-compose.yml`, then recreate both containers:
+
+```sh
+docker compose up -d --force-recreate
+```
+
+When editing the app through ZimaOS Settings, add the same environment
+variables to the appropriate services:
+
+- Add `ZIMAMOD_API_PORT` to both `zimamod-api` and `zimamod-proxy`.
+- Add `ZIMAMOD_DASHBOARD_PORT` to `zimamod-proxy`.
+- Update the ZimaMOD app's displayed/open port to match
+  `ZIMAMOD_DASHBOARD_PORT`.
+
+Valid port values are integers from `1` through `65535`. The default values
+remain suitable for most installations. The dashboard and API ports must be
+different.
 
 ## Update Notifications
 

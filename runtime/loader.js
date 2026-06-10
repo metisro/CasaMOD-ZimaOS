@@ -91,8 +91,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.15", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.15", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.16", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.16", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {
