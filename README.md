@@ -2,7 +2,11 @@
 
 <img src="assets/zimamod-icon.png" alt="ZimaMOD icon" width="180">
 
-Independent mod framework for ZimaOS.
+Independent, community-developed mod framework for ZimaOS.
+
+> **Independent community project:** ZimaMOD is not affiliated with, endorsed
+> by, maintained by, or supported by the ZimaOS, CasaOS, or CasaMOD projects or
+> their respective teams.
 
 ZimaOS uses the CasaOS design language and APIs, but its dashboard is served by
 `zimaos-gateway` from embedded assets. It does not expose the editable
@@ -275,3 +279,15 @@ with access to the authenticated ZimaOS browser session.
 When ZimaOS returns `400 Bad Request` for the optional
 `/v2/settings/fe.custom` request, the proxy supplies an empty custom-settings
 response so the dashboard can continue without logging an unhandled error.
+
+## License
+
+Copyright 2026 Flavius Gheorghe.
+
+ZimaMOD is licensed under the [Apache License 2.0](LICENSE), except for
+separately identified third-party components. See
+[Third-Party Notices](THIRD_PARTY_NOTICES.md) for their attribution and license
+terms.
+
+Contributions are accepted under the terms described in
+[CONTRIBUTING.md](CONTRIBUTING.md).

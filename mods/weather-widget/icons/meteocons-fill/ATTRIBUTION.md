@@ -7,5 +7,6 @@ This folder contains selected Fill SVG icons from `@meteocons/svg`.
 - Author: Bas Milius
 - License: MIT
 
-The downloaded `package.json` in this folder records the package metadata and
+The complete MIT license and copyright notice are included in `LICENSE`. The
+downloaded `package.json` in this folder also records the package metadata and
 license field.
