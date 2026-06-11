@@ -289,6 +289,9 @@
             <button type="button" data-filter="installed">
               <span class="zimamod-store-nav-icon">✓</span>Installed
             </button>
+            <button type="button" class="zimamod-store-copy-key">
+              <span class="zimamod-store-nav-icon">□</span>Copy key
+            </button>
           </nav>
           <section class="zimamod-store-update" aria-live="polite">
             <strong>ZimaMOD version</strong>
@@ -325,6 +328,23 @@
     modal.querySelector(".zimamod-store-backdrop").addEventListener("click", closeStore);
     modal.querySelector(".zimamod-store-close").addEventListener("click", closeStore);
     modal.querySelector(".zimamod-store-search input").addEventListener("input", () => filterCards(modal));
+    modal.querySelector(".zimamod-store-copy-key").addEventListener("click", async event => {
+      const button = event.currentTarget;
+      const original = button.innerHTML;
+      button.disabled = true;
+      try {
+        await window.ZimaMOD.copyApiToken();
+        button.innerHTML = `<span class="zimamod-store-nav-icon">✓</span>Key copied`;
+      } catch (error) {
+        button.innerHTML = `<span class="zimamod-store-nav-icon">!</span>Copy failed`;
+        modal.querySelector(".zimamod-store-status").textContent = error.message;
+      } finally {
+        setTimeout(() => {
+          button.innerHTML = original;
+          button.disabled = false;
+        }, 1800);
+      }
+    });
     modal.querySelectorAll("[data-filter]").forEach(button => {
       button.addEventListener("click", () => {
         modal.querySelectorAll("[data-filter]").forEach(item => item.classList.toggle("is-active", item === button));

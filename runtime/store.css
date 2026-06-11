@@ -150,6 +150,11 @@
   background: #eaf1ff;
 }
 
+.zimamod-store-sidebar nav button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
 .zimamod-store-nav-icon {
   display: grid;
   width: 20px;

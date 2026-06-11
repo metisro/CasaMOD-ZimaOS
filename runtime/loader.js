@@ -46,10 +46,49 @@
     throw new Error("Invalid ZimaMOD API token");
   }
 
+  async function copyText(value) {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    if (!copied) throw new Error("Clipboard access unavailable");
+  }
+
   window.ZimaMOD = {
     platform: "zimaos",
     clearWriteToken() {
       sessionStorage.removeItem(TOKEN_KEY);
+    },
+    async copyApiToken() {
+      const dashboardToken = (() => {
+        try {
+          return document.querySelector("#app").__vue__.$store.state.access_token || "";
+        } catch (_) {
+          return localStorage.getItem("access_token") || "";
+        }
+      })();
+      if (!dashboardToken) throw new Error("Copy key failed: sign in to ZimaOS first");
+      const response = await fetch(
+        `/v1/file?path=${encodeURIComponent("/DATA/AppData/zimamod/config/api_token")}&timestamp=${Date.now()}`,
+        {
+          credentials: "include",
+          cache: "no-store",
+          headers: dashboardToken ? { Authorization: dashboardToken } : {}
+        }
+      );
+      if (!response.ok) throw new Error(`Copy key failed: ${response.status}`);
+      const token = (await response.text()).trim();
+      if (token.length < 32) throw new Error("Copy key failed: invalid API token");
+      await copyText(token);
+      return token;
     },
     assetUrl(modId, relativePath) {
       return `${MOD_BASE}/${encodeURIComponent(modId)}/${String(relativePath).replace(/^\/+/, "")}`;
@@ -116,8 +155,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.19", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.19", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.20", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.20", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {

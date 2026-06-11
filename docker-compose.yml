@@ -1,21 +1,20 @@
 name: zimamod
-version: "1.1.19"
+version: "1.1.20"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.19
+    image: ghcr.io/metisro/zimamod-api:1.1.20
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
     environment:
       DATA_DIR: /data
       ZIMAMOD_API_PORT: "${ZIMAMOD_API_PORT:-8090}"
-      ZIMAMOD_API_TOKEN: "${ZIMAMOD_API_TOKEN:-}"
     volumes:
       - /DATA/AppData/zimamod:/data
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.19
+    image: ghcr.io/metisro/zimamod-proxy:1.1.20
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -48,9 +47,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.19"
+  version: "1.1.20"
   updateAt: "2026-06-10"
   releaseNotes:
-    en_us: Persists the write API token as api-token.txt and migrates the legacy filename.
+    en_us: Rotates the API token on restart and adds a MOD Store Copy key action.
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues

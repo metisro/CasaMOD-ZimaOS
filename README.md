@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.19
-ghcr.io/metisro/zimamod-proxy:1.1.19
+ghcr.io/metisro/zimamod-api:1.1.20
+ghcr.io/metisro/zimamod-proxy:1.1.20
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -78,17 +78,19 @@ chmod +x verify.sh
 ./verify.sh
 ```
 
-On first start, the API generates a random write token in the persistent data
-directory. Retrieve it when the browser asks for authorization:
+Each time `zimamod-api` starts, it generates a new random write token at:
 
-```sh
-docker exec zimamod-api cat /data/api-token.txt
+```text
+/DATA/AppData/zimamod/config/api_token
 ```
 
-Keep the token private. ZimaMOD asks for it before configuration changes or MOD
-Store install/uninstall operations and keeps it only in that tab's session
-storage. Read-only dashboard API requests do not require it. You can provide a
-fixed `ZIMAMOD_API_TOKEN` environment value of at least 32 characters instead.
+Open the MOD Store and click **Copy key** in the left column, then paste it
+when the first install, uninstall, or configuration write requests
+authorization. The valid token is kept in that tab's session storage, so it is
+requested only once per browser session.
+
+Restarting `zimamod-api` rotates the token and invalidates previously authorized
+browser sessions. Read-only dashboard API requests do not require a token.
 
 The default dashboard connection uses HTTP, so the bearer token is not
 protected from a network attacker capable of intercepting LAN traffic. Put
@@ -121,8 +123,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.19
-git push origin v1.1.19
+git tag v1.1.20
+git push origin v1.1.20
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -152,15 +154,15 @@ The standard ZimaOS dashboard remains available on port `80`.
 
 ### ZimaOS Settings
 
-When importing through ZimaOS, the API automatically generates its write token.
-Retrieve it from the ZimaOS terminal when prompted in the browser:
+When importing through ZimaOS, the API automatically generates its write token
+in `/DATA/AppData/zimamod/config/api_token`. Use the MOD Store's **Copy key**
+button, or retrieve it from the ZimaOS terminal:
 
 ```sh
-docker exec zimamod-api cat /data/api-token.txt
+docker exec zimamod-api cat /data/config/api_token
 ```
 
-To set your own token instead, add `ZIMAMOD_API_TOKEN=<random-token>` of at
-least 32 characters to `zimamod-api`. Do not add it to `zimamod-proxy`.
+The token changes whenever `zimamod-api` restarts.
 
 ### Custom Ports
 

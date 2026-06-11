@@ -47,6 +47,7 @@ Before submitting a change, run the relevant checks:
 
 ```sh
 node --test api/server.test.js
+node --test runtime/loader.test.js
 node --check runtime/loader.js
 node --check runtime/store.js
 node --check mods/weather-widget/mod.js

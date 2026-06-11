@@ -6,7 +6,7 @@ const http = require("node:http");
 const os = require("node:os");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
-const apiToken = "test-token-that-is-at-least-32-characters";
+let apiToken = "";
 
 const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-"));
 const modDir = path.join(dataDir, "mod", "test-mod");
@@ -50,7 +50,6 @@ const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
     DATA_DIR: dataDir,
     ZIMAMOD_API_PORT: "18090",
     VERSION: "1.1.8",
-    ZIMAMOD_API_TOKEN: apiToken,
     UPDATE_URL: "http://127.0.0.1:18091/latest"
   },
   stdio: "ignore"
@@ -102,17 +101,13 @@ async function waitForServer() {
   throw new Error("API did not start");
 }
 
-async function verifyGeneratedToken() {
+async function verifyRestartRegeneratesToken() {
   const generatedDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-generated-token-"));
-  const generatedChild = spawn(process.execPath, [path.join(__dirname, "server.js")], {
-    env: {
-      ...process.env,
-      DATA_DIR: generatedDataDir,
-      ZIMAMOD_API_PORT: "18092",
-      ZIMAMOD_API_TOKEN: ""
-    },
+  const start = () => spawn(process.execPath, [path.join(__dirname, "server.js")], {
+    env: { ...process.env, DATA_DIR: generatedDataDir, ZIMAMOD_API_PORT: "18092" },
     stdio: "ignore"
   });
+  let generatedChild = start();
   try {
     for (let attempt = 0; attempt < 30; attempt++) {
       try {
@@ -121,48 +116,34 @@ async function verifyGeneratedToken() {
         await new Promise(resolve => setTimeout(resolve, 50));
       }
     }
-    const generatedToken = fs.readFileSync(path.join(generatedDataDir, "api-token.txt"), "utf8").trim();
-    assert.ok(generatedToken.length >= 32);
-    assert.equal((await request("PUT", "/config/test-mod", { generated: true }, generatedToken, 18092)).status, 200);
+    const tokenFile = path.join(generatedDataDir, "config", "api_token");
+    const firstToken = fs.readFileSync(tokenFile, "utf8").trim();
+    assert.ok(firstToken.length >= 32);
+    assert.equal((await request("PUT", "/config/test-mod", { generated: true }, firstToken, 18092)).status, 200);
+    generatedChild.kill();
+    await new Promise(resolve => generatedChild.once("exit", resolve));
+    generatedChild = start();
+    for (let attempt = 0; attempt < 30; attempt++) {
+      try {
+        if ((await request("GET", "/health", null, "", 18092)).status === 200) break;
+      } catch (_) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
+    const secondToken = fs.readFileSync(tokenFile, "utf8").trim();
+    assert.notEqual(secondToken, firstToken);
+    assert.equal((await request("PUT", "/config/test-mod", { old: true }, firstToken, 18092)).status, 401);
+    assert.equal((await request("PUT", "/config/test-mod", { current: true }, secondToken, 18092)).status, 200);
   } finally {
     generatedChild.kill();
     fs.rmSync(generatedDataDir, { recursive: true, force: true });
   }
 }
 
-async function verifyLegacyTokenMigration() {
-  const migrationDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-token-migration-"));
-  const legacyToken = "legacy-token-that-is-at-least-32-characters";
-  fs.writeFileSync(path.join(migrationDataDir, "api-token"), legacyToken);
-  const migrationChild = spawn(process.execPath, [path.join(__dirname, "server.js")], {
-    env: {
-      ...process.env,
-      DATA_DIR: migrationDataDir,
-      ZIMAMOD_API_PORT: "18093",
-      ZIMAMOD_API_TOKEN: ""
-    },
-    stdio: "ignore"
-  });
-  try {
-    for (let attempt = 0; attempt < 30; attempt++) {
-      try {
-        if ((await request("GET", "/health", null, "", 18093)).status === 200) break;
-      } catch (_) {
-        await new Promise(resolve => setTimeout(resolve, 50));
-      }
-    }
-    assert.equal(fs.readFileSync(path.join(migrationDataDir, "api-token.txt"), "utf8").trim(), legacyToken);
-    assert.equal(fs.existsSync(path.join(migrationDataDir, "api-token")), false);
-    assert.equal((await request("PUT", "/config/test-mod", { migrated: true }, legacyToken, 18093)).status, 200);
-  } finally {
-    migrationChild.kill();
-    fs.rmSync(migrationDataDir, { recursive: true, force: true });
-  }
-}
-
 (async () => {
   try {
     assert.equal((await waitForServer()).status, 200);
+    apiToken = fs.readFileSync(path.join(dataDir, "config", "api_token"), "utf8").trim();
 
     const mods = await request("GET", "/mods");
     assert.equal(mods.status, 200);
@@ -248,8 +229,7 @@ async function verifyLegacyTokenMigration() {
     );
 
     assert.equal((await request("GET", "/config/../bad")).status, 404);
-    await verifyGeneratedToken();
-    await verifyLegacyTokenMigration();
+    await verifyRestartRegeneratesToken();
     console.log("ZimaMOD API integration test passed");
   } finally {
     child.kill();
