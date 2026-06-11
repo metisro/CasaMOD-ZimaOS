@@ -44,12 +44,23 @@ const updateServer = http.createServer((request, response) => {
   }));
 }).listen(18091, "127.0.0.1");
 
+const dashboardServer = http.createServer((request, response) => {
+  if (request.url === "/v1/users/current" && request.headers.authorization === "Bearer dashboard-token") {
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end('{"success":200}');
+    return;
+  }
+  response.writeHead(401, { "Content-Type": "application/json" });
+  response.end('{"error":"Unauthorized"}');
+}).listen(18094, "127.0.0.1");
+
 const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
   env: {
     ...process.env,
     DATA_DIR: dataDir,
     ZIMAMOD_API_PORT: "18090",
     VERSION: "1.1.8",
+    ZIMAMOD_DASHBOARD_URL: "http://127.0.0.1:18094",
     UPDATE_URL: "http://127.0.0.1:18091/latest"
   },
   stdio: "ignore"
@@ -144,6 +155,11 @@ async function verifyRestartRegeneratesToken() {
   try {
     assert.equal((await waitForServer()).status, 200);
     apiToken = fs.readFileSync(path.join(dataDir, "config", "api_token"), "utf8").trim();
+    assert.equal((await request("GET", "/token")).status, 401);
+    assert.equal((await request("GET", "/token", null, "wrong-dashboard-token")).status, 401);
+    const tokenResponse = await request("GET", "/token", null, "dashboard-token");
+    assert.equal(tokenResponse.status, 200);
+    assert.equal(tokenResponse.body.token, apiToken);
 
     const mods = await request("GET", "/mods");
     assert.equal(mods.status, 200);
@@ -234,6 +250,7 @@ async function verifyRestartRegeneratesToken() {
   } finally {
     child.kill();
     updateServer.close();
+    dashboardServer.close();
     fs.rmSync(dataDir, { recursive: true, force: true });
   }
 })().catch(error => {

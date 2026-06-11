@@ -290,7 +290,9 @@
               <span class="zimamod-store-nav-icon">✓</span>Installed
             </button>
             <button type="button" class="zimamod-store-copy-key">
-              <span class="zimamod-store-nav-icon">□</span>Copy key
+              <span class="zimamod-store-nav-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"></path></svg>
+              </span>Copy key
             </button>
           </nav>
           <section class="zimamod-store-update" aria-live="polite">

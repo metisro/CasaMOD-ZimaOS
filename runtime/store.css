@@ -162,6 +162,16 @@
   font-size: 17px;
 }
 
+.zimamod-store-nav-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 .zimamod-store-sidebar-note {
   margin: auto 8px 0;
   color: #a0a5ae;

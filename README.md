@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.20
-ghcr.io/metisro/zimamod-proxy:1.1.20
+ghcr.io/metisro/zimamod-api:1.1.21
+ghcr.io/metisro/zimamod-proxy:1.1.21
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -88,6 +88,9 @@ Open the MOD Store and click **Copy key** in the left column, then paste it
 when the first install, uninstall, or configuration write requests
 authorization. The valid token is kept in that tab's session storage, so it is
 requested only once per browser session.
+
+**Copy key** requires a valid signed-in ZimaOS dashboard session. ZimaMOD
+validates that session before returning the current key.
 
 Restarting `zimamod-api` rotates the token and invalidates previously authorized
 browser sessions. Read-only dashboard API requests do not require a token.
@@ -123,8 +126,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.20
-git push origin v1.1.20
+git tag v1.1.21
+git push origin v1.1.21
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a

@@ -6,7 +6,7 @@ const path = require("node:path");
 const test = require("node:test");
 const vm = require("node:vm");
 
-test("MOD Store mutations reuse one token per session and Copy key uses the ZimaOS file API", async () => {
+test("MOD Store mutations reuse one token per session and Copy key uses ZimaOS session validation", async () => {
   const requests = [];
   const prompts = ["session-token"];
   const session = new Map();
@@ -33,11 +33,13 @@ test("MOD Store mutations reuse one token per session and Copy key uses the Zima
     document,
     fetch: async (url, options = {}) => {
       requests.push({ url, options });
+      const isTokenRequest = String(url).endsWith("/token");
       return {
         ok: true,
         status: 200,
-        json: async () => ({ mods: [] }),
-        text: async () => "copied-api-token-that-is-at-least-32-characters"
+        json: async () => isTokenRequest
+          ? { token: "copied-api-token-that-is-at-least-32-characters" }
+          : { mods: [] }
       };
     },
     localStorage: {
@@ -73,9 +75,9 @@ test("MOD Store mutations reuse one token per session and Copy key uses the Zima
   assert.equal(writes[0].options.headers.Authorization, "Bearer session-token");
   assert.equal(writes[1].options.headers.Authorization, "Bearer session-token");
   assert.equal(session.get("zimamod-api-token"), "session-token");
-  const copyRequest = requests.find(request => String(request.url).startsWith("/v1/file?"));
+  const copyRequest = requests.find(request => String(request.url).endsWith("/token"));
   assert.equal(copyRequest.options.headers.Authorization, "zimaos-session-token");
-  assert.match(copyRequest.url, /%2FDATA%2FAppData%2Fzimamod%2Fconfig%2Fapi_token/);
+  assert.equal(copyRequest.url, "/zimamod-api/token");
   assert.equal(copied, "copied-api-token-that-is-at-least-32-characters");
   assert.deepEqual(prompts, []);
 });

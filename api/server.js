@@ -17,6 +17,7 @@ const ASSET_PATH_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/;
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const VERSION = process.env.VERSION || "dev";
 const TOKEN_FILE = path.join(CONFIG_DIR, "api_token");
+const DASHBOARD_URL = process.env.ZIMAMOD_DASHBOARD_URL || "http://127.0.0.1:80";
 const UPDATE_URL = process.env.UPDATE_URL || "https://api.github.com/repos/metisro/ZimaMOD/releases/latest";
 const UPDATE_CACHE_MS = 8 * 60 * 60 * 1000;
 let updateCache = null;
@@ -69,6 +70,28 @@ function requireAuthorization(request, response) {
   response.setHeader("WWW-Authenticate", 'Bearer realm="ZimaMOD write API"');
   send(response, 401, { error: "Authentication required" });
   return false;
+}
+
+function dashboardSessionValid(request) {
+  return new Promise(resolve => {
+    const authorization = request.headers.authorization || "";
+    if (!authorization) {
+      resolve(false);
+      return;
+    }
+    const url = new URL("/v1/users/current", DASHBOARD_URL);
+    const validation = http.get(url, {
+      headers: {
+        Authorization: authorization,
+        "X-Real-IP": request.headers["x-real-ip"] || request.socket.remoteAddress || ""
+      }
+    }, response => {
+      response.resume();
+      resolve(response.statusCode >= 200 && response.statusCode < 300);
+    });
+    validation.setTimeout(5000, () => validation.destroy());
+    validation.on("error", () => resolve(false));
+  });
 }
 
 function contentType(file) {
@@ -396,6 +419,15 @@ async function handle(request, response) {
 
   if (request.method === "GET" && url.pathname === "/update") {
     send(response, 200, await updateStatus(url.searchParams.get("refresh") === "1"));
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/token") {
+    if (!await dashboardSessionValid(request)) {
+      send(response, 401, { error: "Valid ZimaOS session required" });
+      return;
+    }
+    send(response, 200, { token: API_TOKEN });
     return;
   }
 

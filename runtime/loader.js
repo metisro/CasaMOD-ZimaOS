@@ -76,16 +76,13 @@
         }
       })();
       if (!dashboardToken) throw new Error("Copy key failed: sign in to ZimaOS first");
-      const response = await fetch(
-        `/v1/file?path=${encodeURIComponent("/DATA/AppData/zimamod/config/api_token")}&timestamp=${Date.now()}`,
-        {
-          credentials: "include",
-          cache: "no-store",
-          headers: dashboardToken ? { Authorization: dashboardToken } : {}
-        }
-      );
+      const response = await fetch(`${API_BASE}/token`, {
+        credentials: "include",
+        cache: "no-store",
+        headers: { Authorization: dashboardToken }
+      });
       if (!response.ok) throw new Error(`Copy key failed: ${response.status}`);
-      const token = (await response.text()).trim();
+      const token = String((await response.json()).token || "").trim();
       if (token.length < 32) throw new Error("Copy key failed: invalid API token");
       await copyText(token);
       return token;
@@ -155,8 +152,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.20", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.20", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.21", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.21", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {
