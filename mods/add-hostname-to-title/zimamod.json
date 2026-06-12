@@ -1,0 +1,19 @@
+{
+  "name": "Add Hostname to Title",
+  "version": "1.0.0",
+  "description": "Add hostname to title.",
+  "category": "Compatible with ZimaMOD created for CasaMOD",
+  "authors": [
+    {
+      "name": "Cp0204",
+      "url": "https://github.com/Cp0204"
+    }
+  ],
+  "origin": {
+    "type": "compatible",
+    "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/add-hostname-to-title"
+  },
+  "enabled": true,
+  "scripts": ["mod.js"],
+  "styles": []
+}

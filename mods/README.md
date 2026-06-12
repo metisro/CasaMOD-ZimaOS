@@ -69,6 +69,12 @@ changes, particularly simple JavaScript or CSS mods that do not depend on
 CasaOS-specific dashboard elements or APIs. Compatibility must not be assumed:
 test each mod on ZimaOS before relying on it.
 
+The MOD Store category **Compatible with ZimaMOD created for CasaMOD** contains
+CasaMOD mods that have been tested on ZimaMOD. Entries in this category retain
+their original CasaMOD authorship and source links. A compatible entry may
+include a small documented adaptation, such as an English translation, when
+required for inclusion.
+
 Mods commonly need adaptation when they depend on CasaOS DOM selectors,
 `.ps-container`, the CasaOS `/v1/file` API, fixed asset paths, or dashboard
 behavior that differs in ZimaOS. Use the ZimaMOD browser API and runtime
@@ -128,8 +134,9 @@ The supported fields are:
 | `name` | Display name. Defaults to the mod ID. |
 | `version` | Version string used for display and asset cache busting. |
 | `description` | Short MOD Store description. |
+| `category` | Optional MOD Store category and filter label. |
 | `authors` | Author names with optional HTTP or HTTPS profile URLs. |
-| `origin` | Declares a `native` or `adapted` mod and its source. |
+| `origin` | Declares a `native`, `compatible`, or `adapted` mod and its source. |
 | `screenshot` | Relative path to the MOD Store card image. |
 | `enabled` | Set to `false` to prevent an installed mod from loading. |
 | `scripts` | JavaScript files loaded in listed order. |
@@ -157,6 +164,24 @@ Confirm that the original license permits adaptation and redistribution.
 Preserve all required copyright, license, and attribution notices inside the
 mod directory. Code without a license is not automatically available for
 reuse.
+
+### Compatible CasaMOD Mods
+
+Use the following metadata for an unchanged CasaMOD mod that has been tested
+and confirmed to work with ZimaMOD:
+
+```json
+{
+  "category": "Compatible with ZimaMOD created for CasaMOD",
+  "origin": {
+    "type": "compatible",
+    "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/example-mod"
+  }
+}
+```
+
+Use `origin.type: "adapted"` instead when the source was changed for ZimaMOD,
+while retaining the same category when it remains a CasaMOD-created mod.
 
 ## Browser API
 

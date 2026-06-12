@@ -1,0 +1,19 @@
+{
+  "name": "Network Title Setter",
+  "version": "1.0.0",
+  "description": "Detect network environment and dynamically set the page title with internal, public, and custom labels.",
+  "category": "Compatible with ZimaMOD created for CasaMOD",
+  "authors": [
+    {
+      "name": "MingTechpro"
+    }
+  ],
+  "origin": {
+    "type": "adapted",
+    "adapter": "ZimaMOD",
+    "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/network-title-setter"
+  },
+  "enabled": true,
+  "scripts": ["mod.js"],
+  "styles": []
+}

@@ -9,6 +9,7 @@
   const UPDATE_TOOLTIP_CLASS = "zimamod-update-tooltip";
   const MODAL_ID = "zimamod-store-modal";
   const UPDATE_CHECK_MS = 8 * 60 * 60 * 1000;
+  const CASAMOD_COMPATIBLE_CATEGORY = "Compatible with ZimaMOD created for CasaMOD";
   let updateStatus = null;
 
   function allRoots() {
@@ -289,6 +290,9 @@
             <button type="button" data-filter="installed">
               <span class="zimamod-store-nav-icon">✓</span>Installed
             </button>
+            <button type="button" data-filter="casamod-compatible">
+              <span class="zimamod-store-nav-icon">C</span>CasaMOD compatible
+            </button>
             <button type="button" class="zimamod-store-copy-key">
               <span class="zimamod-store-nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"></path></svg>
@@ -366,7 +370,8 @@
     const card = document.createElement("article");
     card.className = "zimamod-store-card";
     card.dataset.installed = String(mod.installed);
-    card.dataset.search = `${mod.name} ${mod.description || ""} ${
+    card.dataset.category = mod.category || "";
+    card.dataset.search = `${mod.name} ${mod.description || ""} ${mod.category || ""} ${
       (mod.authors || []).map(author => author.name).join(" ")
     }`.toLowerCase();
     const media = mod.screenshot
@@ -378,7 +383,13 @@
         : `<span>${escapeHtml(author.name)}</span>`
       ).join('<span class="zimamod-store-author-separator">, </span>')
       : `<span>ZimaMOD contributor</span>`;
-    const origin = mod.origin?.type === "adapted"
+    const origin = mod.origin?.type === "compatible"
+      ? `Created for CasaMOD${
+        mod.origin.source
+          ? ` <span aria-hidden="true">&middot;</span> <a href="${escapeHtml(mod.origin.source)}" target="_blank" rel="noopener noreferrer">View original</a>`
+          : ""
+      }`
+      : mod.origin?.type === "adapted"
       ? `Adapted for ZimaMOD by ${escapeHtml(mod.origin.adapter || "ZimaMOD")}${
         mod.origin.source
           ? ` <span aria-hidden="true">&middot;</span> <a href="${escapeHtml(mod.origin.source)}" target="_blank" rel="noopener noreferrer">View original</a>`
@@ -390,7 +401,9 @@
       <div class="zimamod-store-copy">
         <div class="zimamod-store-card-heading">
           <div>
-            <span class="zimamod-store-card-type">ZimaMOD</span>
+            <span class="zimamod-store-card-type">${escapeHtml(
+              mod.category === CASAMOD_COMPATIBLE_CATEGORY ? "CasaMOD compatible" : "ZimaMOD"
+            )}</span>
             <h3>${escapeHtml(mod.name)}</h3>
             <div class="zimamod-store-authors">by ${authors}</div>
           </div>
@@ -454,7 +467,11 @@
 
     modal.querySelectorAll(".zimamod-store-card").forEach(card => {
       const matchesSearch = !query || card.dataset.search.includes(query);
-      const matchesFilter = filter !== "installed" || card.dataset.installed === "true";
+      const matchesFilter = filter === "installed"
+        ? card.dataset.installed === "true"
+        : filter === "casamod-compatible"
+          ? card.dataset.category === CASAMOD_COMPATIBLE_CATEGORY
+          : true;
       card.hidden = !(matchesSearch && matchesFilter);
       if (!card.hidden) visible++;
     });

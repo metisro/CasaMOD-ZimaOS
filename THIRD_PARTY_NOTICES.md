@@ -29,3 +29,19 @@ licensed by ZimaMOD's Apache License 2.0:
 
 These references and credits do not imply affiliation with, endorsement by, or
 support from the referenced projects or authors.
+
+## CasaMOD-Compatible Mods
+
+The following MOD Store entries were copied from the
+[Cp0204/CasaMOD](https://github.com/Cp0204/CasaMOD) project after being tested
+with ZimaMOD. Their original source links and authors are recorded in each
+entry's `zimamod.json` and `README.md`.
+
+- `add-hostname-to-title`, by Cp0204
+- `emoji-cursor`, by Anonymous
+- `helloworld`, by Cp0204
+- `snow-wallpaper`, by leaf-126
+- `network-title-setter`, by MingTechpro; translated into English for ZimaMOD
+
+These files remain attributed to their original authors and are not presented
+as original ZimaMOD work.

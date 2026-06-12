@@ -23,10 +23,10 @@ fs.writeFileSync(path.join(storeDir, "screenshot.jpg"), "jpeg-data");
 fs.writeFileSync(path.join(storeDir, "zimamod.json"), JSON.stringify({
   name: "Store Mod",
   description: "Test store mod",
+  category: "Compatible with ZimaMOD created for CasaMOD",
   authors: [{ name: "Test Author", url: "https://example.com/author" }],
   origin: {
-    type: "adapted",
-    adapter: "Test Adapter",
+    type: "compatible",
     source: "https://example.com/original"
   },
   screenshot: "screenshot.png",
@@ -170,10 +170,11 @@ async function verifyRestartRegeneratesToken() {
     assert.equal(store.status, 200);
     assert.equal(store.body.mods[0].id, "store-mod");
     assert.equal(store.body.mods[0].installed, false);
+    assert.equal(store.body.mods[0].category, "Compatible with ZimaMOD created for CasaMOD");
     assert.deepEqual(store.body.mods[0].authors, [{ name: "Test Author", url: "https://example.com/author" }]);
     assert.deepEqual(store.body.mods[0].origin, {
-      type: "adapted",
-      adapter: "Test Adapter",
+      type: "compatible",
+      adapter: "",
       source: "https://example.com/original"
     });
     const storeAsset = await request("GET", "/store-assets/store-mod/screenshot.jpg");

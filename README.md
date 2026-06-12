@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.21
-ghcr.io/metisro/zimamod-proxy:1.1.21
+ghcr.io/metisro/zimamod-api:1.1.22
+ghcr.io/metisro/zimamod-proxy:1.1.22
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -126,8 +126,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.21
-git push origin v1.1.21
+git tag v1.1.22
+git push origin v1.1.22
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -268,6 +268,11 @@ Hover over the ZimaMOD app tile on the dashboard and select **MOD Store** to
 view the catalog. Installing copies a catalog mod from `store/<mod-id>` into
 `mod/<mod-id>`; uninstalling removes only the installed copy. Reload the
 dashboard after changing installed mods.
+
+The Store category **Compatible with ZimaMOD created for CasaMOD** collects
+mods originally created for CasaMOD that have been tested with ZimaMOD.
+These entries preserve their original authorship and source links. Some may
+include a documented compatibility change, such as an English translation.
 
 Each enabled mod is a directory containing `zimamod.json`:
 

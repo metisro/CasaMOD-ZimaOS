@@ -290,7 +290,7 @@ function readModManifest(root, modId) {
     }).filter(author => author.name)
     : [];
   const origin = manifest.origin && typeof manifest.origin === "object" ? {
-    type: manifest.origin.type === "adapted" ? "adapted" : "native",
+    type: ["adapted", "compatible"].includes(manifest.origin.type) ? manifest.origin.type : "native",
     adapter: typeof manifest.origin.adapter === "string" ? manifest.origin.adapter : "",
     source: typeof manifest.origin.source === "string" && /^https?:\/\//.test(manifest.origin.source)
       ? manifest.origin.source
@@ -307,6 +307,7 @@ function readModManifest(root, modId) {
     enabled: manifest.enabled !== false,
     version: typeof manifest.version === "string" ? manifest.version : "1",
     description: typeof manifest.description === "string" ? manifest.description : "",
+    category: typeof manifest.category === "string" ? manifest.category : "",
     authors,
     origin,
     authorUrl: typeof manifest.authorUrl === "string" && /^https?:\/\//.test(manifest.authorUrl)
