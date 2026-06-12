@@ -44,6 +44,33 @@ Browser
 - Shows an update indicator and installation guidance when a newer ZimaMOD
   release is available.
 
+## Screenshots
+
+Click a thumbnail to view the full-resolution screenshot.
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="screenshots/zimamod-dashboard.png">
+        <img src="screenshots/thumbnails/zimamod-dashboard.png" alt="ZimaMOD dashboard" width="300">
+      </a><br>
+      <sub>ZimaMOD dashboard</sub>
+    </td>
+    <td align="center">
+      <a href="screenshots/mod-store-discover.png">
+        <img src="screenshots/thumbnails/mod-store-discover.png" alt="MOD Store Discover view" width="300">
+      </a><br>
+      <sub>MOD Store Discover</sub>
+    </td>
+    <td align="center">
+      <a href="screenshots/mod-store-installed.png">
+        <img src="screenshots/thumbnails/mod-store-installed.png" alt="MOD Store Installed view" width="300">
+      </a><br>
+      <sub>MOD Store Installed</sub>
+    </td>
+  </tr>
+</table>
+
 ## Container Images
 
 The app uses two ZimaMOD images:
@@ -56,8 +83,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.24
-ghcr.io/metisro/zimamod-proxy:1.1.24
+ghcr.io/metisro/zimamod-api:1.1.25
+ghcr.io/metisro/zimamod-proxy:1.1.25
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -132,8 +159,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.24
-git push origin v1.1.24
+git tag v1.1.25
+git push origin v1.1.25
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a

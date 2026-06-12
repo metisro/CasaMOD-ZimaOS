@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible problem with ZimaMOD, its proxy, API, Store, or bundled mods.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve ZimaMOD. Do not include API tokens, passwords, private URLs, or other secrets.
+
+  - type: input
+    id: version
+    attributes:
+      label: ZimaMOD version
+      description: Use the installed semantic version or image tag.
+      placeholder: "1.1.25"
+    validations:
+      required: true
+
+  - type: input
+    id: zimaos-version
+    attributes:
+      label: ZimaOS version
+      placeholder: "1.6.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Installation method
+      options:
+        - ZimaOS custom Compose app
+        - Docker Compose
+        - Local source build
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe what happened and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open...
+        2. Install...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or browser console output
+      description: Remove tokens, credentials, private addresses, and personal data.
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Additional environment details
+      description: Include browser, architecture, custom ports, changed image tags, and installed mods when relevant.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I reproduced this on the proxied ZimaMOD dashboard, not the standard ZimaOS dashboard.
+          required: true
+        - label: I removed secrets and personal information from this report.
+          required: true
+        - label: I searched existing issues for the same problem.
+          required: true

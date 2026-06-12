@@ -1,0 +1,55 @@
+name: Feature or mod idea
+description: Suggest a ZimaMOD framework improvement, bundled mod, or documentation change.
+title: "[Idea]: "
+labels:
+  - enhancement
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      options:
+        - Framework improvement
+        - New mod
+        - Existing mod improvement
+        - MOD Store improvement
+        - Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: Explain what users cannot do today or what could work better.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or existing work
+      description: Link related CasaMOD, CasaOS, ZimaOS, or other implementations when relevant.
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Compatibility and breakage considerations
+      description: Note internal APIs, dashboard selectors, versions, or expected tradeoffs.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues for a similar request.
+          required: true
+        - label: I understand that proposals may intentionally use unstable ZimaOS internals.
+          required: true

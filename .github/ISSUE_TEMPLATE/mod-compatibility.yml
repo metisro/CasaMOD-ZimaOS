@@ -1,0 +1,73 @@
+name: Mod compatibility report
+description: Report whether a mod works, breaks, or needs adaptation on ZimaMOD.
+title: "[Mod compatibility]: "
+labels:
+  - mod-compatibility
+body:
+  - type: input
+    id: mod-name
+    attributes:
+      label: Mod name
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Original source
+      description: Link to the mod source or repository.
+      placeholder: "https://github.com/..."
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Tested versions
+      description: Include both ZimaMOD and ZimaOS versions.
+      placeholder: "ZimaMOD 1.1.25, ZimaOS 1.6.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result
+      options:
+        - Works without source changes
+        - Works with minor changes
+        - Requires adaptation
+        - Does not work
+    validations:
+      required: true
+
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Tested behavior
+      description: Explain what works, what fails, and how the result was verified.
+    validations:
+      required: true
+
+  - type: textarea
+    id: changes
+    attributes:
+      label: Required changes or known limitations
+
+  - type: textarea
+    id: license
+    attributes:
+      label: Authorship and license
+      description: Identify the original author and redistribution/adaptation license when known.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I tested this on the proxied ZimaMOD dashboard.
+          required: true
+        - label: I reviewed the mod source before running it.
+          required: true
+        - label: I removed secrets and personal information from this report.
+          required: true
