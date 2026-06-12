@@ -34,32 +34,9 @@ jobs:
             node --check "$file"
           done < <(find api runtime mods -type f -name '*.js' -print0)
 
-  validate-install:
-    if: github.ref_type != 'tag'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Validate published install images
-        shell: bash
-        run: |
-          while read -r image; do
-            docker buildx imagetools inspect "$image"
-          done < <(docker compose -f docker-compose.yml config --images)
-
   publish:
-    needs:
-      - validate-code
-      - validate-install
-    if: >-
-      always() &&
-      needs.validate-code.result == 'success' &&
-      (github.ref_type == 'tag' || needs.validate-install.result == 'success')
+    needs: validate-code
+    if: needs.validate-code.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read

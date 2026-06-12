@@ -70,6 +70,8 @@ It uses the repository's built-in `GITHUB_TOKEN`; no registry secret is needed.
 Before publishing any images, the workflow runs the API and runtime tests and
 checks the syntax of every JavaScript file under `api/`, `runtime/`, and
 `mods/`. Pull requests run the same checks through `.github/workflows/ci.yml`.
+Branch pushes publish `latest` and commit-SHA tags after validation. Release
+tags additionally publish the matching version tag and create a GitHub Release.
 
 ## Docker Compose Install
 
