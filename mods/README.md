@@ -36,6 +36,9 @@ the first deployment. On an existing development installation, rebuild the
 images and then uninstall and reinstall the mod from the MOD Store, or replace
 its installed directory manually, to test the refreshed copy.
 
+For framework and mod uninstall, rollback, backup, and recovery procedures, see
+the repository [operations guide](../docs/OPERATIONS.md).
+
 ## Install A Mod Outside The MOD Store
 
 Users can install a mod manually without adding it to the MOD Store:

@@ -1,9 +1,9 @@
 name: zimamod
-version: "1.1.23"
+version: "1.1.24"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.23
+    image: ghcr.io/metisro/zimamod-api:1.1.24
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - /DATA/AppData/zimamod:/data
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.23
+    image: ghcr.io/metisro/zimamod-proxy:1.1.24
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -47,9 +47,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.23"
+  version: "1.1.24"
   updateAt: "2026-06-12"
   releaseNotes:
-    en_us: Adds automated tests and JavaScript syntax checks that must pass before container images are published.
+    en_us: Updates Weather Widget documentation and adds complete uninstall, rollback, backup, and recovery guidance.
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues

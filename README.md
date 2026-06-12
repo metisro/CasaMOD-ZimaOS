@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.23
-ghcr.io/metisro/zimamod-proxy:1.1.23
+ghcr.io/metisro/zimamod-api:1.1.24
+ghcr.io/metisro/zimamod-proxy:1.1.24
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -132,8 +132,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.23
-git push origin v1.1.23
+git tag v1.1.24
+git push origin v1.1.24
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -269,6 +269,9 @@ installs framework updates automatically.
 
 These directories are mounted into the containers. Rebuilding the app refreshes
 the bundled mods without deleting user-installed mods or persistent settings.
+
+For complete uninstall, rollback, backup, and recovery procedures, see the
+[operations guide](docs/OPERATIONS.md).
 
 Hover over the ZimaMOD app tile on the dashboard and select **MOD Store** to
 view the catalog. Installing copies a catalog mod from `store/<mod-id>` into
