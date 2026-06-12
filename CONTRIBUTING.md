@@ -53,3 +53,6 @@ node --check runtime/store.js
 node --check mods/weather-widget/mod.js
 node --check mods/widget-sortable-zimaos/mod.js
 ```
+
+Pull requests run these tests and syntax checks automatically. Publishing is
+also blocked unless the same validation job succeeds.

@@ -56,8 +56,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.22
-ghcr.io/metisro/zimamod-proxy:1.1.22
+ghcr.io/metisro/zimamod-api:1.1.23
+ghcr.io/metisro/zimamod-proxy:1.1.23
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -66,6 +66,10 @@ Images are `node:22-alpine` and `nginx:alpine`.
 The GitHub Actions workflow at `.github/workflows/publish-docker.yml` publishes
 both images to GitHub Container Registry for `linux/amd64` and `linux/arm64`.
 It uses the repository's built-in `GITHUB_TOKEN`; no registry secret is needed.
+
+Before publishing any images, the workflow runs the API and runtime tests and
+checks the syntax of every JavaScript file under `api/`, `runtime/`, and
+`mods/`. Pull requests run the same checks through `.github/workflows/ci.yml`.
 
 ## Docker Compose Install
 
@@ -126,8 +130,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.22
-git push origin v1.1.22
+git tag v1.1.23
+git push origin v1.1.23
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
