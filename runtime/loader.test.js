@@ -69,11 +69,17 @@ test("MOD Store mutations reuse one token per session and Copy key uses ZimaOS s
 
   await window.ZimaMOD.installMod("test-mod");
   await window.ZimaMOD.uninstallMod("test-mod");
+  await window.ZimaMOD.saveBingWallpaper("https://www.bing.com/th?id=OHR.Test.jpg");
   await window.ZimaMOD.copyApiToken();
 
   const writes = requests.filter(request => request.options.method);
   assert.equal(writes[0].options.headers.Authorization, "Bearer session-token");
   assert.equal(writes[1].options.headers.Authorization, "Bearer session-token");
+  assert.equal(writes[2].options.headers.Authorization, "Bearer session-token");
+  assert.equal(writes[2].url, "/zimamod-api/bing-wallpaper/save");
+  assert.deepEqual(JSON.parse(writes[2].options.body), {
+    imageUrl: "https://www.bing.com/th?id=OHR.Test.jpg"
+  });
   assert.equal(session.get("zimamod-api-token"), "session-token");
   const copyRequest = requests.find(request => String(request.url).endsWith("/token"));
   assert.equal(copyRequest.options.headers.Authorization, "zimaos-session-token");

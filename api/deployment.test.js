@@ -27,3 +27,16 @@ test("API startup refreshes the catalog without installing bundled mods", () => 
   assert.doesNotMatch(entrypoint, /\/data\/mod\/\$mod_id/);
   assert.doesNotMatch(entrypoint, /bundled-mods-seeded|Initially installed bundled mod/);
 });
+
+test("Weather Widget includes the Pure Liquid Glass theme", () => {
+  const mod = read("mods/weather-widget/mod.js");
+  const theme = read("mods/weather-widget/themes/pure-liquid-glass.css");
+  const manifest = JSON.parse(read("mods/weather-widget/zimamod.json"));
+
+  assert.match(mod, /label: "Pure Liquid Glass"/);
+  assert.match(mod, /themes\/pure-liquid-glass\.css/);
+  assert.match(mod, /ensurePureLiquidGlassFilter/);
+  assert.match(theme, /filter: url\("#zimamod-weather-pure-liquid-filter"\)/);
+  assert.match(theme, /backdrop-filter:/);
+  assert.equal(manifest.version, "1.3.0");
+});

@@ -1,0 +1,20 @@
+{
+  "name": "Bing Wallpaper v2",
+  "version": "1.1.0",
+  "description": "Set the daily Bing image as the dashboard wallpaper, view its description, and save favorites to Gallery.",
+  "category": "Compatible with ZimaMOD created for CasaMOD",
+  "authors": [
+    {
+      "name": "Cp0204",
+      "url": "https://github.com/Cp0204"
+    }
+  ],
+  "origin": {
+    "type": "adapted",
+    "adapter": "ZimaMOD",
+    "source": "https://github.com/Cp0204/CasaMOD/tree/main/app/mod/bing-wallpaper-v2"
+  },
+  "enabled": true,
+  "scripts": ["mod.js"],
+  "styles": []
+}

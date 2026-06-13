@@ -1,5 +1,5 @@
 name: zimamod
-version: "1.1.26-local"
+version: "1.1.27-local"
 
 services:
   zimamod-api:
@@ -7,23 +7,25 @@ services:
       context: .
       dockerfile: api/Dockerfile
       args:
-        VERSION: "1.1.26-local"
+        VERSION: "1.1.27-local"
     image: zimamod-api:local
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
     environment:
       DATA_DIR: /data
+      BING_GALLERY_DIR: /gallery
       ZIMAMOD_API_PORT: "8090"
     volumes:
       - /DATA/AppData/zimamod:/data
+      - /DATA/Gallery/Bing Wallpapers:/gallery
 
   zimamod-proxy:
     build:
       context: .
       dockerfile: proxy/Dockerfile
       args:
-        VERSION: "1.1.26-local"
+        VERSION: "1.1.27-local"
     image: zimamod-proxy:local
     container_name: zimamod-proxy
     labels:
@@ -57,7 +59,7 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.26-local"
+  version: "1.1.27-local"
   updateAt: "2026-06-13"
   releaseNotes:
     en_us: Local development build.

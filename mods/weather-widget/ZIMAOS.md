@@ -1,6 +1,6 @@
 # ZimaOS Compatibility
 
-Weather Widget v1.2.0 is loaded through ZimaMOD and targets the ZimaOS
+Weather Widget v1.3.0 is loaded through ZimaMOD and targets the ZimaOS
 dashboard. When a normal dashboard widget anchor is unavailable, it renders as
 a fixed overlay in the upper-right corner.
 

@@ -108,6 +108,16 @@
       if (!response.ok) throw new Error(`Config write failed: ${response.status}`);
       return config;
     },
+    async saveBingWallpaper(imageUrl) {
+      const response = await writeRequest(`${API_BASE}/bing-wallpaper/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl })
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || `Wallpaper save failed: ${response.status}`);
+      return body;
+    },
     async listStore() {
       const response = await fetch(`${API_BASE}/store`, { credentials: "include", cache: "no-store" });
       if (!response.ok) throw new Error(`MOD Store failed: ${response.status}`);
@@ -152,8 +162,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.26", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.26", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.27", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.27", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {

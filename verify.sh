@@ -65,5 +65,9 @@ docker exec zimamod-api test -f "/data/config/$config_id.json" ||
   fail "configuration file was not written to the persistent config volume"
 echo "PASS: configuration API persisted data"
 
+docker exec zimamod-api test -d /gallery ||
+  fail "Bing Wallpaper Gallery directory is not mounted"
+echo "PASS: Bing Wallpaper Gallery directory is mounted"
+
 docker exec zimamod-api rm -f "/data/config/$config_id.json"
 echo "ZimaMOD deployment verification passed."

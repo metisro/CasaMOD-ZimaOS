@@ -26,6 +26,9 @@ licensed by ZimaMOD's Apache License 2.0:
 - Widget Sortable is a ZimaMOD and ZimaOS reimplementation of
   [Cp0204/CasaMOD widget-sortable](https://github.com/Cp0204/CasaMOD/tree/main/app/mod/widget-sortable).
   Original authors: LANMIN-X and Cp0204.
+- Bing Wallpaper v2 is a ZimaMOD and ZimaOS reimplementation of
+  [Cp0204/CasaMOD bing-wallpaper-v2](https://github.com/Cp0204/CasaMOD/tree/main/app/mod/bing-wallpaper-v2).
+  Original author: Cp0204.
 
 These references and credits do not imply affiliation with, endorsement by, or
 support from the referenced projects or authors.

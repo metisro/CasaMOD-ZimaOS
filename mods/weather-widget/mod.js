@@ -1,4 +1,4 @@
-// ZimaMOD: Weather Widget v1.2.0-zimaos
+// ZimaMOD: Weather Widget v1.3.0-zimaos
 // Based on CasaOS-UI PR #257's Weather.vue idea, adapted as an injected ZimaMOD.
 
 (function ZimaMODWeatherWidget() {
@@ -43,6 +43,11 @@
       label: "Liquid Glass",
       file: "themes/liquid-glass.css",
       className: MOD_ID + "-theme-liquid"
+    },
+    pureLiquid: {
+      label: "Pure Liquid Glass",
+      file: "themes/pure-liquid-glass.css",
+      className: MOD_ID + "-theme-pure-liquid"
     }
   };
 
@@ -1075,7 +1080,48 @@
     const selectedTheme = THEMES[theme] || THEMES.casa;
     Object.values(THEMES).forEach(item => wrapper.classList.remove(item.className));
     wrapper.classList.add(selectedTheme.className);
+    if (theme === "pureLiquid") ensurePureLiquidGlassFilter();
     loadThemeCss(theme);
+  }
+
+  function ensurePureLiquidGlassFilter() {
+    if (document.getElementById(MOD_ID + "-pure-liquid-filter")) return;
+    const namespace = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(namespace, "svg");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("width", "0");
+    svg.setAttribute("height", "0");
+    svg.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
+
+    const filter = document.createElementNS(namespace, "filter");
+    filter.id = MOD_ID + "-pure-liquid-filter";
+    filter.setAttribute("x", "-12%");
+    filter.setAttribute("y", "-12%");
+    filter.setAttribute("width", "124%");
+    filter.setAttribute("height", "124%");
+
+    const turbulence = document.createElementNS(namespace, "feTurbulence");
+    turbulence.setAttribute("type", "fractalNoise");
+    turbulence.setAttribute("baseFrequency", "0.008 0.012");
+    turbulence.setAttribute("numOctaves", "2");
+    turbulence.setAttribute("seed", "92");
+    turbulence.setAttribute("result", "noise");
+
+    const blur = document.createElementNS(namespace, "feGaussianBlur");
+    blur.setAttribute("in", "noise");
+    blur.setAttribute("stdDeviation", "0.35");
+    blur.setAttribute("result", "softNoise");
+
+    const displacement = document.createElementNS(namespace, "feDisplacementMap");
+    displacement.setAttribute("in", "SourceGraphic");
+    displacement.setAttribute("in2", "softNoise");
+    displacement.setAttribute("scale", "32");
+    displacement.setAttribute("xChannelSelector", "R");
+    displacement.setAttribute("yChannelSelector", "G");
+
+    filter.append(turbulence, blur, displacement);
+    svg.appendChild(filter);
+    document.body.appendChild(svg);
   }
 
   function setWeatherScene(artwork) {
@@ -1461,6 +1507,7 @@
     if (existing) existing.remove();
 
     const config = await getConfig();
+    if (config.theme === "pureLiquid") ensurePureLiquidGlassFilter();
     const overlay = document.createElement("div");
     overlay.className = `${MOD_ID} ${MOD_ID}-overlay ${(THEMES[config.theme] || THEMES.casa).className}`;
     overlay.id = MOD_ID + "-overlay";

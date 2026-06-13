@@ -11,7 +11,9 @@ const DATA_DIR = process.env.DATA_DIR || "/data";
 const MOD_DIR = path.join(DATA_DIR, "mod");
 const CONFIG_DIR = path.join(DATA_DIR, "config");
 const STORE_DIR = path.join(DATA_DIR, "store");
+const BING_GALLERY_DIR = process.env.BING_GALLERY_DIR || "/gallery";
 const MAX_BODY_BYTES = 64 * 1024;
+const MAX_WALLPAPER_BYTES = 25 * 1024 * 1024;
 const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const ASSET_PATH_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/;
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
@@ -30,6 +32,7 @@ if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
 fs.mkdirSync(DATA_DIR, { recursive: true });
 fs.mkdirSync(CONFIG_DIR, { recursive: true });
 fs.mkdirSync(STORE_DIR, { recursive: true });
+fs.mkdirSync(BING_GALLERY_DIR, { recursive: true });
 
 function generateApiToken() {
   const generated = crypto.randomBytes(32).toString("hex");
@@ -127,6 +130,94 @@ function storeAssetPath(modId, relativePath) {
   const file = path.resolve(root, relativePath);
   if (!file.startsWith(root + path.sep)) throw new Error("Invalid store asset path");
   return file;
+}
+
+function trustedBingUrl(value) {
+  const url = new URL(value);
+  const hostname = url.hostname.toLowerCase();
+  if (url.protocol !== "https:" || (hostname !== "bing.com" && !hostname.endsWith(".bing.com"))) {
+    throw new Error("Only HTTPS Bing image URLs can be saved");
+  }
+  return url;
+}
+
+function wallpaperFilename(url) {
+  const source = url.searchParams.get("id") || path.basename(url.pathname) || "bing-wallpaper";
+  const decoded = decodeURIComponent(source).replace(/^OHR\./i, "").replace(/\?.*$/, "");
+  const extension = path.extname(decoded).toLowerCase();
+  const safeExtension = [".jpg", ".jpeg", ".png", ".webp"].includes(extension) ? extension : ".jpg";
+  const base = path.basename(decoded, extension)
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^[.-]+|[.-]+$/g, "")
+    .slice(0, 120) || "bing-wallpaper";
+  return base + safeExtension;
+}
+
+function downloadBingWallpaper(sourceUrl, destination, redirects = 0) {
+  return new Promise((resolve, reject) => {
+    const url = trustedBingUrl(sourceUrl);
+    const request = require("node:https").get(url, {
+      headers: { "User-Agent": `ZimaMOD/${VERSION}` }
+    }, response => {
+      if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+        response.resume();
+        if (redirects >= 3) {
+          reject(new Error("Too many Bing image redirects"));
+          return;
+        }
+        downloadBingWallpaper(new URL(response.headers.location, url).toString(), destination, redirects + 1)
+          .then(resolve, reject);
+        return;
+      }
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        response.resume();
+        reject(new Error(`Bing image download failed: HTTP ${response.statusCode}`));
+        return;
+      }
+      if (!String(response.headers["content-type"] || "").toLowerCase().startsWith("image/")) {
+        response.resume();
+        reject(new Error("Bing response was not an image"));
+        return;
+      }
+
+      const temporary = destination + ".tmp-" + process.pid + "-" + Date.now();
+      const output = fs.createWriteStream(temporary, { flags: "wx" });
+      let size = 0;
+      let settled = false;
+      const fail = error => {
+        if (settled) return;
+        settled = true;
+        response.destroy();
+        output.destroy();
+        fs.rm(temporary, { force: true }, () => reject(error));
+      };
+      response.on("data", chunk => {
+        size += chunk.length;
+        if (size > MAX_WALLPAPER_BYTES) fail(new Error("Bing image exceeds the 25 MB limit"));
+      });
+      response.on("error", fail);
+      output.on("error", fail);
+      output.on("finish", () => {
+        if (settled) return;
+        settled = true;
+        fs.link(temporary, destination, error => {
+          fs.rm(temporary, { force: true }, () => error ? reject(error) : resolve(size));
+        });
+      });
+      response.pipe(output);
+    });
+    request.setTimeout(15000, () => request.destroy(new Error("Bing image download timed out")));
+    request.on("error", reject);
+  });
+}
+
+async function saveBingWallpaper(imageUrl) {
+  const url = trustedBingUrl(imageUrl);
+  const filename = wallpaperFilename(url);
+  const destination = path.join(BING_GALLERY_DIR, filename);
+  if (fs.existsSync(destination)) return { filename, saved: false, exists: true };
+  await downloadBingWallpaper(url.toString(), destination);
+  return { filename, saved: true, exists: false };
 }
 
 function versionParts(value) {
@@ -442,6 +533,19 @@ async function handle(request, response) {
   if (storeMatch && request.method === "DELETE") {
     uninstallMod(storeMatch[1]);
     send(response, 200, { ok: true, installed: false });
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/bing-wallpaper/save") {
+    const raw = await readBody(request);
+    const body = JSON.parse(raw);
+    if (typeof body.imageUrl !== "string") throw new Error("A Bing image URL is required");
+    const result = await saveBingWallpaper(body.imageUrl);
+    send(response, 200, {
+      ok: true,
+      ...result,
+      path: `/DATA/Gallery/Bing Wallpapers/${result.filename}`
+    });
     return;
   }
 

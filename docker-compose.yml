@@ -1,20 +1,22 @@
 name: zimamod
-version: "1.1.26"
+version: "1.1.27"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.26
+    image: ghcr.io/metisro/zimamod-api:1.1.27
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
     environment:
       DATA_DIR: /data
+      BING_GALLERY_DIR: /gallery
       ZIMAMOD_API_PORT: "8090"
     volumes:
       - /DATA/AppData/zimamod:/data
+      - /DATA/Gallery/Bing Wallpapers:/gallery
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.26
+    image: ghcr.io/metisro/zimamod-proxy:1.1.27
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -47,7 +49,7 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.26"
+  version: "1.1.27"
   updateAt: "2026-06-13"
   releaseNotes:
     en_us: Fixes ZimaOS port import and makes first-run mod installation opt-in.

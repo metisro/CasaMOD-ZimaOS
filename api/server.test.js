@@ -9,6 +9,7 @@ const { spawn } = require("node:child_process");
 let apiToken = "";
 
 const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-"));
+const galleryDir = path.join(dataDir, "gallery");
 const modDir = path.join(dataDir, "mod", "test-mod");
 const storeDir = path.join(dataDir, "store", "store-mod");
 fs.mkdirSync(modDir, { recursive: true });
@@ -58,6 +59,7 @@ const child = spawn(process.execPath, [path.join(__dirname, "server.js")], {
   env: {
     ...process.env,
     DATA_DIR: dataDir,
+    BING_GALLERY_DIR: galleryDir,
     ZIMAMOD_API_PORT: "18090",
     VERSION: "1.1.8",
     ZIMAMOD_DASHBOARD_URL: "http://127.0.0.1:18094",
@@ -115,7 +117,12 @@ async function waitForServer() {
 async function verifyRestartRegeneratesToken() {
   const generatedDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "zimamod-generated-token-"));
   const start = () => spawn(process.execPath, [path.join(__dirname, "server.js")], {
-    env: { ...process.env, DATA_DIR: generatedDataDir, ZIMAMOD_API_PORT: "18092" },
+    env: {
+      ...process.env,
+      DATA_DIR: generatedDataDir,
+      BING_GALLERY_DIR: path.join(generatedDataDir, "gallery"),
+      ZIMAMOD_API_PORT: "18092"
+    },
     stdio: "ignore"
   });
   let generatedChild = start();
@@ -200,6 +207,12 @@ async function verifyRestartRegeneratesToken() {
     assert.equal(updateRequestCount, 2);
 
     assert.equal((await request("POST", "/store/store-mod")).status, 401);
+    assert.equal((await request("POST", "/bing-wallpaper/save", {
+      imageUrl: "https://www.bing.com/th?id=OHR.Test.jpg"
+    })).status, 401);
+    assert.equal((await request("POST", "/bing-wallpaper/save", {
+      imageUrl: "https://example.com/not-bing.jpg"
+    }, true)).status, 400);
     assert.equal((await request("POST", "/store/store-mod", null, "wrong-token")).status, 401);
     assert.equal((await request("PATCH", "/future-write-route")).status, 401);
     assert.equal((await request("PATCH", "/future-write-route", null, true)).status, 404);

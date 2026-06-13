@@ -1,0 +1,188 @@
+/* ZimaMOD Weather: refractive Pure Liquid Glass theme. */
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid {
+  --zimamod-weather-chart-line: rgb(220, 249, 255);
+  --zimamod-weather-chart-fill: rgba(160, 232, 255, .24);
+  --zimamod-weather-chart-grid: rgba(255, 255, 255, .18);
+  --zimamod-weather-chart-text: rgba(255, 255, 255, .82);
+  --pure-glass-tint: rgba(205, 242, 255, .10);
+  color: rgba(255, 255, 255, .98);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid.zimamod-weather-scene-sun,
+.zimamod-weather.zimamod-weather-theme-pure-liquid.zimamod-weather-scene-partly-cloudy {
+  --pure-glass-tint: rgba(255, 235, 183, .11);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid.zimamod-weather-scene-rain,
+.zimamod-weather.zimamod-weather-theme-pure-liquid.zimamod-weather-scene-showers,
+.zimamod-weather.zimamod-weather-theme-pure-liquid.zimamod-weather-scene-thunderstorm {
+  --pure-glass-tint: rgba(144, 190, 255, .12);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, .34);
+  border-radius: 24px;
+  color: rgba(255, 255, 255, .98);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .13), var(--pure-glass-tint));
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .72),
+    inset -1px -1px 0 rgba(255, 255, 255, .12),
+    inset 0 0 8px rgba(255, 255, 255, .12),
+    0 18px 42px rgba(0, 10, 30, .28);
+  text-shadow: 0 1px 4px rgba(0, 8, 25, .45);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card::before,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card::before {
+  z-index: -2;
+  overflow: hidden;
+  backdrop-filter: blur(1px) saturate(145%) contrast(106%);
+  -webkit-backdrop-filter: blur(1px) saturate(145%) contrast(106%);
+  filter: url("#zimamod-weather-pure-liquid-filter");
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card::after {
+  z-index: -1;
+  inset: 1px;
+  border-radius: 23px;
+  background:
+    radial-gradient(ellipse at 18% 4%, rgba(255, 255, 255, .38), transparent 28%),
+    linear-gradient(115deg, rgba(255, 255, 255, .20), transparent 20% 78%, rgba(255, 255, 255, .08));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .42),
+    inset 0 -1px 1px rgba(255, 255, 255, .10);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-header,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-current-view,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-forecast-view,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-error {
+  position: relative;
+  z-index: 1;
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-scene-art {
+  display: block;
+  top: -7px;
+  left: 47px;
+  width: 132px;
+  height: 132px;
+  opacity: .78;
+  filter: saturate(.90) drop-shadow(0 10px 20px rgba(0, 12, 35, .30));
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-bg-icon,
+.zimamod-weather.zimamod-weather-theme-pure-liquid #zimamod-weather-icon {
+  display: none !important;
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-city,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-temp,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-unit,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-stat-value,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-day-name,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-day-temp strong {
+  color: rgba(255, 255, 255, .99) !important;
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-status,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-meta,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-stat-label,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-day-low {
+  color: rgba(242, 250, 255, .78);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-clock,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-icon-btn,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-stat,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-day,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-back-btn {
+  color: rgba(255, 255, 255, .96);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .17), rgba(255, 255, 255, .055));
+  border: 1px solid rgba(255, 255, 255, .25);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .35),
+    inset -1px -1px 0 rgba(255, 255, 255, .07),
+    0 5px 14px rgba(0, 12, 36, .13);
+  backdrop-filter: blur(10px) saturate(135%);
+  -webkit-backdrop-filter: blur(10px) saturate(135%);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-clock,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-icon-btn {
+  border-radius: 999px;
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-clock:hover,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-icon-btn:hover,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-forecast-btn:hover,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-back-btn:hover {
+  background: rgba(255, 255, 255, .25);
+  border-color: rgba(255, 255, 255, .46);
+  transform: translateY(-1px);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-chart-tip,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-modal {
+  color: #fff;
+  background: linear-gradient(145deg, rgba(38, 61, 84, .62), rgba(20, 34, 57, .54));
+  border: 1px solid rgba(255, 255, 255, .31);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .35),
+    0 22px 60px rgba(0, 8, 25, .40);
+  backdrop-filter: blur(26px) saturate(155%);
+  -webkit-backdrop-filter: blur(26px) saturate(155%);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-modal h3,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-switch-label {
+  color: rgba(255, 255, 255, .98);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-field label,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-unit-option {
+  color: rgba(242, 250, 255, .76);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-field input,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-unit-switch,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-btn-cancel {
+  color: #fff;
+  background: rgba(255, 255, 255, .09);
+  border: 1px solid rgba(255, 255, 255, .24);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .15);
+}
+
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-unit-switch input:checked + .zimamod-weather-unit-option,
+.zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-btn-save {
+  color: #fff;
+  background: linear-gradient(145deg, rgba(127, 222, 255, .78), rgba(116, 142, 255, .70));
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .48),
+    0 7px 18px rgba(40, 116, 208, .24);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-card {
+    background: linear-gradient(145deg, rgba(50, 82, 112, .92), rgba(24, 43, 71, .90));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-clock:hover,
+  .zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-icon-btn:hover,
+  .zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-forecast-btn:hover,
+  .zimamod-weather.zimamod-weather-theme-pure-liquid .zimamod-weather-back-btn:hover {
+    transform: none;
+  }
+}

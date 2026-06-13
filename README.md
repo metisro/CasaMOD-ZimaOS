@@ -83,8 +83,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.26
-ghcr.io/metisro/zimamod-proxy:1.1.26
+ghcr.io/metisro/zimamod-api:1.1.27
+ghcr.io/metisro/zimamod-proxy:1.1.27
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -159,8 +159,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.26
-git push origin v1.1.26
+git tag v1.1.27
+git push origin v1.1.27
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a

@@ -26,6 +26,7 @@ jobs:
         run: |
           node --test api/deployment.test.js
           node --test api/server.test.js
+          node --test api/bing-wallpaper-mod.test.js
           node --test runtime/loader.test.js
 
       - name: Check JavaScript syntax
