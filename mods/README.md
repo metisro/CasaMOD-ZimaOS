@@ -31,10 +31,11 @@ Installing a MOD Store entry copies it into `mod/<mod-id>`. Uninstalling it
 removes only the installed copy and leaves its store entry available.
 
 The directories in this repository's `mods/` folder are copied into the MOD
-Store whenever the API image starts. They are installed automatically only on
-the first deployment. On an existing development installation, rebuild the
-images and then uninstall and reinstall the mod from the MOD Store, or replace
-its installed directory manually, to test the refreshed copy.
+Store whenever the API image starts. Catalog entries are never installed
+automatically; users choose the mods they want from the MOD Store. On an
+existing development installation, rebuild the images and then uninstall and
+reinstall the mod from the MOD Store, or replace its installed directory
+manually, to test the refreshed copy.
 
 For framework and mod uninstall, rollback, backup, and recovery procedures, see
 the repository [operations guide](../docs/OPERATIONS.md).

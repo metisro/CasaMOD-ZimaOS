@@ -14,7 +14,7 @@ body:
     attributes:
       label: ZimaMOD version
       description: Use the installed semantic version or image tag.
-      placeholder: "1.1.25"
+      placeholder: "1.1.26"
     validations:
       required: true
 

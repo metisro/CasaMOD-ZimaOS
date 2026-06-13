@@ -21,8 +21,9 @@ ZimaMOD containers are replaceable. User state is stored under:
   store/     MOD Store catalog copied from the API image
 ```
 
-The hidden `.bundled-mods-seeded` marker records that bundled mods were
-installed during the first deployment.
+Older releases may have created a hidden `.bundled-mods-seeded` marker after
+installing bundled mods during the first deployment. Current releases ignore
+this legacy marker; it can remain in place or be removed.
 
 Starting a newer or older API image refreshes bundled entries in `store/`, but
 does not replace already-installed copies under `mod/`. This protects local
@@ -123,8 +124,8 @@ rm -rf /DATA/AppData/zimamod
 ```
 
 Removing this directory permanently deletes installed mods, settings, Store
-state, and the seed marker. Optionally remove downloaded images after confirming
-that no remaining installation uses them:
+state, and any legacy marker. Optionally remove downloaded images after
+confirming that no remaining installation uses them:
 
 ```sh
 docker image rm ghcr.io/metisro/zimamod-api:<version>

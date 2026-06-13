@@ -4,6 +4,5 @@ set -eu
 docker compose up -d
 
 echo
-dashboard_port=${ZIMAMOD_DASHBOARD_PORT:-8088}
-echo "ZimaMOD is available at http://ZIMAOS-IP:$dashboard_port"
+echo "ZimaMOD is available at the Web UI port configured in docker-compose.yml (default: http://ZIMAOS-IP:8088)"
 echo "Run ./verify.sh to validate the deployment."

@@ -83,8 +83,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.25
-ghcr.io/metisro/zimamod-proxy:1.1.25
+ghcr.io/metisro/zimamod-api:1.1.26
+ghcr.io/metisro/zimamod-proxy:1.1.26
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -159,8 +159,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.25
-git push origin v1.1.25
+git tag v1.1.26
+git push origin v1.1.26
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -200,18 +200,26 @@ docker exec zimamod-api cat /data/config/api_token
 
 The token changes whenever `zimamod-api` restarts.
 
+The import Compose file uses literal default port values so ZimaOS displays
+`8088` and `8090` correctly during import. A new installation starts with no
+mods installed; choose each desired mod from the MOD Store.
+
 ### Custom Ports
 
 ZimaMOD defaults to dashboard port `8088` and private API port `8090`. Both can
-be changed at runtime without rebuilding either image:
+be changed at runtime without rebuilding either image. For Docker Compose,
+edit the environment values in `docker-compose.yml` before recreating the
+containers:
 
-```env
-ZIMAMOD_DASHBOARD_PORT=8188
-ZIMAMOD_API_PORT=8190
+```yaml
+zimamod-api:
+  environment:
+    ZIMAMOD_API_PORT: "8190"
+zimamod-proxy:
+  environment:
+    ZIMAMOD_DASHBOARD_PORT: "8188"
+    ZIMAMOD_API_PORT: "8190"
 ```
-
-When using Docker Compose, place those values in a `.env` file beside
-`docker-compose.yml`, then recreate both containers:
 
 ```sh
 docker compose up -d --force-recreate
@@ -289,13 +297,14 @@ installs framework updates automatically.
 
 ```text
 /DATA/AppData/zimamod/
-  mod/                    bundled and user-installed mods
+  mod/                    installed mods
   config/                 persistent per-mod settings
   store/                  mods available through the MOD Store
 ```
 
-These directories are mounted into the containers. Rebuilding the app refreshes
-the bundled mods without deleting user-installed mods or persistent settings.
+These directories are mounted into the containers. Starting or rebuilding the
+API refreshes the bundled MOD Store catalog without installing catalog entries,
+deleting installed mods, or changing persistent settings.
 
 For complete uninstall, rollback, backup, and recovery procedures, see the
 [operations guide](docs/OPERATIONS.md).

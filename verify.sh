@@ -36,10 +36,7 @@ check_status "$base_url/zimamod-runtime/loader.js" 200
 check_status "$base_url/zimamod-runtime/store.js" 200
 check_status "$base_url/zimamod-runtime/store.css" 200
 check_status "$base_url/zimamod-runtime/zimamod-icon.png" 200
-check_status "$base_url/mod/weather-widget/mod.js" 200
 check_status "$base_url/store/weather-widget/screenshot.jpg" 200
-check_status "$base_url/mod/widget-sortable-zimaos/mod.js" 200
-check_status "$base_url/mod/widget-sortable-zimaos/mod.css" 200
 check_status "$base_url/v2/settings/fe.custom" 200
 
 [ "${#api_token}" -ge 32 ] ||

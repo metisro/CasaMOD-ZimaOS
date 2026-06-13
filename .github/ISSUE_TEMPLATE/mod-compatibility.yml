@@ -25,7 +25,7 @@ body:
     attributes:
       label: Tested versions
       description: Include both ZimaMOD and ZimaOS versions.
-      placeholder: "ZimaMOD 1.1.25, ZimaOS 1.6.1"
+      placeholder: "ZimaMOD 1.1.26, ZimaOS 1.6.1"
     validations:
       required: true
 
