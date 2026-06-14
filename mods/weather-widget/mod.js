@@ -1,4 +1,4 @@
-// ZimaMOD: Weather Widget v1.3.5-zimaos
+// ZimaMOD: Weather Widget v1.3.7-zimaos
 // Based on CasaOS-UI PR #257's Weather.vue idea, adapted as an injected ZimaMOD.
 
 (function ZimaMODWeatherWidget() {
@@ -19,6 +19,8 @@
   const WRAPPER_ID = MOD_ID + "-widget";
   const CASAOS_ANCHOR = ".ps-container";
   const ZIMAOS_MOUNT_ID = MOD_ID + "-zimaos-mount";
+  const LIQUID_FILTER_SVG_ID = MOD_ID + "-liquid-filter-svg";
+  const LIQUID_FILTER_ID = MOD_ID + "-liquid-distortion";
   const CONFIG_PATH = "/var/lib/casaos/1/weather-widget.json";
   const LOCAL_CONFIG_KEY = MOD_ID + "-config";
   const IS_ZIMAOS =
@@ -572,7 +574,8 @@
         background: var(--background-2, rgba(30, 32, 48, .88));
         border: 1px solid var(--background-4, rgba(255, 255, 255, .08));
         box-shadow: 0 8px 26px rgba(0, 0, 0, .22);
-        backdrop-filter: blur(16px);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
       }
 
       .${MOD_ID}-bg-icon {
@@ -907,7 +910,54 @@
     `;
 
     document.head.appendChild(style);
+    injectLiquidGlassFilter();
     loadCss("base", "themes/base.css", true);
+  }
+
+  function injectLiquidGlassFilter() {
+    if (document.getElementById(LIQUID_FILTER_SVG_ID)) return;
+
+    const namespace = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(namespace, "svg");
+    const defs = document.createElementNS(namespace, "defs");
+    const filter = document.createElementNS(namespace, "filter");
+    const turbulence = document.createElementNS(namespace, "feTurbulence");
+    const displacement = document.createElementNS(namespace, "feDisplacementMap");
+
+    svg.id = LIQUID_FILTER_SVG_ID;
+    svg.setAttribute("aria-hidden", "true");
+    Object.assign(svg.style, {
+      height: "0",
+      overflow: "hidden",
+      pointerEvents: "none",
+      position: "absolute",
+      width: "0"
+    });
+
+    filter.id = LIQUID_FILTER_ID;
+    filter.setAttribute("x", "-12%");
+    filter.setAttribute("y", "-12%");
+    filter.setAttribute("width", "124%");
+    filter.setAttribute("height", "124%");
+    filter.setAttribute("color-interpolation-filters", "sRGB");
+
+    turbulence.setAttribute("type", "fractalNoise");
+    turbulence.setAttribute("baseFrequency", "0.012 0.028");
+    turbulence.setAttribute("numOctaves", "2");
+    turbulence.setAttribute("seed", "17");
+    turbulence.setAttribute("result", "liquid-noise");
+
+    displacement.setAttribute("in", "SourceGraphic");
+    displacement.setAttribute("in2", "liquid-noise");
+    displacement.setAttribute("scale", "7");
+    displacement.setAttribute("xChannelSelector", "R");
+    displacement.setAttribute("yChannelSelector", "B");
+
+    filter.appendChild(turbulence);
+    filter.appendChild(displacement);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+    document.body.appendChild(svg);
   }
 
   function loadCss(id, href, persistent) {

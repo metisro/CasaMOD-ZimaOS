@@ -31,10 +31,16 @@ test("API startup refreshes the catalog without installing bundled mods", () => 
 test("Weather Widget includes its supported themes", () => {
   const mod = read("mods/weather-widget/mod.js");
   const manifest = JSON.parse(read("mods/weather-widget/zimamod.json"));
+  const liquidTheme = read("mods/weather-widget/themes/liquid-glass.css");
 
   assert.match(mod, /label: "CasaOS"/);
   assert.match(mod, /label: "Aero"/);
   assert.match(mod, /label: "Liquid Glass"/);
   assert.doesNotMatch(mod, /Pure Liquid Glass|pure-liquid-glass/);
-  assert.equal(manifest.version, "1.3.5");
+  assert.doesNotMatch(mod, /backdrop-filter:\s*blur/);
+  assert.doesNotMatch(liquidTheme, /backdrop-filter:\s*blur/);
+  assert.match(mod, /feDisplacementMap/);
+  assert.match(mod, /feTurbulence/);
+  assert.match(liquidTheme, /filter:\s*url\("#zimamod-weather-liquid-distortion"\)/);
+  assert.equal(manifest.version, "1.3.7");
 });

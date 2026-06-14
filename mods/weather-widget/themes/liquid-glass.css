@@ -34,16 +34,17 @@
   border-radius: 20px;
   color: rgba(255, 255, 255, .96);
   background:
-    radial-gradient(circle at 14% 8%, var(--liquid-accent-a), transparent 42%),
-    radial-gradient(circle at 92% 100%, var(--liquid-accent-b), transparent 48%),
-    linear-gradient(145deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .065));
-  border: 1px solid rgba(255, 255, 255, .30);
+    radial-gradient(ellipse at 14% 4%, var(--liquid-accent-a), transparent 44%),
+    radial-gradient(ellipse at 96% 104%, var(--liquid-accent-b), transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .025));
+  border: 1px solid rgba(255, 255, 255, .36);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .52),
-    inset 0 -1px 0 rgba(255, 255, 255, .08),
-    0 14px 34px rgba(0, 13, 35, .28);
-  backdrop-filter: blur(28px) saturate(165%);
-  -webkit-backdrop-filter: blur(28px) saturate(165%);
+    inset 1px 1px 0 rgba(255, 255, 255, .58),
+    inset -1px -1px 0 rgba(255, 255, 255, .10),
+    inset 0 0 20px rgba(255, 255, 255, .045),
+    0 14px 34px rgba(0, 13, 35, .22);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   text-shadow: 0 1px 3px rgba(0, 12, 30, .32);
 }
 
@@ -54,22 +55,28 @@
   z-index: 0;
   border-radius: 19px;
   background:
-    linear-gradient(118deg, rgba(255, 255, 255, .34), transparent 18% 76%, rgba(255, 255, 255, .12)),
-    linear-gradient(180deg, rgba(255, 255, 255, .14), transparent 38%);
+    radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .40), transparent 70%),
+    radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .18), transparent 72%),
+    radial-gradient(ellipse 32% 95% at 104% 48%, rgba(90, 205, 255, .12), transparent 74%),
+    linear-gradient(118deg, rgba(255, 255, 255, .22), transparent 20% 74%, rgba(255, 255, 255, .10));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .08),
+    inset 0 12px 22px -20px rgba(255, 255, 255, .9);
   pointer-events: none;
 }
 
 .zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-card::after {
   content: "";
   position: absolute;
-  width: 140px;
-  height: 140px;
-  right: -54px;
-  bottom: -68px;
+  inset: 7px;
   z-index: 0;
-  border-radius: 50%;
-  background: rgba(165, 229, 255, .13);
-  box-shadow: 0 0 55px rgba(124, 207, 255, .20);
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse 42% 17% at 20% 24%, rgba(255, 255, 255, .12), transparent 72%),
+    radial-gradient(ellipse 44% 18% at 78% 72%, rgba(91, 210, 255, .10), transparent 74%),
+    linear-gradient(102deg, transparent 8%, rgba(255, 255, 255, .05) 26%, transparent 43% 63%, rgba(130, 218, 255, .055) 79%, transparent 94%);
+  filter: url("#zimamod-weather-liquid-distortion");
+  opacity: .9;
   pointer-events: none;
 }
 
@@ -124,8 +131,8 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .30),
     0 4px 12px rgba(0, 16, 42, .12);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-clock,
@@ -146,8 +153,8 @@
   background: rgba(22, 38, 60, .58);
   border: 1px solid rgba(255, 255, 255, .28);
   box-shadow: 0 10px 24px rgba(0, 12, 34, .24);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-modal {
@@ -159,8 +166,8 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .35),
     0 24px 64px rgba(0, 9, 28, .42);
-  backdrop-filter: blur(34px) saturate(160%);
-  -webkit-backdrop-filter: blur(34px) saturate(160%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .zimamod-weather.zimamod-weather-theme-liquid .zimamod-weather-modal h3,

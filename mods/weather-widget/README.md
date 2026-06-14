@@ -1,4 +1,4 @@
-# ZimaMOD Weather Widget v1.3.5
+# ZimaMOD Weather Widget v1.3.7
 
 Weather Widget adds a configurable weather card to the ZimaOS dashboard through
 ZimaMOD.
@@ -94,6 +94,14 @@ The selected theme is saved in the ZimaMOD Weather Widget configuration.
 
 Keep shared sizing and layout rules in `themes/base.css`. A custom theme should
 override only theme-specific colors, materials, borders, shadows, and artwork.
+
+Avoid `backdrop-filter` on the widget or its controls. On ZimaOS, an additional
+live backdrop blur causes Chromium compositor flickering across native app
+tiles while recommendation cards are visible. Use transparent gradients,
+highlights, borders, and inset shadows for glass effects instead.
+
+Liquid Glass uses a static SVG displacement filter on an internal decorative
+layer to provide subtle refraction without sampling or blurring the dashboard.
 
 1. Create a theme file such as `themes/my-theme.css`.
 2. Add it to the `THEMES` registry near the top of `mod.js`.
