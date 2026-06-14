@@ -153,6 +153,22 @@ function wallpaperFilename(url) {
   return base + safeExtension;
 }
 
+function decodeMountPath(value) {
+  return value.replace(/\\040/g, " ").replace(/\\011/g, "\t").replace(/\\012/g, "\n").replace(/\\134/g, "\\");
+}
+
+function galleryMounted() {
+  if (process.platform !== "linux") return false;
+  try {
+    const expected = path.resolve(BING_GALLERY_DIR);
+    return fs.readFileSync("/proc/self/mountinfo", "utf8")
+      .split("\n")
+      .some(line => decodeMountPath(line.split(" - ")[0]?.split(" ")[4] || "") === expected);
+  } catch (_) {
+    return false;
+  }
+}
+
 function downloadBingWallpaper(sourceUrl, destination, redirects = 0) {
   return new Promise((resolve, reject) => {
     const url = trustedBingUrl(sourceUrl);
@@ -213,6 +229,12 @@ function downloadBingWallpaper(sourceUrl, destination, redirects = 0) {
 
 async function saveBingWallpaper(imageUrl) {
   const url = trustedBingUrl(imageUrl);
+  if (!galleryMounted()) {
+    throw new Error(
+      "Bing Wallpapers Gallery is not mounted. Add /DATA/Gallery/Bing Wallpapers:/gallery " +
+      "to zimamod-api volumes and recreate the container."
+    );
+  }
   const filename = wallpaperFilename(url);
   const destination = path.join(BING_GALLERY_DIR, filename);
   if (fs.existsSync(destination)) return { filename, saved: false, exists: true };
@@ -489,7 +511,7 @@ async function handle(request, response) {
   if (WRITE_METHODS.has(request.method) && !requireAuthorization(request, response)) return;
 
   if (request.method === "GET" && url.pathname === "/health") {
-    send(response, 200, { ok: true });
+    send(response, 200, { ok: true, galleryMounted: galleryMounted() });
     return;
   }
 

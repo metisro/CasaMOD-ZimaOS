@@ -67,6 +67,8 @@ echo "PASS: configuration API persisted data"
 
 docker exec zimamod-api test -d /gallery ||
   fail "Bing Wallpaper Gallery directory is not mounted"
+docker inspect zimamod-api --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx /gallery ||
+  fail "Bing Wallpaper Gallery directory exists but is not a container mount"
 echo "PASS: Bing Wallpaper Gallery directory is mounted"
 
 docker exec zimamod-api rm -f "/data/config/$config_id.json"

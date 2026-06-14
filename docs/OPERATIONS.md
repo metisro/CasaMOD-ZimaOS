@@ -138,16 +138,17 @@ Use immutable matching API and proxy tags. Never run the API and proxy from
 different releases.
 
 1. Create a full backup.
-2. Change both image tags to the target release, for example:
+2. Use the target release's complete Compose manifest so its image tags,
+   volumes, and environment entries remain compatible. For example:
 
    ```yaml
    image: ghcr.io/metisro/zimamod-api:1.1.22
    image: ghcr.io/metisro/zimamod-proxy:1.1.22
    ```
 
-   In ZimaOS Settings, change the image tag on both the `zimamod-api` and
-   `zimamod-proxy` service tabs, keep both versions identical, and select
-   **Install** or **Save**.
+   In ZimaOS Settings, keep both image versions identical and apply any volume
+   or environment differences from that release before selecting **Install**
+   or **Save**.
 
 3. For a Compose installation, recreate both containers:
 
@@ -168,6 +169,24 @@ different releases.
 The rollback refreshes bundled Store entries from the older API image but
 leaves installed mods and configurations unchanged. Restore a full backup when
 the previous installed mod files or settings are also required.
+
+## Recover Bing Wallpapers From An Unmounted Container
+
+ZimaMOD `1.1.27` introduced `/DATA/Gallery/Bing Wallpapers:/gallery`. An
+installation upgraded by changing only image tags may have written wallpapers
+into the API container's private `/gallery` directory instead of the host
+Gallery.
+
+Recover those files before recreating the container:
+
+```sh
+mkdir -p "/DATA/Gallery/Bing Wallpapers"
+docker cp "zimamod-api:/gallery/." "/DATA/Gallery/Bing Wallpapers/"
+```
+
+Add `/DATA/Gallery/Bing Wallpapers:/gallery` to the `zimamod-api` volumes,
+recreate the container, and confirm `/zimamod-api/health` reports
+`"galleryMounted":true`.
 
 ## Roll Back One Mod
 

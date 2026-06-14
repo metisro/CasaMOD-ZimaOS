@@ -31,5 +31,14 @@ ZimaOS provides:
 
 ## Tested Mods
 
-- Weather Widget
-- Widget Sortable
+The bundled MOD Store catalog currently contains:
+
+- Built for ZimaMOD: Weather Widget
+- Adapted from CasaMOD for ZimaMOD: Bing Wallpaper v2, Network Title Setter,
+  and Widget Sortable
+- CasaMOD-compatible without source adaptation: Add Hostname to Title, Emoji
+  Cursor, Hello, World!, and Snow Wallpaper
+
+Bundled catalog mods remain uninstalled until selected by the user. The
+long-term goal is to adapt all CasaMOD mods for ZimaMOD in future releases,
+after each one is reviewed and tested on ZimaOS.

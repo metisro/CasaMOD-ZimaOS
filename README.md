@@ -38,7 +38,9 @@ Browser
 - Serves mod JavaScript, CSS, icons, and other assets with correct MIME types.
 - Stores per-mod JSON configuration under `/DATA/AppData/zimamod/config`.
 - Avoids execution inside ZimaOS Wujie micro-apps, shadow roots, and iframes.
-- Includes adapted Weather Widget and Widget Sortable example mods.
+- Includes a bundled MOD Store catalog of native ZimaMOD, adapted CasaMOD, and
+  tested CasaMOD-compatible mods. Bundled mods are available to install but are
+  not installed automatically.
 - Includes ZimaOS custom-app metadata and a dedicated ZimaMOD app icon.
 - Includes a dashboard MOD Store for installing and uninstalling catalog mods.
 - Shows an update indicator and installation guidance when a newer ZimaMOD
@@ -83,8 +85,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.27
-ghcr.io/metisro/zimamod-proxy:1.1.27
+ghcr.io/metisro/zimamod-api:1.1.28
+ghcr.io/metisro/zimamod-proxy:1.1.28
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -149,6 +151,15 @@ from an app-store source that tracks this manifest. A one-time custom Compose
 import displays the version but must be re-imported or rebuilt manually when a
 new manifest is released.
 
+When updating an existing custom Compose installation, use the latest complete
+`docker-compose.yml`. Updating only image tags does not apply newly introduced
+volumes or environment variables. ZimaMOD `1.1.27` adds the following API
+volume for Bing Wallpaper saves:
+
+```yaml
+- /DATA/Gallery/Bing Wallpapers:/gallery
+```
+
 ### Creating A Release
 
 `VERSION` identifies the source version being prepared. The install Compose
@@ -159,8 +170,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.27
-git push origin v1.1.27
+git tag v1.1.28
+git push origin v1.1.28
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -290,8 +301,9 @@ installation. The MOD Store includes a manual **Update check** action.
 
 When an update is available, a blue dot appears on the ZimaMOD dashboard tile
 and the MOD Store displays the installed and latest versions with instructions
-for updating both container image tags in ZimaOS Settings. ZimaMOD never
-installs framework updates automatically.
+for applying the latest Compose manifest or matching image, volume, and
+environment changes in ZimaOS Settings. ZimaMOD never installs framework
+updates automatically.
 
 ## Directories
 
@@ -300,6 +312,8 @@ installs framework updates automatically.
   mod/                    installed mods
   config/                 persistent per-mod settings
   store/                  mods available through the MOD Store
+/DATA/Gallery/Bing Wallpapers/
+  Saved Bing Wallpaper images
 ```
 
 These directories are mounted into the containers. Starting or rebuilding the
@@ -318,6 +332,26 @@ The Store category **Compatible with ZimaMOD created for CasaMOD** collects
 mods originally created for CasaMOD that have been tested with ZimaMOD.
 These entries preserve their original authorship and source links. Some may
 include a documented compatibility change, such as an English translation.
+
+### Bundled MOD Store Catalog
+
+All bundled mods are copied into the MOD Store catalog and remain uninstalled
+until selected by the user.
+
+| Mod | Included form |
+| --- | --- |
+| Weather Widget | Built for ZimaMOD |
+| Bing Wallpaper v2 | Adapted from CasaMOD for ZimaMOD |
+| Network Title Setter | Adapted from CasaMOD for ZimaMOD |
+| Widget Sortable | Adapted from CasaMOD for ZimaMOD |
+| Add Hostname to Title | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Emoji Cursor | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Hello, World! | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Snow Wallpaper | CasaMOD mod compatible with ZimaMOD without source adaptation |
+
+The long-term project goal is to adapt all CasaMOD mods for ZimaMOD across
+future releases. Each mod will still be reviewed, ported when necessary, and
+tested on ZimaOS before it is added to the bundled catalog.
 
 Each enabled mod is a directory containing `zimamod.json`:
 
@@ -364,7 +398,7 @@ CasaMOD mods for CasaOS commonly require these changes:
 4. Avoid running in Wujie micro-apps, shadow roots, and iframes.
 5. Guard against repeated execution and asynchronous SPA rendering.
 
-The bundled mods demonstrate these patterns.
+The bundled native, adapted, and compatible mods demonstrate these patterns.
 
 ## Security
 

@@ -160,7 +160,9 @@ async function verifyRestartRegeneratesToken() {
 
 (async () => {
   try {
-    assert.equal((await waitForServer()).status, 200);
+    const health = await waitForServer();
+    assert.equal(health.status, 200);
+    assert.equal(health.body.galleryMounted, false);
     apiToken = fs.readFileSync(path.join(dataDir, "config", "api_token"), "utf8").trim();
     assert.equal((await request("GET", "/token")).status, 401);
     assert.equal((await request("GET", "/token", null, "wrong-dashboard-token")).status, 401);
@@ -213,6 +215,11 @@ async function verifyRestartRegeneratesToken() {
     assert.equal((await request("POST", "/bing-wallpaper/save", {
       imageUrl: "https://example.com/not-bing.jpg"
     }, true)).status, 400);
+    const missingGalleryMount = await request("POST", "/bing-wallpaper/save", {
+      imageUrl: "https://www.bing.com/th?id=OHR.Test.jpg"
+    }, true);
+    assert.equal(missingGalleryMount.status, 400);
+    assert.match(missingGalleryMount.body.error, /Gallery is not mounted/);
     assert.equal((await request("POST", "/store/store-mod", null, "wrong-token")).status, 401);
     assert.equal((await request("PATCH", "/future-write-route")).status, 401);
     assert.equal((await request("PATCH", "/future-write-route", null, true)).status, 404);

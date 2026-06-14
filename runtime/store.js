@@ -181,8 +181,8 @@
     }
     tooltip.innerHTML = `
       <strong>ZimaMOD ${escapeHtml(updateStatus.latestVersion)} is available</strong>
-      In ZimaMOD Settings, edit both zimamod-api and zimamod-proxy image tags to
-      ${escapeHtml(updateStatus.latestVersion)}, then click Install.
+      Re-import the latest Compose manifest, or update both image tags to
+      ${escapeHtml(updateStatus.latestVersion)} and apply any new volume or environment entries.
     `;
     return tooltip;
   }
@@ -243,8 +243,8 @@
       </div>
       ${updateStatus.updateAvailable ? `
         <span class="zimamod-store-update-badge">Version ${escapeHtml(updateStatus.latestVersion)} available</span>
-        <p>In ZimaMOD Settings, edit both zimamod-api and zimamod-proxy image tags to
-          <code>${escapeHtml(updateStatus.latestVersion)}</code>, then click <strong>Install</strong>.</p>
+        <p>Re-import the latest Compose manifest, or update both image tags to
+          <code>${escapeHtml(updateStatus.latestVersion)}</code> and apply any new volume or environment entries.</p>
       ` : `<p>You are using the latest available version.</p>`}
     `;
     panel.querySelector(".zimamod-store-update-refresh").addEventListener("click", () => void checkUpdates(true));

@@ -84,6 +84,27 @@ Mods commonly need adaptation when they depend on CasaOS DOM selectors,
 behavior that differs in ZimaOS. Use the ZimaMOD browser API and runtime
 requirements documented below when changes are needed.
 
+## Bundled MOD Store Catalog
+
+Bundled catalog entries are available for users to install individually. They
+are not installed automatically.
+
+| Mod | Included form |
+| --- | --- |
+| Weather Widget | Built for ZimaMOD |
+| Bing Wallpaper v2 | Adapted from CasaMOD for ZimaMOD |
+| Network Title Setter | Adapted from CasaMOD for ZimaMOD |
+| Widget Sortable | Adapted from CasaMOD for ZimaMOD |
+| Add Hostname to Title | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Emoji Cursor | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Hello, World! | CasaMOD mod compatible with ZimaMOD without source adaptation |
+| Snow Wallpaper | CasaMOD mod compatible with ZimaMOD without source adaptation |
+
+ZimaMOD aims to adapt all CasaMOD mods in future releases. Inclusion is
+incremental because every upstream mod must be reviewed and tested against the
+ZimaOS dashboard, with an adaptation created when direct compatibility is not
+sufficient.
+
 ## Create A Mod
 
 Create a directory whose name is also the mod ID:
@@ -231,8 +252,8 @@ Keep contributions focused, inspectable, and safe.
 - Use `window.ZimaMOD.assetUrl()` instead of hard-coded asset paths.
 - Use `window.ZimaMOD.getConfig()` and `setConfig()` for persistent settings.
 
-The bundled Weather Widget and Widget Sortable mods demonstrate the expected
-patterns.
+The bundled native, adapted, and directly compatible mods demonstrate the
+expected patterns.
 
 ## Store Card Image
 

@@ -5,6 +5,32 @@ Right-click the wallpaper to view its description and open the Bing image
 information page. The information bubble also includes a **Save** button that
 stores the current image in `/DATA/Gallery/Bing Wallpapers`.
 
+The `zimamod-api` container must have the matching bind mount:
+
+```yaml
+- /DATA/Gallery/Bing Wallpapers:/gallery
+```
+
+If an existing installation was upgraded by changing only image tags, add this
+volume in ZimaOS Settings and recreate the API container. Without the mount,
+ZimaMOD refuses to report the wallpaper as saved.
+
+Before recreating an affected container, recover any wallpapers that were
+previously written into its private `/gallery` directory:
+
+```sh
+mkdir -p "/DATA/Gallery/Bing Wallpapers"
+docker cp "zimamod-api:/gallery/." "/DATA/Gallery/Bing Wallpapers/"
+```
+
+After adding the volume and recreating the container, verify the mount:
+
+```sh
+curl -fsS http://127.0.0.1:8088/zimamod-api/health
+```
+
+The response must include `"galleryMounted":true`.
+
 - Original idea and author: Cp0204
 - Original source: [CasaMOD bing-wallpaper-v2](https://github.com/Cp0204/CasaMOD/tree/main/app/mod/bing-wallpaper-v2)
 - ZimaMOD adaptation: independently reimplemented for the ZimaOS dashboard,
