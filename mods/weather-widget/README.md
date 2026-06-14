@@ -1,4 +1,4 @@
-# ZimaMOD Weather Widget v1.3.0
+# ZimaMOD Weather Widget v1.3.5
 
 Weather Widget adds a configurable weather card to the ZimaOS dashboard through
 ZimaMOD.
@@ -18,7 +18,7 @@ of a compiled dashboard component.
 - Supports custom city, coordinates, refresh interval, Celsius or Fahrenheit,
   and theme selection.
 - Resolves city coordinates through Open-Meteo geocoding.
-- Includes Casa, Aero, Liquid Glass, and refractive Pure Liquid Glass themes.
+- Includes Casa, Aero, and Liquid Glass themes.
 - Uses Open-Meteo without requiring an API key.
 
 ## Install And Uninstall
@@ -79,12 +79,7 @@ themes/base.css
 themes/casa.css
 themes/aero.css
 themes/liquid-glass.css
-themes/pure-liquid-glass.css
 ```
-
-Pure Liquid Glass injects a scoped SVG turbulence and displacement filter to
-refract the dashboard wallpaper behind the card. It falls back to a translucent
-glass gradient when backdrop filters are unavailable.
 
 The Aero theme uses selected Meteocons Fill SVG icons from `@meteocons/svg`,
 which is MIT licensed. The selected icons, license, and attribution are under:
