@@ -42,5 +42,9 @@ test("Weather Widget includes its supported themes", () => {
   assert.match(mod, /feDisplacementMap/);
   assert.match(mod, /feTurbulence/);
   assert.match(liquidTheme, /filter:\s*url\("#zimamod-weather-liquid-distortion"\)/);
-  assert.equal(manifest.version, "1.3.7");
+  assert.match(mod, /mutationTouchesWeather/);
+  assert.match(mod, /beginStartupMount/);
+  assert.match(mod, /startupObserver\?\.disconnect/);
+  assert.doesNotMatch(mod, /setInterval\(enforceSingleWidget/);
+  assert.equal(manifest.version, "1.3.9");
 });

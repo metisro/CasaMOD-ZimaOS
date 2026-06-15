@@ -1,4 +1,4 @@
-// ZimaMOD: Weather Widget v1.3.7-zimaos
+// ZimaMOD: Weather Widget v1.3.9-zimaos
 // Based on CasaOS-UI PR #257's Weather.vue idea, adapted as an injected ZimaMOD.
 
 (function ZimaMODWeatherWidget() {
@@ -65,6 +65,9 @@
   let lastDailyForecast = [];
   let activeView = "current";
   let lastWeatherVisual = null;
+  let startupObserver = null;
+  let startupMountPromise = null;
+  let startupDeadline = 0;
   let chartState = {
     points: [],
     hitPoints: [],
@@ -1628,7 +1631,7 @@
 
   function moduleFunction() {
     injectStyles();
-    getConfig()
+    return getConfig()
       .then(renderShell)
       .then(updateWeather)
       .catch(error => {
@@ -1649,23 +1652,69 @@
     if (document.querySelector(`[widget-id="${WIDGET_ID}"]`)) {
       mountContainer();
     } else {
-      moduleFunction();
+      beginStartupMount();
     }
   }, 120);
   const debouncedDedupe = debounce(enforceSingleWidget, 40);
 
-  const observer = new MutationObserver(() => {
+  function mutationTouchesWeather(records) {
+    const selector = `#${WRAPPER_ID}, #${ZIMAOS_MOUNT_ID}, [widget-id="${WIDGET_ID}"]`;
+    return records.some(record => (
+      [...record.addedNodes, ...record.removedNodes].some(node => (
+        node instanceof Element &&
+        (node.matches(selector) || node.querySelector(selector))
+      ))
+    ));
+  }
+
+  const observer = new MutationObserver(records => {
+    if (!mutationTouchesWeather(records)) return;
     debouncedDedupe();
     debouncedViewSync();
   });
 
+  function stopStartupObserver() {
+    startupObserver?.disconnect();
+    startupObserver = null;
+    startupDeadline = 0;
+  }
+
+  function tryStartupMount() {
+    if (document.querySelector(`#${WRAPPER_ID}[widget-id="${WIDGET_ID}"]`)) {
+      stopStartupObserver();
+      return;
+    }
+    if (Date.now() > startupDeadline) {
+      stopStartupObserver();
+      return;
+    }
+    if (startupMountPromise) return;
+
+    startupMountPromise = moduleFunction()
+      .finally(() => {
+        startupMountPromise = null;
+        if (document.querySelector(`#${WRAPPER_ID}[widget-id="${WIDGET_ID}"]`)) {
+          stopStartupObserver();
+        }
+      });
+  }
+
+  function beginStartupMount() {
+    if (document.querySelector(`#${WRAPPER_ID}[widget-id="${WIDGET_ID}"]`)) return;
+    startupDeadline = Date.now() + 15000;
+    if (!startupObserver) {
+      startupObserver = new MutationObserver(debounce(tryStartupMount, 120));
+      startupObserver.observe(document.body, { childList: true, subtree: true });
+    }
+    tryStartupMount();
+  }
+
   window.addEventListener("resize", debounce(() => drawChart(lastForecast), 120));
   window.addEventListener("hashchange", debouncedViewSync);
   window.addEventListener("popstate", debouncedViewSync);
-  setInterval(enforceSingleWidget, 1000);
 
   if (document.querySelector(CASAOS_ANCHOR) || document.querySelector("#app")) {
-    moduleFunction();
+    beginStartupMount();
   }
 
   observer.observe(document.body, {

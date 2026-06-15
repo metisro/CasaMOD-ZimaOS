@@ -4,3 +4,5 @@ CasaMOD-ZimaOS.zip
 docs
 install.sh
 verify.sh
+AGENTS.md
+release.ps1

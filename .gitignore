@@ -1,3 +1,4 @@
 config/
 *.zip
 AGENTS.md
+release.ps1

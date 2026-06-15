@@ -1,4 +1,4 @@
-# ZimaMOD Weather Widget v1.3.7
+# ZimaMOD Weather Widget v1.3.9
 
 Weather Widget adds a configurable weather card to the ZimaOS dashboard through
 ZimaMOD.
@@ -102,6 +102,13 @@ highlights, borders, and inset shadows for glass effects instead.
 
 Liquid Glass uses a static SVG displacement filter on an internal decorative
 layer to provide subtle refraction without sampling or blurring the dashboard.
+
+The widget observes only dashboard mutations that add or remove its own mount.
+Unrelated native overlays, recommendation cards, and app animations do not
+trigger full-page widget reconciliation or geometry reads.
+
+During initial dashboard construction, a temporary observer retries mounting
+for up to 15 seconds. It disconnects immediately after the widget appears.
 
 1. Create a theme file such as `themes/my-theme.css`.
 2. Add it to the `THEMES` registry near the top of `mod.js`.
