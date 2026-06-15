@@ -2,6 +2,182 @@
   background: rgba(16, 85, 180, .94);
 }
 
+#zimamod-token-modal {
+  position: fixed;
+  z-index: 2147483647;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  color: #20242d;
+  font-family: system-ui, sans-serif;
+}
+
+.zimamod-token-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 12, 24, .68);
+}
+
+.zimamod-token-dialog {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 0 15px;
+  width: min(460px, 100%);
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 20px;
+  background: #f8f9fc;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .38);
+}
+
+.zimamod-token-mark {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(145deg, #4a8cff, #4551d8);
+  box-shadow: 0 9px 24px rgba(55, 96, 220, .32);
+}
+
+.zimamod-token-mark svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.zimamod-token-kicker {
+  color: #6b75a0;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.zimamod-token-copy h2,
+.zimamod-token-copy p {
+  margin: 0;
+}
+
+.zimamod-token-copy h2 {
+  margin-top: 3px;
+  font-size: 21px;
+}
+
+.zimamod-token-copy p {
+  margin-top: 7px;
+  color: #747b89;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.zimamod-token-form {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+}
+
+.zimamod-token-form label {
+  display: block;
+  margin-bottom: 7px;
+  color: #555c69;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.zimamod-token-input-row {
+  display: flex;
+  gap: 7px;
+}
+
+.zimamod-token-input-row input {
+  min-width: 0;
+  flex: 1;
+  box-sizing: border-box;
+  border: 1px solid #d9dde7;
+  border-radius: 10px;
+  padding: 10px 11px;
+  outline: none;
+  color: #252a34;
+  background: #fff;
+  font: 500 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.zimamod-token-input-row input:focus {
+  border-color: #4b75ee;
+  box-shadow: 0 0 0 3px rgba(64, 111, 235, .14);
+}
+
+.zimamod-token-input-row button,
+.zimamod-token-actions button {
+  border: 0;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font: 700 11px/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.zimamod-token-input-row button,
+.zimamod-token-cancel {
+  color: #596170;
+  background: #e9ecf3;
+}
+
+.zimamod-token-help,
+.zimamod-token-error {
+  display: block;
+  margin-top: 8px;
+  color: #858c99;
+  font-size: 10px;
+}
+
+.zimamod-token-error {
+  color: #d84e64;
+}
+
+.zimamod-token-error[hidden] {
+  display: none;
+}
+
+.zimamod-token-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.zimamod-token-authorize {
+  color: #fff;
+  background: #3269ed;
+  box-shadow: 0 6px 16px rgba(50, 105, 237, .24);
+}
+
+@media (max-width: 520px) {
+  .zimamod-token-dialog {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .zimamod-token-mark {
+    margin-bottom: 12px;
+  }
+
+  .zimamod-token-input-row {
+    flex-wrap: wrap;
+  }
+
+  .zimamod-token-input-row input {
+    flex-basis: 100%;
+  }
+}
+
 .zimamod-update-dot {
   position: absolute;
   z-index: 30;

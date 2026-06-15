@@ -17,21 +17,106 @@
   const API_BASE = "/zimamod-api";
   const MOD_BASE = "/mod";
   const TOKEN_KEY = "zimamod-api-token";
+  const TOKEN_MODAL_ID = "zimamod-token-modal";
+  let tokenRequest = null;
 
   function writeToken() {
     return sessionStorage.getItem(TOKEN_KEY) || "";
   }
 
   function requestWriteToken() {
-    const token = window.prompt("Enter the ZimaMOD API token to authorize this change:");
-    if (!token) throw new Error("ZimaMOD write authorization cancelled");
-    sessionStorage.setItem(TOKEN_KEY, token);
-    return token;
+    if (tokenRequest) return tokenRequest;
+
+    tokenRequest = new Promise((resolve, reject) => {
+      document.getElementById(TOKEN_MODAL_ID)?.remove();
+
+      const modal = document.createElement("div");
+      modal.id = TOKEN_MODAL_ID;
+      modal.innerHTML = `
+        <div class="zimamod-token-backdrop"></div>
+        <section class="zimamod-token-dialog" role="dialog" aria-modal="true" aria-labelledby="zimamod-token-title">
+          <div class="zimamod-token-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"></path></svg>
+          </div>
+          <div class="zimamod-token-copy">
+            <span class="zimamod-token-kicker">Secure ZimaMOD action</span>
+            <h2 id="zimamod-token-title">Authorize this change</h2>
+            <p>Paste the current API key to install, uninstall, or change MOD settings. The key is kept only for this browser session.</p>
+          </div>
+          <form class="zimamod-token-form">
+            <label for="zimamod-token-input">API key</label>
+            <div class="zimamod-token-input-row">
+              <input id="zimamod-token-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste API key">
+              <button class="zimamod-token-show" type="button" aria-label="Show API key">Show</button>
+              <button class="zimamod-token-paste" type="button">Paste</button>
+            </div>
+            <span class="zimamod-token-help">Use <strong>Copy key</strong> in the MOD Store, then paste it here.</span>
+            <span class="zimamod-token-error" role="alert" hidden>Enter an API key to continue.</span>
+            <div class="zimamod-token-actions">
+              <button class="zimamod-token-cancel" type="button">Cancel</button>
+              <button class="zimamod-token-authorize" type="submit">Authorize</button>
+            </div>
+          </form>
+        </section>
+      `;
+
+      const input = modal.querySelector("#zimamod-token-input");
+      const error = modal.querySelector(".zimamod-token-error");
+      const finish = (token, cancelled = false) => {
+        modal.remove();
+        tokenRequest = null;
+        if (cancelled) {
+          reject(new Error("ZimaMOD write authorization cancelled"));
+          return;
+        }
+        sessionStorage.setItem(TOKEN_KEY, token);
+        resolve(token);
+      };
+      const cancel = () => finish("", true);
+
+      modal.querySelector(".zimamod-token-form").addEventListener("submit", event => {
+        event.preventDefault();
+        const token = input.value.trim();
+        if (!token) {
+          error.hidden = false;
+          input.focus();
+          return;
+        }
+        finish(token);
+      });
+      modal.querySelector(".zimamod-token-cancel").addEventListener("click", cancel);
+      modal.querySelector(".zimamod-token-backdrop").addEventListener("click", cancel);
+      modal.querySelector(".zimamod-token-show").addEventListener("click", event => {
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        event.currentTarget.textContent = show ? "Hide" : "Show";
+        event.currentTarget.setAttribute("aria-label", show ? "Hide API key" : "Show API key");
+        input.focus();
+      });
+      modal.querySelector(".zimamod-token-paste").addEventListener("click", async () => {
+        try {
+          input.value = await navigator.clipboard.readText();
+          error.hidden = true;
+          input.focus();
+        } catch (_) {
+          error.textContent = "Clipboard access is unavailable. Paste the key manually.";
+          error.hidden = false;
+        }
+      });
+      modal.addEventListener("keydown", event => {
+        if (event.key === "Escape") cancel();
+      });
+
+      document.body.appendChild(modal);
+      input.focus();
+    });
+
+    return tokenRequest;
   }
 
   async function writeRequest(url, options) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const token = writeToken() || requestWriteToken();
+      const token = writeToken() || await requestWriteToken();
       const response = await fetch(url, {
         ...options,
         credentials: "include",
@@ -162,8 +247,8 @@
     return url.pathname + url.search;
   }
 
-  loadStyle("/zimamod-runtime/store.css?v=1.1.31", "zimamod-store");
-  loadScript("/zimamod-runtime/store.js?v=1.1.31", "zimamod-store");
+  loadStyle("/zimamod-runtime/store.css?v=1.1.32", "zimamod-store");
+  loadScript("/zimamod-runtime/store.js?v=1.1.32", "zimamod-store");
 
   fetch(`${API_BASE}/mods`, { credentials: "include", cache: "no-store" })
     .then(response => {
