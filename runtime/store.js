@@ -293,6 +293,9 @@
             <button type="button" data-filter="casamod-compatible">
               <span class="zimamod-store-nav-icon">C</span>CasaMOD compatible
             </button>
+            <button type="button" class="zimamod-store-dtm-settings">
+              <span class="zimamod-store-nav-icon">D</span>DTM Settings
+            </button>
             <button type="button" class="zimamod-store-copy-key">
               <span class="zimamod-store-nav-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"></path></svg>
@@ -331,10 +334,25 @@
         </main>
       </section>
     `;
-    modal.querySelector(".zimamod-store-backdrop").addEventListener("click", closeStore);
-    modal.querySelector(".zimamod-store-close").addEventListener("click", closeStore);
-    modal.querySelector(".zimamod-store-search input").addEventListener("input", () => filterCards(modal));
-    modal.querySelector(".zimamod-store-copy-key").addEventListener("click", async event => {
+
+    const bind = (selector, eventName, handler) => {
+      const element = modal.querySelector(selector);
+      if (element) element.addEventListener(eventName, handler);
+      return element;
+    };
+
+    bind(".zimamod-store-backdrop", "click", closeStore);
+    bind(".zimamod-store-close", "click", closeStore);
+    bind(".zimamod-store-search input", "input", () => filterCards(modal));
+    bind(".zimamod-store-dtm-settings", "click", () => {
+      if (window.ZimaMODDashboardThemes?.openSettings) {
+        window.ZimaMODDashboardThemes.openSettings();
+        return;
+      }
+      const status = modal.querySelector(".zimamod-store-status");
+      if (status) status.textContent = "Install Dashboard Themes, then reload the dashboard to use DTM Settings.";
+    });
+    bind(".zimamod-store-copy-key", "click", async event => {
       const button = event.currentTarget;
       const original = button.innerHTML;
       button.disabled = true;

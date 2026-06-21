@@ -1,0 +1,33 @@
+/* Dashboard Themes: Sanded Glass */
+
+html[data-zimamod-dashboard-theme="sanded-glass"],
+:host([data-zimamod-dashboard-theme="sanded-glass"]) {
+  --dtm-radius: 20px;
+  --dtm-card-radius: 16px;
+  --dtm-search-radius: 14px;
+  --dtm-text: rgba(255, 255, 255, .96);
+  --dtm-border: rgba(255, 255, 255, .36);
+  --dtm-gloss-a: rgba(255, 255, 255, .40);
+  --dtm-gloss-b: rgba(255, 255, 255, .18);
+  --dtm-gloss-c: rgba(90, 205, 255, .12);
+  --dtm-frame:
+    radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .40), transparent 70%),
+    radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .18), transparent 72%),
+    radial-gradient(ellipse 32% 95% at 104% 48%, rgba(90, 205, 255, .12), transparent 74%),
+    linear-gradient(118deg, rgba(255, 255, 255, .22), transparent 20% 74%, rgba(255, 255, 255, .10));
+  --dtm-header-frame: var(--dtm-frame);
+  --dtm-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .08),
+    inset 0 12px 22px -20px rgba(255, 255, 255, .9);
+  --dtm-filter: blur(28px) saturate(165%);
+  --dtm-blur: blur(5px);
+}
+
+.zimamod-dashboard-themes-preview-sanded-glass {
+  background:
+    radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .40), transparent 70%),
+    radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .18), transparent 72%),
+    radial-gradient(ellipse 32% 95% at 104% 48%, rgba(90, 205, 255, .12), transparent 74%),
+    linear-gradient(118deg, rgba(255, 255, 255, .22), transparent 20% 74%, rgba(255, 255, 255, .10));
+  backdrop-filter: blur(18px) saturate(165%);
+}

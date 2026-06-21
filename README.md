@@ -85,8 +85,8 @@ ghcr.io/metisro/zimamod-proxy:latest
 Releases also publish immutable semantic-version tags, such as:
 
 ```text
-ghcr.io/metisro/zimamod-api:1.1.32
-ghcr.io/metisro/zimamod-proxy:1.1.32
+ghcr.io/metisro/zimamod-api:1.1.33
+ghcr.io/metisro/zimamod-proxy:1.1.33
 ```
 
 They are built from this GitHub repository. Their upstream Docker Official
@@ -170,8 +170,8 @@ To publish a release, first update `VERSION` and the versioned runtime assets,
 commit the change, then create and push a matching `v<version>` Git tag:
 
 ```sh
-git tag v1.1.32
-git push origin v1.1.32
+git tag v1.1.33
+git push origin v1.1.33
 ```
 
 The tag publishes immutable `:<version>` API and proxy images and creates a
@@ -341,6 +341,7 @@ until selected by the user.
 | Mod | Included form |
 | --- | --- |
 | Weather Widget | Built for ZimaMOD |
+| Dashboard Themes | Built for ZimaMOD |
 | Bing Wallpaper v2 | Adapted from CasaMOD for ZimaMOD |
 | Network Title Setter | Adapted from CasaMOD for ZimaMOD |
 | Widget Sortable | Adapted from CasaMOD for ZimaMOD |

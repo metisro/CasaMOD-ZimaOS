@@ -92,6 +92,7 @@ are not installed automatically.
 | Mod | Included form |
 | --- | --- |
 | Weather Widget | Built for ZimaMOD |
+| Dashboard Themes | Built for ZimaMOD |
 | Bing Wallpaper v2 | Adapted from CasaMOD for ZimaMOD |
 | Network Title Setter | Adapted from CasaMOD for ZimaMOD |
 | Widget Sortable | Adapted from CasaMOD for ZimaMOD |

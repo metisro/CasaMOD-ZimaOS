@@ -1,0 +1,29 @@
+/* Dashboard Themes: CasaOS */
+
+html[data-zimamod-dashboard-theme="casaos"],
+:host([data-zimamod-dashboard-theme="casaos"]) {
+  --dtm-radius: 18px;
+  --dtm-card-radius: 16px;
+  --dtm-search-radius: 12px;
+  --dtm-text: var(--text-1, #e0e4f0);
+  --dtm-border: var(--background-4, rgba(255, 255, 255, .08));
+  --dtm-gloss-a: rgba(255, 255, 255, .10);
+  --dtm-gloss-b: rgba(73, 179, 255, .08);
+  --dtm-gloss-c: rgba(255, 255, 255, .04);
+  --dtm-frame:
+    radial-gradient(ellipse at 18% 0%, rgba(73, 179, 255, .16), transparent 42%),
+    linear-gradient(145deg, var(--background-2, rgba(30, 32, 48, .88)), rgba(20, 22, 35, .82));
+  --dtm-header-frame:
+    linear-gradient(145deg, var(--background-2, rgba(30, 32, 48, .92)), rgba(20, 22, 35, .88));
+  --dtm-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 12px 28px rgba(0, 0, 0, .22);
+  --dtm-filter: blur(18px) saturate(145%);
+  --dtm-blur: blur(5px);
+}
+
+.zimamod-dashboard-themes-preview-casaos {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(73, 179, 255, .30), transparent 42%),
+    linear-gradient(145deg, rgba(30, 32, 48, .94), rgba(20, 22, 35, .88));
+}

@@ -18,7 +18,7 @@ of a compiled dashboard component.
 - Supports custom city, coordinates, refresh interval, Celsius or Fahrenheit,
   and theme selection.
 - Resolves city coordinates through Open-Meteo geocoding.
-- Includes Casa, Aero, and Liquid Glass themes.
+- Includes Casa, Aero, Liquid Glass, and Sanded Glass themes.
 - Uses Open-Meteo without requiring an API key.
 
 ## Install And Uninstall
@@ -79,6 +79,7 @@ themes/base.css
 themes/casa.css
 themes/aero.css
 themes/liquid-glass.css
+themes/sanded-glass.css
 ```
 
 The Aero theme uses selected Meteocons Fill SVG icons from `@meteocons/svg`,
@@ -102,6 +103,8 @@ highlights, borders, and inset shadows for glass effects instead.
 
 Liquid Glass uses a static SVG displacement filter on an internal decorative
 layer to provide subtle refraction without sampling or blurring the dashboard.
+Sanded Glass is the renamed brushed-glass style and keeps the stronger frosted
+surface from the pasted theme.
 
 The widget observes only dashboard mutations that add or remove its own mount.
 Unrelated native overlays, recommendation cards, and app animations do not

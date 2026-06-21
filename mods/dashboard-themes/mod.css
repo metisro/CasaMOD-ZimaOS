@@ -1,0 +1,258 @@
+/* ZimaMOD Dashboard Themes */
+
+html[data-zimamod-dashboard-themes="true"] {
+  --dtm-text-shadow: 0 1px 3px rgba(0, 12, 30, .32);
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+  color: var(--dtm-text);
+  text-shadow: var(--dtm-text-shadow);
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-widget,
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-search {
+  overflow: hidden !important;
+  opacity: 1 !important;
+  color: var(--dtm-text) !important;
+  border: 1px solid var(--dtm-border) !important;
+  border-radius: var(--dtm-radius);
+  background: var(--dtm-frame) !important;
+  box-shadow: var(--dtm-shadow) !important;
+  backdrop-filter: var(--dtm-filter);
+  -webkit-backdrop-filter: var(--dtm-filter);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-search {
+  border-radius: var(--dtm-search-radius);
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-widget::before,
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-search::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 1;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .30), transparent 70%),
+    radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .12), transparent 72%),
+    linear-gradient(118deg, rgba(255, 255, 255, .18), transparent 20% 74%, rgba(255, 255, 255, .08));
+  pointer-events: none;
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-header {
+  border-bottom: 1px solid var(--dtm-border) !important;
+  background: var(--dtm-header-frame) !important;
+  box-shadow: var(--dtm-shadow) !important;
+  backdrop-filter: var(--dtm-filter);
+  -webkit-backdrop-filter: var(--dtm-filter);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+#zimamod-dashboard-themes-modal {
+  position: fixed;
+  z-index: 2147483200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #f5f8ff;
+  font-family: system-ui, sans-serif;
+}
+
+.zimamod-dashboard-themes-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 24, .70);
+}
+
+.zimamod-dashboard-themes-dialog {
+  position: relative;
+  width: min(720px, 100%);
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(71, 195, 255, .22), transparent 42%),
+    linear-gradient(145deg, rgba(24, 37, 62, .94), rgba(12, 18, 36, .92));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .46);
+}
+
+.zimamod-dashboard-themes-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.zimamod-dashboard-themes-dialog h2,
+.zimamod-dashboard-themes-dialog p {
+  margin: 0;
+}
+
+.zimamod-dashboard-themes-dialog h2 {
+  margin-top: 3px;
+  font-size: 25px;
+}
+
+.zimamod-dashboard-themes-dialog p {
+  margin-top: 7px;
+  max-width: 520px;
+  color: rgba(235, 244, 255, .72);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.zimamod-dashboard-themes-kicker {
+  color: rgba(153, 222, 255, .86);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.zimamod-dashboard-themes-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.zimamod-dashboard-themes-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.zimamod-dashboard-themes-theme-card {
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .07);
+  cursor: pointer;
+}
+
+.zimamod-dashboard-themes-theme-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.zimamod-dashboard-themes-theme-card:has(input:checked) {
+  border-color: rgba(116, 213, 255, .72);
+  box-shadow: 0 0 0 3px rgba(76, 174, 255, .14);
+}
+
+.zimamod-dashboard-themes-preview {
+  height: 88px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .35);
+}
+
+.zimamod-dashboard-themes-preview-sanded-glass {
+  background: #22324a;
+}
+
+.zimamod-dashboard-themes-preview-aero {
+  background: #116b9d;
+}
+
+.zimamod-dashboard-themes-preview-casaos {
+  background: #1e2030;
+}
+
+.zimamod-dashboard-themes-preview-chaos {
+  background: #551c8c;
+}
+
+.zimamod-dashboard-themes-theme-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.zimamod-dashboard-themes-theme-copy strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.zimamod-dashboard-themes-theme-copy small {
+  color: rgba(234, 244, 255, .68);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.zimamod-dashboard-themes-status {
+  margin: 16px 0 0;
+  color: rgba(234, 244, 255, .72);
+  font-size: 12px;
+}
+
+.zimamod-dashboard-themes-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.zimamod-dashboard-themes-actions button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: 750 12px/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.zimamod-dashboard-themes-cancel {
+  color: rgba(242, 248, 255, .88);
+  background: rgba(255, 255, 255, .10);
+}
+
+.zimamod-dashboard-themes-save {
+  color: #fff;
+  background: linear-gradient(145deg, #56cdff, #667eff);
+  box-shadow: 0 8px 20px rgba(41, 121, 213, .26);
+}
+
+@media (max-width: 720px) {
+  .zimamod-dashboard-themes-theme-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-zimamod-dashboard-themes="true"] .zimamod-dashboard-themes-surface {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,72 @@
+/* Dashboard Themes: Liquid Glass */
+
+html[data-zimamod-dashboard-theme="liquid-glass"],
+:host([data-zimamod-dashboard-theme="liquid-glass"]) {
+  --dtm-radius: 20px;
+  --dtm-card-radius: 16px;
+  --dtm-search-radius: 14px;
+  --dtm-text: rgba(255, 255, 255, .96);
+  --dtm-border: rgba(255, 255, 255, .36);
+  --dtm-gloss-a: rgba(255, 255, 255, .40);
+  --dtm-gloss-b: rgba(255, 255, 255, .18);
+  --dtm-gloss-c: rgba(90, 205, 255, .12);
+  --dtm-liquid-accent-a: rgba(69, 196, 255, .34);
+  --dtm-liquid-accent-b: rgba(103, 113, 255, .24);
+  --dtm-frame:
+    radial-gradient(ellipse at 14% 4%, var(--dtm-liquid-accent-a), transparent 44%),
+    radial-gradient(ellipse at 96% 104%, var(--dtm-liquid-accent-b), transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .025));
+  --dtm-header-frame:
+    radial-gradient(circle at 12% 0%, rgba(71, 195, 255, .28), transparent 40%),
+    linear-gradient(145deg, rgba(32, 56, 82, .76), rgba(24, 37, 62, .60));
+  --dtm-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .58),
+    inset -1px -1px 0 rgba(255, 255, 255, .10),
+    inset 0 0 20px rgba(255, 255, 255, .045),
+    0 14px 34px rgba(0, 13, 35, .22);
+  --dtm-filter: none;
+  --dtm-blur: blur(0px);
+  --dtm-app-filter: none;
+}
+
+html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-widget::before,
+html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-search::before,
+:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-handle::before,
+:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app::before {
+  background:
+    radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .40), transparent 70%),
+    radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .18), transparent 72%),
+    radial-gradient(ellipse 32% 95% at 104% 48%, rgba(90, 205, 255, .12), transparent 74%),
+    linear-gradient(118deg, rgba(255, 255, 255, .22), transparent 20% 74%, rgba(255, 255, 255, .10));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .08),
+    inset 0 12px 22px -20px rgba(255, 255, 255, .9);
+}
+
+html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-header {
+  background: transparent !important;
+}
+
+html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-widget::after,
+html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-search::after,
+:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  z-index: 1;
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse 42% 17% at 20% 24%, rgba(255, 255, 255, .12), transparent 72%),
+    radial-gradient(ellipse 44% 18% at 78% 72%, rgba(91, 210, 255, .10), transparent 74%),
+    linear-gradient(102deg, transparent 8%, rgba(255, 255, 255, .05) 26%, transparent 43% 63%, rgba(130, 218, 255, .055) 79%, transparent 94%);
+  filter: url("#zimamod-dashboard-themes-distortion");
+  opacity: .9;
+  pointer-events: none;
+}
+
+.zimamod-dashboard-themes-preview-liquid-glass {
+  background:
+    radial-gradient(ellipse at 14% 4%, rgba(69, 196, 255, .34), transparent 44%),
+    radial-gradient(ellipse at 96% 104%, rgba(103, 113, 255, .24), transparent 50%),
+    linear-gradient(145deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .025));
+}

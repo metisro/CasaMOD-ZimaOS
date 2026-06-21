@@ -1,0 +1,25 @@
+{
+  "name": "Dashboard Themes",
+  "version": "1.0.0",
+  "description": "Manage ZimaOS dashboard themes for native app, widget, search, and header surfaces.",
+  "category": "Visual Effects",
+  "screenshot": "screenshot.jpg",
+  "authors": [
+    {
+      "name": "metisro",
+      "url": "https://github.com/metisro"
+    }
+  ],
+  "origin": {
+    "type": "native",
+    "adapter": "ZimaMOD",
+    "source": ""
+  },
+  "enabled": true,
+  "scripts": [
+    "mod.js"
+  ],
+  "styles": [
+    "mod.css"
+  ]
+}

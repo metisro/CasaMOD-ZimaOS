@@ -45,6 +45,11 @@
       label: "Liquid Glass",
       file: "themes/liquid-glass.css",
       className: MOD_ID + "-theme-liquid"
+    },
+    sanded: {
+      label: "Sanded Glass",
+      file: "themes/sanded-glass.css",
+      className: MOD_ID + "-theme-sanded"
     }
   };
 
@@ -885,6 +890,35 @@
         color: #fff;
       }
 
+      .${MOD_ID}-theme-row {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .${MOD_ID}-theme-switch {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 16px;
+      }
+
+      .${MOD_ID}-theme-switch label {
+        min-width: 0;
+      }
+
+      .${MOD_ID}-theme-switch .${MOD_ID}-unit-option {
+        display: block;
+        min-width: 0;
+        padding: 7px 8px;
+        overflow: hidden;
+        font-size: 11px;
+        line-height: 1.15;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       .${MOD_ID}-footer {
         display: flex;
         justify-content: flex-end;
@@ -1556,9 +1590,9 @@
           </div>
         </div>
 
-        <div class="${MOD_ID}-field ${MOD_ID}-switch-row">
+        <div class="${MOD_ID}-field ${MOD_ID}-switch-row ${MOD_ID}-theme-row">
           <span class="${MOD_ID}-switch-label">Theme</span>
-          <div class="${MOD_ID}-unit-switch" role="radiogroup" aria-label="Theme">
+          <div class="${MOD_ID}-unit-switch ${MOD_ID}-theme-switch" role="radiogroup" aria-label="Theme">
             ${renderThemeOptions(config.theme)}
           </div>
         </div>
