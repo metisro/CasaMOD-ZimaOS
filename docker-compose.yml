@@ -1,9 +1,9 @@
 name: zimamod
-version: "1.1.33"
+version: "1.1.34"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.33
+    image: ghcr.io/metisro/zimamod-api:1.1.34
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
       - /DATA/Gallery/Bing Wallpapers:/gallery
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.33
+    image: ghcr.io/metisro/zimamod-proxy:1.1.34
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -49,9 +49,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.33"
-  updateAt: "2026-06-21"
+  version: "1.1.34"
+  updateAt: "2026-06-22"
   releaseNotes:
-    en_us: '### New: Dashboard Themes MOD  This release adds **Dashboard Themes**, a new built-for-ZimaMOD visual manager for the ZimaOS dashboard.    Dashboard Themes can style native dashboard surfaces including:    - App cards inside the ZimaOS `wujie-app` shadow root  - Native dashboard widgets  - Search bar blur surfaces  - Dashboard header surfaces    A new **DTM Settings** button is available in the MOD Store sidebar. The button only launches the manager; Dashboard Themes remains an independent MOD.    ### Dashboard Theme Options    Dashboard Themes includes:    - **Sanded Glass**  - **Liquid Glass**  - **Aero**  - **CasaOS**  - **Chaos**    Each theme now lives in its own CSS file under `mods/dashboard-themes/themes/`.    ### Weather Widget Updates    - Added **Sanded Glass** as a Weather Widget theme.  - Sanded Glass replaces the old brushed-glass direction with the new name.  - Improved the Weather Widget theme selector so longer theme names such as Liquid Glass and Sanded Glass display cleanly.    ### Documentation And Tests    - Updated root and MOD documentation to include Dashboard Themes.  - Added deployment test coverage for Dashboard Themes, theme asset paths, DTM Settings, and Weather Widget Sanded Glass.  - Verified full test suite: 10/10 passing.'
+    en_us: '### Fixed: Dashboard Themes App Menu Positioning  This release fixes a Dashboard Themes regression where the native ZimaOS app-card dropdown could be positioned from the wrong place after opening the three-dot menu.    ### What Changed    - Dashboard Themes now preserves the native app blur layer and applies theme styling to that layer instead of removing it.  - Dropdown, menu, popover, and listbox elements keep their native positioning behavior while still receiving a higher z-index.  - Liquid Glass dashboard app-card overlays now target the preserved blur layer.    ### Validation    - Added deployment coverage to prevent reintroducing forced dropdown positioning.  - Verified full test suite: 10/10 passing.'
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues

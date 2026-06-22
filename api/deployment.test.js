@@ -93,6 +93,15 @@ test("Dashboard Themes ships as an independent theme manager", () => {
   assert.match(mod, /openSettings/);
   assert.match(mod, /window\.ZimaMOD\.setConfig\(CONFIG_ID/);
   assert.match(mod, /setupShadowRoot/);
+  assert.match(mod, /overflow:\s*visible !important/);
+  assert.match(mod, /\.\$\{APP_CLASS\}\s*\{\s*position:\s*relative !important;\s*overflow:\s*visible !important;/);
+  assert.doesNotMatch(mod, /translateZ\(0\)/);
+  assert.match(mod, /const APP_BLUR_CLASS = MOD_ID \+ "-app-blur"/);
+  assert.match(mod, /element\.classList\.add\(APP_BLUR_CLASS\)/);
+  assert.doesNotMatch(mod, /element\.remove\(\)/);
+  assert.match(mod, /\[role="menu"\]/);
+  assert.doesNotMatch(mod, /\[role="listbox"\]\s*\{\s*position:\s*relative/);
+  assert.match(mod, /\[role="listbox"\]\s*\{\s*z-index:\s*50;/);
   assert.match(mod, /\.blur-background/);
   assert.match(mod, /\.bg-blur/);
   assert.match(mod, /BG_HEX_RE/);
@@ -103,6 +112,7 @@ test("Dashboard Themes ships as an independent theme manager", () => {
   assert.match(css, /#zimamod-dashboard-themes-modal/);
   assert.match(sanded, /data-zimamod-dashboard-theme="sanded-glass"/);
   assert.match(liquid, /data-zimamod-dashboard-theme="liquid-glass"/);
+  assert.match(liquid, /zimamod-dashboard-themes-app-blur/);
   assert.match(liquid, /filter:\s*url\("#zimamod-dashboard-themes-distortion"\)/);
   assert.match(liquid, /--dtm-app-filter:\s*none/);
   assert.match(liquid, /\.zimamod-dashboard-themes-header\s*\{\s*background:\s*transparent !important;/);

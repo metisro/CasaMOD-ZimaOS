@@ -23,6 +23,7 @@
   const SHADOW_THEME_STYLE_ID = MOD_ID + "-shadow-theme-style";
   const SURFACE_CLASS = MOD_ID + "-surface";
   const APP_CLASS = MOD_ID + "-app";
+  const APP_BLUR_CLASS = MOD_ID + "-app-blur";
   const HANDLE_CLASS = MOD_ID + "-handle";
   const WIDGET_CLASS = MOD_ID + "-widget";
   const SEARCH_CLASS = MOD_ID + "-search";
@@ -218,6 +219,8 @@
     findAll(root, ".blur-background").forEach(element => {
       if (element.closest(".zimamod-weather")) return;
 
+      element.classList.add(APP_BLUR_CLASS);
+
       const card = element.parentElement;
       if (card && card !== root.body) {
         card.classList.add(SURFACE_CLASS, APP_CLASS);
@@ -227,8 +230,6 @@
       if (handle && handle !== root.body) {
         handle.classList.add(HANDLE_CLASS);
       }
-
-      element.remove();
     });
   }
 
@@ -275,30 +276,22 @@
       .${HANDLE_CLASS} {
         position: relative;
         border-radius: var(--dtm-radius);
-        isolation: isolate;
-      }
-
-      .${HANDLE_CLASS}::before {
-        content: "";
-        position: absolute;
-        inset: 1px;
-        z-index: 1;
-        border-radius: inherit;
-        background:
-          radial-gradient(ellipse 85% 24% at 45% -2%, var(--dtm-gloss-a), transparent 70%),
-          radial-gradient(ellipse 28% 105% at -4% 52%, var(--dtm-gloss-b), transparent 72%),
-          radial-gradient(ellipse 32% 95% at 104% 48%, var(--dtm-gloss-c), transparent 74%),
-          linear-gradient(118deg, rgba(255, 255, 255, .22), transparent 20% 74%, rgba(255, 255, 255, .10));
-        pointer-events: none;
+        overflow: visible !important;
       }
 
       .${APP_CLASS} {
         position: relative !important;
-        overflow: hidden !important;
+        overflow: visible !important;
         color: var(--dtm-text) !important;
+      }
+
+      .${APP_BLUR_CLASS} {
+        overflow: hidden !important;
         border: 1px solid var(--dtm-border) !important;
         border-radius: var(--dtm-card-radius) !important;
         background: var(--dtm-frame) !important;
+        backdrop-filter: var(--dtm-app-filter, var(--dtm-blur) saturate(165%));
+        -webkit-backdrop-filter: var(--dtm-app-filter, var(--dtm-blur) saturate(165%));
         box-shadow:
           inset 1px 1px 0 rgba(255, 255, 255, .58),
           inset -1px -1px 0 rgba(255, 255, 255, .10),
@@ -306,12 +299,13 @@
           0 14px 34px rgba(0, 13, 35, .22) !important;
       }
 
-      .${APP_CLASS}::before {
+      .${APP_BLUR_CLASS}::before {
         content: "";
         position: absolute;
         inset: 1px;
         z-index: 1;
         border-radius: inherit;
+        overflow: hidden;
         background:
           radial-gradient(ellipse 85% 24% at 45% -2%, var(--dtm-gloss-a), transparent 70%),
           radial-gradient(ellipse 28% 105% at -4% 52%, var(--dtm-gloss-b), transparent 72%),
@@ -325,12 +319,12 @@
         z-index: 2;
       }
 
-      .aspect-square.${APP_CLASS},
-      .${APP_CLASS}.aspect-square {
-        backdrop-filter: var(--dtm-app-filter, var(--dtm-blur) saturate(165%));
-        -webkit-backdrop-filter: var(--dtm-app-filter, var(--dtm-blur) saturate(165%));
-        transform: translateZ(0);
-        will-change: transform;
+      .${APP_CLASS} [class*="dropdown" i],
+      .${APP_CLASS} [class*="menu" i],
+      .${APP_CLASS} [class*="popover" i],
+      .${APP_CLASS} [role="menu"],
+      .${APP_CLASS} [role="listbox"] {
+        z-index: 50;
       }
     `;
 

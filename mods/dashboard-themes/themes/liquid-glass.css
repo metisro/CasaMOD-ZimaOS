@@ -31,8 +31,7 @@ html[data-zimamod-dashboard-theme="liquid-glass"],
 
 html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-widget::before,
 html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-search::before,
-:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-handle::before,
-:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app::before {
+:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app-blur::before {
   background:
     radial-gradient(ellipse 85% 24% at 45% -2%, rgba(255, 255, 255, .40), transparent 70%),
     radial-gradient(ellipse 28% 105% at -4% 52%, rgba(255, 255, 255, .18), transparent 72%),
@@ -49,11 +48,11 @@ html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-head
 
 html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-widget::after,
 html[data-zimamod-dashboard-theme="liquid-glass"] .zimamod-dashboard-themes-search::after,
-:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app::after {
+:host([data-zimamod-dashboard-theme="liquid-glass"]) .zimamod-dashboard-themes-app-blur::after {
   content: "";
   position: absolute;
   inset: 7px;
-  z-index: 1;
+  z-index: 0;
   border-radius: 15px;
   background:
     radial-gradient(ellipse 42% 17% at 20% 24%, rgba(255, 255, 255, .12), transparent 72%),
