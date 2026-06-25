@@ -342,6 +342,7 @@ until selected by the user.
 | --- | --- |
 | Weather Widget | Built for ZimaMOD |
 | Dashboard Themes | Built for ZimaMOD |
+| Resource Alerts | Built for ZimaMOD |
 | Bing Wallpaper v2 | Adapted from CasaMOD for ZimaMOD |
 | Network Title Setter | Adapted from CasaMOD for ZimaMOD |
 | Widget Sortable | Adapted from CasaMOD for ZimaMOD |

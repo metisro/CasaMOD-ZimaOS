@@ -1,0 +1,22 @@
+{
+  "name": "Resource Alerts",
+  "version": "0.1.0",
+  "description": "Adds a dashboard widget for CPU, RAM, storage, service checks, and optional alert delivery.",
+  "category": "System Monitoring",
+  "authors": [
+    {
+      "name": "metisro",
+      "url": "https://github.com/metisro"
+    }
+  ],
+  "origin": {
+    "type": "native"
+  },
+  "enabled": true,
+  "scripts": [
+    "mod.js"
+  ],
+  "styles": [
+    "mod.css"
+  ]
+}

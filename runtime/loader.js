@@ -214,6 +214,26 @@
       if (!response.ok) throw new Error(`Update check failed: ${response.status}`);
       return response.json();
     },
+    async getSystemMetrics() {
+      const response = await fetch(`${API_BASE}/metrics`, { credentials: "include", cache: "no-store" });
+      if (!response.ok) throw new Error(`Metrics request failed: ${response.status}`);
+      return response.json();
+    },
+    async getResourceAlertsState() {
+      const response = await fetch(`${API_BASE}/resource-alerts`, { credentials: "include", cache: "no-store" });
+      if (!response.ok) throw new Error(`Resource Alerts state failed: ${response.status}`);
+      return response.json();
+    },
+    async runResourceAlertsCheck() {
+      const response = await writeRequest(`${API_BASE}/resource-alerts/check`, { method: "POST" });
+      if (!response.ok) throw new Error(`Resource Alerts check failed: ${response.status}`);
+      return response.json();
+    },
+    async clearResourceAlertsEvents() {
+      const response = await writeRequest(`${API_BASE}/resource-alerts/events`, { method: "DELETE" });
+      if (!response.ok) throw new Error(`Resource Alerts clear failed: ${response.status}`);
+      return response.json();
+    },
     async installMod(modId) {
       const response = await writeRequest(`${API_BASE}/store/${encodeURIComponent(modId)}`, { method: "POST" });
       if (!response.ok) throw new Error(`Mod installation failed: ${response.status}`);

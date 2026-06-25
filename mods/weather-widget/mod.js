@@ -301,7 +301,8 @@
   }
 
   function hasDashboardWidgets(element) {
-    return ["system", "storage", "network"].every(title => hasWidgetTitle(element, title));
+    const nativeCount = ["system", "storage", "network"].filter(title => hasWidgetTitle(element, title)).length;
+    return nativeCount >= 2 || hasWidgetTitle(element, "widget settings");
   }
 
   function closestOverlay(element) {

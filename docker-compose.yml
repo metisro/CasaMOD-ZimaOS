@@ -10,10 +10,24 @@ services:
     environment:
       DATA_DIR: /data
       BING_GALLERY_DIR: /gallery
+      HOST_PROC_DIR: /host/proc
+      HOST_SYS_DIR: /host/sys
       ZIMAMOD_API_PORT: "8090"
     volumes:
-      - /DATA/AppData/zimamod:/data
-      - /DATA/Gallery/Bing Wallpapers:/gallery
+      - type: bind
+        source: /DATA/AppData/zimamod
+        target: /data
+      - type: bind
+        source: /DATA/Gallery/Bing Wallpapers
+        target: /gallery
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+      - type: bind
+        source: /sys
+        target: /host/sys
+        read_only: true
 
   zimamod-proxy:
     image: ghcr.io/metisro/zimamod-proxy:1.1.34
@@ -28,7 +42,10 @@ services:
       ZIMAMOD_DASHBOARD_PORT: "8088"
       ZIMAMOD_API_PORT: "8090"
     volumes:
-      - /DATA/AppData/zimamod/mod:/mods:ro
+      - type: bind
+        source: /DATA/AppData/zimamod/mod
+        target: /mods
+        read_only: true
 
 x-casaos:
   architectures:

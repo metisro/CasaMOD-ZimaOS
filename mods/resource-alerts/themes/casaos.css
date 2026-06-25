@@ -1,0 +1,22 @@
+/* Resource Alerts: CasaOS */
+
+html[data-zimamod-resource-alerts-theme="casaos"] {
+  --zra-radius: 18px;
+  --zra-card-radius: 16px;
+  --zra-text: var(--text-1, #e0e4f0);
+  --zra-muted: var(--text-3, rgba(224, 228, 240, .68));
+  --zra-border: var(--background-4, rgba(255, 255, 255, .08));
+  --zra-soft-border: rgba(255, 255, 255, .10);
+  --zra-frame:
+    radial-gradient(ellipse at 18% 0%, rgba(73, 179, 255, .16), transparent 42%),
+    linear-gradient(145deg, var(--background-2, rgba(30, 32, 48, .88)), rgba(20, 22, 35, .82));
+  --zra-panel: rgba(255, 255, 255, .08);
+  --zra-section: rgba(255, 255, 255, .055);
+  --zra-dialog:
+    linear-gradient(145deg, var(--background-2, rgba(30, 32, 48, .94)), rgba(20, 22, 35, .90));
+  --zra-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 12px 28px rgba(0, 0, 0, .22);
+  --zra-filter: blur(18px) saturate(145%);
+  --zra-button: #3867ff;
+}

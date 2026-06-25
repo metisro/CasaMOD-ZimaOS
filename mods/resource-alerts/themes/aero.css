@@ -1,0 +1,25 @@
+/* Resource Alerts: Aero */
+
+html[data-zimamod-resource-alerts-theme="aero"] {
+  --zra-radius: 9px;
+  --zra-card-radius: 8px;
+  --zra-text: #e8f8ff;
+  --zra-muted: rgba(232, 248, 255, .76);
+  --zra-border: rgba(111, 208, 243, .85);
+  --zra-soft-border: rgba(155, 223, 255, .36);
+  --zra-frame:
+    linear-gradient(90deg, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0) 14%, rgba(255, 255, 255, 0) 86%, rgba(255, 255, 255, .23)),
+    linear-gradient(180deg, rgba(155, 223, 255, .68), rgba(53, 164, 224, .50) 50%, rgba(3, 42, 58, .62) 51%),
+    #062939;
+  --zra-panel: rgba(255, 255, 255, .13);
+  --zra-section: rgba(0, 18, 30, .22);
+  --zra-dialog:
+    linear-gradient(180deg, rgba(42, 62, 71, .86), rgba(3, 45, 61, .78)),
+    #062939;
+  --zra-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .62),
+    inset 0 -1px 0 rgba(23, 141, 184, .52),
+    0 10px 22px rgba(0, 0, 0, .38);
+  --zra-filter: blur(18px) saturate(150%);
+  --zra-button: #217bff;
+}

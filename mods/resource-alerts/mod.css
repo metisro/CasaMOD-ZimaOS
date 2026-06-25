@@ -1,0 +1,791 @@
+/* ZimaMOD Resource Alerts */
+
+:root {
+  --zra-radius: 18px;
+  --zra-card-radius: 13px;
+  --zra-text: #f8fbff;
+  --zra-muted: rgba(235, 244, 255, .72);
+  --zra-border: rgba(255, 255, 255, .22);
+  --zra-soft-border: rgba(255, 255, 255, .16);
+  --zra-frame:
+    radial-gradient(circle at 18% 0%, rgba(96, 197, 255, .24), transparent 44%),
+    linear-gradient(145deg, rgba(25, 54, 102, .72), rgba(11, 24, 48, .58));
+  --zra-panel: rgba(255, 255, 255, .10);
+  --zra-dialog:
+    radial-gradient(circle at 12% 0%, rgba(71, 195, 255, .22), transparent 42%),
+    linear-gradient(145deg, rgba(24, 37, 62, .96), rgba(12, 18, 36, .94));
+  --zra-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .28),
+    0 18px 44px rgba(0, 16, 43, .22);
+  --zra-filter: blur(18px) saturate(145%);
+  --zra-button: #3867ff;
+  --zra-danger: rgba(255, 105, 118, .92);
+  --zra-ok: #64f29a;
+  --zra-warn: #ffcf5b;
+  --zra-critical: #ff6976;
+}
+
+.zimamod-resource-alerts {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 154px;
+  padding: 18px;
+  border: 1px solid var(--zra-border);
+  border-radius: var(--zra-radius);
+  color: var(--zra-text);
+  background: var(--zra-frame);
+  box-shadow: var(--zra-shadow);
+  backdrop-filter: var(--zra-filter);
+  -webkit-backdrop-filter: var(--zra-filter);
+  font-family: system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0, 10, 30, .32);
+}
+
+.zimamod-resource-alerts *,
+.zimamod-resource-alerts-modal * {
+  box-sizing: border-box;
+}
+
+.zimamod-resource-alerts header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.zimamod-resource-alerts-kicker {
+  color: var(--zra-accent-text, rgba(169, 222, 255, .86));
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.zimamod-resource-alerts h2 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.zimamod-resource-alerts-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 999px;
+  background: var(--zra-panel);
+  color: var(--zra-text);
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--zra-ok);
+  box-shadow: 0 0 12px rgba(100, 242, 154, .62);
+}
+
+.zimamod-resource-alerts-status.warn::before {
+  background: var(--zra-warn);
+  box-shadow: 0 0 12px rgba(255, 207, 91, .62);
+}
+
+.zimamod-resource-alerts-status.critical::before {
+  background: var(--zra-critical);
+  box-shadow: 0 0 12px rgba(255, 105, 118, .62);
+}
+
+.zimamod-resource-alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.zimamod-resource-alerts-metric {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: var(--zra-card-radius);
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-label {
+  color: var(--zra-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.zimamod-resource-alerts-value {
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.zimamod-resource-alerts-bar {
+  overflow: hidden;
+  height: 5px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--zra-bar-track, rgba(255, 255, 255, .16));
+}
+
+.zimamod-resource-alerts-bar span {
+  display: block;
+  width: var(--value, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #64f29a, #63c7ff);
+}
+
+.zimamod-resource-alerts-metric.warn .zimamod-resource-alerts-bar span {
+  background: linear-gradient(90deg, #ffcf5b, #ff9f43);
+}
+
+.zimamod-resource-alerts-metric.critical .zimamod-resource-alerts-bar span {
+  background: linear-gradient(90deg, #ff6976, #ff3d8d);
+}
+
+.zimamod-resource-alerts-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  color: var(--zra-muted);
+  font-size: 12px;
+}
+
+.zimamod-resource-alerts-button,
+.zimamod-resource-alerts-modal button {
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--zra-button);
+  font: 750 12px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.zimamod-resource-alerts-button {
+  padding: 9px 13px;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-modal {
+  position: fixed;
+  z-index: 2147483200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--zra-text);
+  font-family: system-ui, sans-serif;
+}
+
+.zimamod-resource-alerts-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--zra-backdrop, rgba(5, 10, 24, .72));
+}
+
+.zimamod-resource-alerts-dialog {
+  position: relative;
+  width: min(860px, 100%);
+  max-height: min(820px, calc(100vh - 48px));
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--zra-border);
+  border-radius: 24px;
+  background: var(--zra-dialog);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .46);
+  backdrop-filter: var(--zra-filter);
+  -webkit-backdrop-filter: var(--zra-filter);
+}
+
+.zimamod-resource-alerts-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.zimamod-resource-alerts-dialog h2,
+.zimamod-resource-alerts-dialog h3,
+.zimamod-resource-alerts-dialog p {
+  margin: 0;
+}
+
+.zimamod-resource-alerts-dialog h2 {
+  font-size: 25px;
+}
+
+.zimamod-resource-alerts-dialog p {
+  margin-top: 6px;
+  color: var(--zra-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.zimamod-resource-alerts-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--zra-border);
+  background: var(--zra-panel);
+  font-size: 24px;
+}
+
+.zimamod-resource-alerts-section {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 18px;
+  background: var(--zra-section, rgba(255, 255, 255, .07));
+}
+
+.zimamod-resource-alerts-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--zra-soft-border);
+}
+
+.zimamod-resource-alerts-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 12px 12px 0 0;
+  color: var(--zra-muted);
+  background: transparent;
+  font: 800 13px/1 system-ui, sans-serif;
+}
+
+.zimamod-resource-alerts-tab:hover,
+.zimamod-resource-alerts-tab.active {
+  color: var(--zra-text);
+  background: var(--zra-panel);
+  border-bottom-color: var(--zra-button);
+}
+
+.zimamod-resource-alerts-tab-badge {
+  min-width: 20px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--zra-button);
+  font-size: 10px;
+}
+
+.zra-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -3px;
+}
+
+.zimamod-resource-alerts-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.zimamod-resource-alerts-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.zimamod-resource-alerts-metric-card {
+  padding: 12px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 14px;
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--zra-muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.zimamod-resource-alerts-metric-top span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zimamod-resource-alerts-metric-big {
+  margin-top: 8px;
+  color: var(--zra-text);
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -.02em;
+}
+
+.zimamod-resource-alerts-sub {
+  margin-top: 6px;
+  color: var(--zra-muted);
+  font-size: 11px;
+}
+
+.zimamod-resource-alerts-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--zra-muted);
+}
+
+.zimamod-resource-alerts-dot.ok,
+.zimamod-resource-alerts-dot.running {
+  background: var(--zra-ok);
+  box-shadow: 0 0 12px rgba(100, 242, 154, .52);
+}
+
+.zimamod-resource-alerts-dot.warn,
+.zimamod-resource-alerts-dot.degraded {
+  background: var(--zra-warn);
+  box-shadow: 0 0 12px rgba(255, 207, 91, .52);
+}
+
+.zimamod-resource-alerts-dot.critical,
+.zimamod-resource-alerts-dot.stopped {
+  background: var(--zra-critical);
+  box-shadow: 0 0 12px rgba(255, 105, 118, .52);
+}
+
+.zimamod-resource-alerts-card-list {
+  overflow: hidden;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 14px;
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-list-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(120px, 1.2fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--zra-soft-border);
+  color: var(--zra-muted);
+  font-size: 12px;
+}
+
+.zimamod-resource-alerts-process-row {
+  grid-template-columns: .8fr minmax(120px, 1.8fr) auto;
+}
+
+.zimamod-resource-alerts-process-row > span:nth-child(2),
+.zimamod-resource-alerts-list-row > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-list-row:last-child {
+  border-bottom: 0;
+}
+
+.zimamod-resource-alerts-list-row > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--zra-text);
+  font-weight: 750;
+}
+
+.zimamod-resource-alerts-badge,
+.zimamod-resource-alerts-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-badge {
+  padding: 4px 9px;
+}
+
+.zimamod-resource-alerts-badge.running {
+  color: var(--zra-ok);
+  background: rgba(100, 242, 154, .12);
+}
+
+.zimamod-resource-alerts-badge.degraded {
+  color: var(--zra-warn);
+  background: rgba(255, 207, 91, .14);
+}
+
+.zimamod-resource-alerts-badge.stopped {
+  color: var(--zra-critical);
+  background: rgba(255, 105, 118, .14);
+}
+
+.zimamod-resource-alerts-network {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.zimamod-resource-alerts-network > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 14px;
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-network .zra-icon {
+  grid-row: span 2;
+}
+
+.zimamod-resource-alerts-network strong {
+  color: var(--zra-text);
+  font-size: 16px;
+}
+
+.zimamod-resource-alerts-network span {
+  color: var(--zra-muted);
+  font-size: 11px;
+}
+
+.zimamod-resource-alerts-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.zimamod-resource-alerts-info-grid > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 14px;
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-info-grid span {
+  color: var(--zra-muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.zimamod-resource-alerts-info-grid strong {
+  color: var(--zra-text);
+  font-size: 16px;
+}
+
+.zimamod-resource-alerts-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.zimamod-resource-alerts-toolbar > div {
+  display: flex;
+  gap: 8px;
+}
+
+.zimamod-resource-alerts-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 8px 11px;
+  border: 1px solid var(--zra-soft-border) !important;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-toolbar-button.secondary {
+  color: var(--zra-text);
+  background: rgba(255, 255, 255, .10);
+}
+
+.zimamod-resource-alerts-toolbar-button.danger {
+  color: #fff;
+  background: rgba(255, 105, 118, .86);
+}
+
+.zimamod-resource-alerts-toolbar-button .zra-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.zimamod-resource-alerts-event {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 13px;
+  background: var(--zra-section, rgba(255, 255, 255, .07));
+  color: var(--zra-muted);
+  font-size: 12px;
+}
+
+.zimamod-resource-alerts-event + .zimamod-resource-alerts-event {
+  margin-top: 8px;
+}
+
+.zimamod-resource-alerts-event strong {
+  color: var(--zra-text);
+}
+
+.zimamod-resource-alerts-event p {
+  margin: 3px 0 0;
+}
+
+.zimamod-resource-alerts-event-icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--zra-text);
+  background: var(--zra-panel);
+  font-weight: 900;
+}
+
+.zimamod-resource-alerts-event.warn .zimamod-resource-alerts-event-icon {
+  color: var(--zra-warn);
+}
+
+.zimamod-resource-alerts-event.critical .zimamod-resource-alerts-event-icon {
+  color: var(--zra-critical);
+}
+
+.zimamod-resource-alerts-event.ok .zimamod-resource-alerts-event-icon {
+  color: var(--zra-ok);
+}
+
+.zimamod-resource-alerts-event-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.zimamod-resource-alerts-tag {
+  padding: 2px 7px;
+  border: 1px solid var(--zra-soft-border);
+  color: var(--zra-muted);
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-pagination,
+.zimamod-resource-alerts-empty {
+  color: var(--zra-muted);
+  font-size: 12px;
+}
+
+.zimamod-resource-alerts-empty {
+  padding: 16px;
+  text-align: center;
+}
+
+.zimamod-resource-alerts-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.zimamod-resource-alerts-field {
+  display: grid;
+  gap: 6px;
+  color: var(--zra-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.zimamod-resource-alerts-field input,
+.zimamod-resource-alerts-field select,
+.zimamod-resource-alerts-field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 12px;
+  color: #111827 !important;
+  background: #fff !important;
+  font: 13px/1.3 system-ui, sans-serif;
+  text-shadow: none;
+}
+
+.zimamod-resource-alerts-field input::placeholder,
+.zimamod-resource-alerts-field textarea::placeholder {
+  color: #6b7280;
+}
+
+.zimamod-resource-alerts-modal input {
+  color: black;
+  padding-left: 5px;
+}
+
+.zimamod-resource-alerts-modal input,
+.zimamod-resource-alerts-modal select {
+  color: #111827 !important;
+  background: #fff !important;
+  text-shadow: none;
+}
+
+.zimamod-resource-alerts-field textarea {
+  min-height: 74px;
+  resize: vertical;
+}
+
+.zimamod-resource-alerts-notes-field textarea {
+  min-height: 120px;
+}
+
+.zimamod-resource-alerts-checks,
+.zimamod-resource-alerts-events {
+  display: grid;
+  gap: 8px;
+}
+
+.zimamod-resource-alerts-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 90px minmax(210px, 1.6fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.zimamod-resource-alerts-row[data-method="HTTP"] [data-field="target"],
+.zimamod-resource-alerts-row:not([data-method="HTTP"]) [data-field="url"] {
+  display: none;
+}
+
+.zimamod-resource-alerts-row:not([data-method="HTTP"]) {
+  grid-template-columns: minmax(130px, 1fr) 90px minmax(210px, 1.6fr) auto auto;
+}
+
+.zimamod-resource-alerts-row input,
+.zimamod-resource-alerts-row select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid var(--zra-soft-border);
+  border-radius: 10px;
+  color: #111827 !important;
+  background: #fff !important;
+  font: 13px/1.2 system-ui, sans-serif;
+  text-shadow: none;
+}
+
+.zimamod-resource-alerts-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--zra-text);
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.zimamod-resource-alerts-row label input {
+  width: auto;
+  min-width: 0;
+  padding: 0;
+}
+
+.zimamod-resource-alerts-row button {
+  padding: 10px 12px;
+  background: var(--zra-danger);
+}
+
+.zimamod-resource-alerts-add-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 34px;
+  margin-top: 2px;
+  padding: 10px 14px;
+}
+
+.zimamod-resource-alerts-add-check .zra-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.zimamod-resource-alerts-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.zimamod-resource-alerts-actions button {
+  padding: 11px 16px;
+}
+
+.zimamod-resource-alerts-actions .secondary {
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-modal button.secondary {
+  background: var(--zra-panel);
+}
+
+.zimamod-resource-alerts-modal button.danger,
+.zimamod-resource-alerts-row button {
+  background: var(--zra-danger);
+}
+
+.zimamod-resource-alerts-modal button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+@media (max-width: 720px) {
+  .zimamod-resource-alerts-grid,
+  .zimamod-resource-alerts-metric-grid,
+  .zimamod-resource-alerts-network,
+  .zimamod-resource-alerts-info-grid,
+  .zimamod-resource-alerts-fields,
+  .zimamod-resource-alerts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .zimamod-resource-alerts-toolbar,
+  .zimamod-resource-alerts-list-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+}

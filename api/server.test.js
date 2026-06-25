@@ -163,6 +163,20 @@ async function verifyRestartRegeneratesToken() {
     const health = await waitForServer();
     assert.equal(health.status, 200);
     assert.equal(health.body.galleryMounted, false);
+    const metrics = await request("GET", "/metrics");
+    assert.equal(metrics.status, 200);
+    assert.equal(metrics.body.ok, true);
+    assert.equal(typeof metrics.body.checkedAt, "string");
+    assert.ok(metrics.body.cpu);
+    assert.ok(metrics.body.memory);
+    assert.ok(metrics.body.disk);
+    assert.ok(metrics.body.network);
+    assert.ok(metrics.body.system);
+    assert.ok(Array.isArray(metrics.body.topProcesses));
+    assert.ok(metrics.body.storageHealth);
+    assert.ok(Array.isArray(metrics.body.sensors));
+    assert.equal(typeof metrics.body.source.proc, "string");
+    assert.equal(typeof metrics.body.source.hostProcMounted, "boolean");
     apiToken = fs.readFileSync(path.join(dataDir, "config", "api_token"), "utf8").trim();
     assert.equal((await request("GET", "/token")).status, 401);
     assert.equal((await request("GET", "/token", null, "wrong-dashboard-token")).status, 401);
@@ -207,6 +221,19 @@ async function verifyRestartRegeneratesToken() {
     assert.equal(refreshedUpdate.body.latestVersion, "1.1.7");
     assert.equal(refreshedUpdate.body.updateAvailable, false);
     assert.equal(updateRequestCount, 2);
+
+    const resourceAlerts = await request("GET", "/resource-alerts");
+    assert.equal(resourceAlerts.status, 200);
+    assert.equal(resourceAlerts.body.ok, true);
+    assert.ok(resourceAlerts.body.state);
+    assert.ok(Array.isArray(resourceAlerts.body.state.events));
+    assert.equal(typeof resourceAlerts.body.monitor.hostProcMounted, "boolean");
+    assert.equal((await request("POST", "/resource-alerts/check")).status, 401);
+    assert.equal((await request("POST", "/resource-alerts/check", null, true)).status, 200);
+    assert.equal((await request("DELETE", "/resource-alerts/events")).status, 401);
+    const clearedAlerts = await request("DELETE", "/resource-alerts/events", null, true);
+    assert.equal(clearedAlerts.status, 200);
+    assert.deepEqual(clearedAlerts.body.state.events, []);
 
     assert.equal((await request("POST", "/store/store-mod")).status, 401);
     assert.equal((await request("POST", "/bing-wallpaper/save", {

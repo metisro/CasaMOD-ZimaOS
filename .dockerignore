@@ -6,3 +6,4 @@ install.sh
 verify.sh
 AGENTS.md
 release.ps1
+deploy-zimaos.ps1

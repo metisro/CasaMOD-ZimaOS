@@ -2,3 +2,4 @@ config/
 *.zip
 AGENTS.md
 release.ps1
+deploy-zimaos.ps1

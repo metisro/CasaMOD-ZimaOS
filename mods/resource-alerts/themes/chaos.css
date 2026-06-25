@@ -1,0 +1,27 @@
+/* Resource Alerts: Chaos */
+
+html[data-zimamod-resource-alerts-theme="chaos"] {
+  --zra-radius: 22px;
+  --zra-card-radius: 18px;
+  --zra-text: #fff;
+  --zra-muted: rgba(255, 241, 255, .78);
+  --zra-border: rgba(255, 110, 238, .58);
+  --zra-soft-border: rgba(50, 235, 255, .26);
+  --zra-frame:
+    radial-gradient(circle at 12% 14%, rgba(255, 80, 220, .36), transparent 38%),
+    radial-gradient(circle at 88% 82%, rgba(40, 238, 255, .30), transparent 42%),
+    linear-gradient(135deg, rgba(85, 28, 140, .48), rgba(8, 18, 62, .34));
+  --zra-panel: rgba(255, 255, 255, .10);
+  --zra-section: rgba(40, 238, 255, .07);
+  --zra-dialog:
+    radial-gradient(circle at 8% 50%, rgba(255, 80, 220, .34), transparent 30%),
+    radial-gradient(circle at 92% 35%, rgba(40, 238, 255, .28), transparent 36%),
+    linear-gradient(135deg, rgba(48, 18, 90, .84), rgba(5, 20, 64, .76));
+  --zra-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .44),
+    inset -1px -1px 0 rgba(42, 240, 255, .18),
+    0 18px 44px rgba(32, 0, 70, .38);
+  --zra-filter: blur(24px) saturate(190%);
+  --zra-button: #7c4dff;
+  --zra-danger: rgba(255, 69, 151, .92);
+}

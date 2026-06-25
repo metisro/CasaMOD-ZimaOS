@@ -44,18 +44,33 @@
 
     return Array.from(document.querySelectorAll("#app div, #app aside, #app section"))
       .map(element => ({ element, rect: element.getBoundingClientRect() }))
-      .filter(({ element, rect }) => {
-        const text = (element.textContent || "").toLowerCase();
-        return (
-          rect.width >= 260 &&
-          rect.width <= 520 &&
-          rect.height >= 450 &&
-          rect.left < window.innerWidth * .35 &&
-          text.includes("storage") &&
-          text.includes("network")
-        );
-      })
+      .filter(({ element, rect }) => (
+        rect.width >= 260 &&
+        rect.width <= 520 &&
+        rect.height >= 450 &&
+        rect.left < window.innerWidth * .35 &&
+        hasDashboardWidgets(element)
+      ))
       .sort((left, right) => left.rect.width - right.rect.width)[0]?.element || null;
+  }
+
+  function visibleLeafText(element) {
+    if (!element || element.children.length !== 0) return "";
+    const rect = element.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return "";
+    const style = getComputedStyle(element);
+    if (style.visibility === "hidden" || style.display === "none") return "";
+    return (element.textContent || "").trim().toLowerCase();
+  }
+
+  function hasWidgetTitle(element, title) {
+    return Array.from(element?.querySelectorAll?.("*") || [])
+      .some(child => visibleLeafText(child) === title);
+  }
+
+  function hasDashboardWidgets(element) {
+    const nativeCount = ["system", "storage", "network"].filter(title => hasWidgetTitle(element, title)).length;
+    return nativeCount >= 2 || hasWidgetTitle(element, "widget settings");
   }
 
   function slug(value) {
@@ -149,7 +164,7 @@
 
     const children = sortableChildren(column);
     const byId = new Map(children.map((child, index) => [childId(child, index), child]));
-    const missingIds = order.filter(id => !byId.has(id));
+    const missingIds = order.filter(id => !byId.has(id) && shouldWaitForMissing(id));
     if (missingIds.length && Date.now() - restoreStartedAt < 5000) {
       clearTimeout(restoreRetryTimer);
       restoreRetryTimer = setTimeout(initialize, 250);
@@ -168,6 +183,10 @@
       const referenceIndex = currentIndex < targetIndex ? targetIndex + 1 : targetIndex;
       column.insertBefore(child, currentChildren[referenceIndex] || null);
     }
+  }
+
+  function shouldWaitForMissing(id) {
+    return !["clock", "system", "storage", "network", "widget-settings"].includes(id);
   }
 
   function clearDragState() {

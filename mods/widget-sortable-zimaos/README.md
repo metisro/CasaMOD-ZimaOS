@@ -21,6 +21,15 @@ During dragging, widgets move only after the pointer crosses a directional
 threshold and displaced widgets animate into place. Order restoration is
 paused until the drag finishes to prevent flickering and unwanted swaps.
 
+When ZimaOS Widget Settings hides one native dashboard widget, Widget Sortable
+still treats the remaining dashboard column as valid. Hidden native widgets such
+as `clock`, `system`, `storage`, `network`, and `widget-settings` do not block
+order restoration; custom ZimaMOD widgets are still awaited briefly so Weather
+Widget and Resource Alerts can mount before their saved positions are restored.
+If all native widgets are hidden and only Widget Settings remains visible, that
+Widget Settings card is used as the dashboard anchor so ZimaMOD widgets stay
+mounted after minimizing settings or refreshing the dashboard.
+
 ## Attribution
 
 Original `widget-sortable` authors: **LANMIN-X** and **Cp0204**.
