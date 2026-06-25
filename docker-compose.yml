@@ -1,9 +1,9 @@
 name: zimamod
-version: "1.1.34"
+version: "1.1.35"
 
 services:
   zimamod-api:
-    image: ghcr.io/metisro/zimamod-api:1.1.34
+    image: ghcr.io/metisro/zimamod-api:1.1.35
     container_name: zimamod-api
     network_mode: host
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
         read_only: true
 
   zimamod-proxy:
-    image: ghcr.io/metisro/zimamod-proxy:1.1.34
+    image: ghcr.io/metisro/zimamod-proxy:1.1.35
     container_name: zimamod-proxy
     labels:
       icon: https://raw.githubusercontent.com/metisro/ZimaMOD/main/assets/zimamod-icon.png
@@ -66,9 +66,9 @@ x-casaos:
     en_us: Independent mod framework for ZimaOS
   description:
     en_us: Extend the ZimaOS dashboard with independently installed JavaScript and CSS mods.
-  version: "1.1.34"
-  updateAt: "2026-06-22"
+  version: "1.1.35"
+  updateAt: "2026-06-25"
   releaseNotes:
-    en_us: '### Fixed: Dashboard Themes App Menu Positioning  This release fixes a Dashboard Themes regression where the native ZimaOS app-card dropdown could be positioned from the wrong place after opening the three-dot menu.    ### What Changed    - Dashboard Themes now preserves the native app blur layer and applies theme styling to that layer instead of removing it.  - Dropdown, menu, popover, and listbox elements keep their native positioning behavior while still receiving a higher z-index.  - Liquid Glass dashboard app-card overlays now target the preserved blur layer.    ### Validation    - Added deployment coverage to prevent reintroducing forced dropdown positioning.  - Verified full test suite: 10/10 passing.'
+    en_us: 'This release adds the new Resource Alerts MOD, a built-for-ZimaMOD monitoring widget with API-side alerting + widgets mods visual fixes       ### Added   - New Resource Alerts dashboard widget.   - Status, Events, Notes, and Settings tabs.   - CPU, RAM, disk, temperature, network, uptime, reboot, process, and storage-health views.   - API-side HTTP, TCP, and process-name service checks.   - Event history with pagination and confirmed clear-all action.   - Telegram and Gotify alert delivery from `zimamod-api`, so alerts work even when the dashboard is closed.   - Theme selector with Sanded Glass, Liquid Glass, Aero, CasaOS, and Chaos themes.   - Host `/proc` and `/sys` read-only compose mounts for accurate host metrics.    ### Fixed   - Widget Sortable now handles hidden native widgets more reliably.   - Weather Widget dashboard-column detection works when only Widget Settings remains visible.    ### Verified   - Telegram alerts tested successfully with service-down, CPU warning, and storage warning events.   - `node --check mods/resource-alerts/mod.js`   - `node --test api/deployment.test.js`   - `node --test api/server.test.js`'
   repo: https://github.com/metisro/ZimaMOD
   support: https://github.com/metisro/ZimaMOD/issues
